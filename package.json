@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "apollo-cache-inmemory": "^1.6.3"
+  }
+}

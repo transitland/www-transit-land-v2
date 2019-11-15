@@ -1,0 +1,7 @@
+query active_stops($geometry: geography){
+      active_stops(where: {geometry: {_st_intersects: $geometry}}){
+        id
+        stop_name
+        geometry
+      }
+}

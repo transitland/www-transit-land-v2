@@ -1,0 +1,21 @@
+query current_feeds {
+  current_feeds {
+    id
+    auth
+    onestop_id
+    associated_feeds
+    created_at
+    deleted_at
+    feed_namespace_id
+    languages
+    last_fetch_error
+    last_fetched_at
+    last_imported_at
+    last_successful_fetch_at
+    license
+    onestop_id
+    other_ids
+    spec
+    urls
+  }
+}
