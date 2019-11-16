@@ -1,0 +1,14 @@
+query {
+  active_agencies {
+    agency_email
+    agency_fare_url
+    agency_id
+    agency_lang
+    agency_name
+    agency_phone
+    agency_timezone
+    agency_url
+    feed_version_id
+    id
+  }
+}

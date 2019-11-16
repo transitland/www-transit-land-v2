@@ -17,5 +17,6 @@ query current_feeds {
     other_ids
     spec
     urls
+    
   }
 }

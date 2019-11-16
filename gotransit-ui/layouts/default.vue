@@ -1,7 +1,7 @@
 <template>
   <div>
     <nav
-      class="navbar header has-shadow is-primary"
+      class="navbar header has-shadow is-light"
       role="navigation"
       aria-label="main navigation"
     >
@@ -10,11 +10,8 @@
           class="navbar-item"
           href="/"
         >
-          <img
-            src="~assets/buefy.png"
-            alt="Buefy"
-            height="28"
-          >
+          <div class="logo-image" />
+          <h2 class="is-h2">Transitland GraphQL Demo</h2>
         </a>
 
         <div class="navbar-burger">
@@ -63,12 +60,32 @@ export default {
           to: { name: 'index' }
         },
         {
-          title: 'Inspire',
+          title: 'Feeds',
           icon: 'lightbulb',
-          to: { name: 'inspire' }
+          to: { name: 'feeds' }
+        },
+        {
+          title: 'Agencies',
+          icon: 'lightbulb',
+          to: { name: 'agencies' }
+        },
+        {
+          title: 'Routes',
+          icon: 'lightbulb',
+          to: { name: 'routes' }
         }
       ]
     }
   }
 }
 </script>
+
+<style scoped>
+.logo-image {
+  background: url('~assets/transitland_logo.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 160px;
+  height: 40px;
+}
+</style>
