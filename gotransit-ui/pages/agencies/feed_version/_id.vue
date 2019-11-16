@@ -1,16 +1,16 @@
 <template>
   <section class="section">
-    <feed :ent="ent" class="entity-box" v-for="ent in ents" />
+    <agency :ent="ent" v-if="ent" />
   </section>
 </template>
 
 <script>
-import apolloProvider from '../graphql'
+import apolloProvider from '~/graphql'
 
 export default {
   data () {
     return {
-      ents: []
+      ent: null
     }
   },
   mounted () {
@@ -20,17 +20,16 @@ export default {
     load () {
       this.$apollo
         .query({
-          query: require('../graphql/current_feeds.gql'),
-          variables: {}
+          query: require('~/graphql/active_agencies.gql'),
+          variables: {
+            feed_version_sha1: this.$route.params.id
+          }
         })
         .then((response) => {
-          this.ents = response.data.current_feeds
+          this.ent = response.data.active_agencies[0]
         })
     }
   },
   apolloProvider
 }
 </script>
-
-<style scoped>
-</style>

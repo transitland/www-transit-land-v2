@@ -2,7 +2,7 @@
 @import "~bulma/sass/utilities/_all";
 
 // Set your colors
-$primary: #fefefe;
+$primary: #666;
 $primary-invert: findColorInvert($primary);
 
 // Setup $colors to use as bulma classes (e.g. 'is-twitter')
@@ -32,5 +32,18 @@ $link-focus-border: $primary;
 .entity-box {
     margin:5px;
     padding:5px;
-    border:solid 1px #ccc;
+    border:solid 1px $primary;
+}
+
+table {
+    width: 100%;
+    margin-top: 10px;
+}
+
+thead {
+    border-bottom: solid 1px $primary;
+}
+
+th, td {
+    padding-right: 20px;
 }

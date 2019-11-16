@@ -62,7 +62,7 @@ export default {
         {
           title: 'Feeds',
           icon: 'lightbulb',
-          to: { name: 'feeds' }
+          to: '/feeds'
         },
         {
           title: 'Agencies',

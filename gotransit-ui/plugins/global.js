@@ -6,3 +6,5 @@ import feedComponent from '../components/feed.vue'
 Vue.component('agency', agencyComponent)
 Vue.component('route', routeComponent)
 Vue.component('feed', feedComponent)
+
+Vue.use(require('vue-moment'))

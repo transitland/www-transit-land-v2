@@ -1,5 +1,5 @@
-query {
-  active_agencies {
+query active_agencies($feed_version_sha1: String) {
+  active_agencies(where: {feed_version: {sha1: {_eq: $feed_version_sha1}}}) {
     agency_email
     agency_fare_url
     agency_id
