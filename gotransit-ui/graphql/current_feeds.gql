@@ -1,5 +1,5 @@
-query current_feeds($onestop_id: String) {
-  current_feeds(where: {onestop_id: {_eq: $onestop_id}}) {
+query current_feeds($onestop_id: String, $last_fetch_error: String) {
+  current_feeds(limit: 100, order_by: {id: asc}, where: {feed_state: {last_fetch_error: {_neq: $last_fetch_error}}}) {
     id
     auth
     onestop_id
@@ -8,19 +8,18 @@ query current_feeds($onestop_id: String) {
     deleted_at
     feed_namespace_id
     languages
-    last_fetch_error
-    last_fetched_at
-    last_imported_at
-    last_successful_fetch_at
     license
     onestop_id
     other_ids
     spec
     urls
-    feed_states {
+    feed_state {
+      last_fetch_error
+      last_fetched_at
+      last_successful_fetch_at
       feed_version {
         id
-        feed_version_gtfs_imports {
+        feed_version_gtfs_import {
           id
           in_progress
           success
@@ -28,41 +27,9 @@ query current_feeds($onestop_id: String) {
         }
       }
     }
-    feed_versions {
-      id
-      created_at
-      sha1
-      earliest_calendar_date
-      latest_calendar_date
-      fetched_at
-      feed_version_gtfs_imports {
-        in_progress
-        success
-        id
-        exception_log
-        error_count
-        entity_count
-        created_at
-      }
-      agencies_aggregate {
-        aggregate {
-          count
-        }
-      }
-      routes_aggregate {
-        aggregate {
-          count
-        }
-      }
-      stops_aggregate {
-        aggregate {
-          count
-        }
-      }
-      trips_aggregate {
-        aggregate {
-          count
-        }
+    feed_versions_aggregate {
+      aggregate {
+        count
       }
     }
   }

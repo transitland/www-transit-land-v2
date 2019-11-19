@@ -26,7 +26,7 @@ export default {
     load () {
       this.$apollo
         .query({
-          query: require('~/graphql/current_feeds.gql'),
+          query: require('~/graphql/current_feed.gql'),
           variables: {
             onestop_id: this.$route.params.id
           }

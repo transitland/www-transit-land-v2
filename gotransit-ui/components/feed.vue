@@ -5,7 +5,7 @@
         Onestop ID: {{ ent.onestop_id }}
       </router-link>
     </div>
-    <div>Spec: {{ ent.Spec }}</div>
+    <div>Spec: {{ ent.spec }}</div>
     <ul>
       <li :key="name" v-for="(url,name) in ent.urls">
         {{ name }}: {{ url }}
@@ -18,9 +18,9 @@
       Languages: {{ ent.languages }}
     </div>
 
-    <div>Last fetch attempted: {{ ent.last_fetched_at | moment("from") }}</div>
-    <div>Last fetch successful: {{ ent.last_successful_fetch_at | moment("from") }}</div>
-    <div>Last fetch failure: {{ ent.last_fetch_error }}</div>
+    <div>Last fetch attempted: {{ ent.feed_state.last_fetched_at | moment("from") }}</div>
+    <div>Last fetch successful: {{ ent.feed_state.last_successful_fetch_at | moment("from") }}</div>
+    <div>Last fetch failure: {{ ent.feed_state.last_fetch_error }}</div>
 
     <table>
       <thead>
@@ -37,20 +37,20 @@
       <tbody>
         <tr v-for="fv in ent.feed_versions" :key="fv.id">
           <td>
-            <span v-if="active_feed_version && fv.id == active_feed_version.id">Active</span>
+            <span v-if="fv.id === ent.feed_state.feed_version.id">Active</span>
           </td>
           <td>{{ fv.sha1.substr(0,6) }}</td>
           <td>{{ fv.fetched_at | moment("from") }}</td>
           <td>{{ fv.earliest_calendar_date }}</td>
           <td>{{ fv.latest_calendar_date }}</td>
-          <template v-if="fv.feed_version_gtfs_imports.length > 0">
-            <td v-if="fv.feed_version_gtfs_imports[0].success">
+          <template v-if="fv.feed_version_gtfs_import">
+            <td v-if="fv.feed_version_gtfs_import.success">
               OK
             </td>
-            <td v-else-if="fv.feed_version_gtfs_imports[0].in_progress">
+            <td v-else-if="fv.feed_version_gtfs_import.in_progress">
               In Progress
             </td>
-            <td v-else-if="fv.feed_version_gtfs_imports[0].success == false">
+            <td v-else-if="fv.feed_version_gtfs_import.success == false">
               Failed
             </td>
             <td v-else>
@@ -80,15 +80,6 @@
 
 <script>
 export default {
-  props: ['ent'],
-  computed: {
-    active_feed_version () {
-      const fv = this.ent.feed_states[0]
-      if (fv != null) {
-        return fv.feed_version
-      }
-      return null
-    }
-  }
+  props: ['ent']
 }
 </script>

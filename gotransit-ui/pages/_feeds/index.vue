@@ -14,10 +14,10 @@
               {{ ent.onestop_id }}
             </router-link>
           </td>
-          <td> {{ ent.feed_versions.length }}</td>
-          <template v-if="ent.feed_states.length > 0">
+          <td> {{ ent.feed_versions_aggregate.aggregate.count }}</td>
+          <template v-if="ent.feed_state">
             <td>
-              <template v-if="ent.feed_states[0].last_fetch_error">
+              <template v-if="ent.feed_state.last_fetch_error">
                 Error!
               </template>
               <template v-else>
@@ -25,9 +25,9 @@
               </template>
             </td>
           </template>
-          <template v-if="ent.feed_states.length > 0 && ent.feed_states[0].feed_version && ent.feed_states[0].feed_version.feed_version_gtfs_imports.length > 0">
+          <template v-if="ent.feed_state && ent.feed_state.feed_version && ent.feed_state.feed_version.feed_version_gtfs_import">
             <td>
-              {{ ent.feed_states[0].feed_version.feed_version_gtfs_imports[0].created_at | moment("from") }}
+              {{ ent.feed_state.feed_version.feed_version_gtfs_import.created_at | moment("from") }}
             </td>
           </template>
         </tr>

@@ -17,7 +17,8 @@ Vue.use(VueApollo)
 // });
 const cache = new InMemoryCache()
 const link = new HttpLink({
-  uri: 'http://localhost:8080/v1/graphql'
+  // uri: 'http://localhost:8080/v1/graphql'
+  uri: 'http://graphql.transit.land/v1/graphql'
 })
 
 const apolloClient = new ApolloClient({
