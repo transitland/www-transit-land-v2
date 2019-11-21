@@ -32,6 +32,7 @@
     "node-loader": "^0.6.0",
     "node-sass": "^4.13.0",
     "sass-loader": "^8.0.0",
+    "vue-affix": "^0.5.2",
     "vue-apollo": "^3.0.0",
     "vue-moment": "^4.0.0"
   }

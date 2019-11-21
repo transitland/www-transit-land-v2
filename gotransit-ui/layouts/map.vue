@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-navbar class="navbar has-shadow is-light" role="navigation" aria-label="main navigation">
+    <b-navbar class="navbar has-shadow is-light" role="navigation" :fixed-top="true" aria-label="main navigation">
       <template slot="brand">
         <a class="navbar-item" href="/">
           <div class="logo-image" />
@@ -31,41 +31,16 @@
       </template>
     </b-navbar>
 
-    <section class="main-content columns">
-      <div class="container column is-10">
-        <nuxt />
-      </div>
+    <section class="main-content">
+      <nuxt />
     </section>
   </div>
 </template>
 
 <script>
+import defaultLayout from './default'
+
 export default {
-  data () {
-    return {
-      items: [
-        {
-          title: 'Home',
-          icon: 'home',
-          to: { name: 'index' }
-        },
-        {
-          title: 'Feeds',
-          icon: 'lightbulb',
-          to: '/feeds'
-        },
-        {
-          title: 'Agencies',
-          icon: 'lightbulb',
-          to: { name: 'agencies' }
-        },
-        {
-          title: 'Routes',
-          icon: 'lightbulb',
-          to: { name: 'routes' }
-        }
-      ]
-    }
-  }
+  mixins: [defaultLayout]
 }
 </script>

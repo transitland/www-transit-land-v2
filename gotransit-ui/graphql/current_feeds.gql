@@ -1,23 +1,28 @@
-query current_feeds($onestop_id: String, $last_fetch_error: String) {
-  current_feeds(limit: 100, order_by: {id: asc}, where: {feed_state: {last_fetch_error: {_neq: $last_fetch_error}}}) {
+query current_feeds($onestop_id: String, $last_fetch_error: String, $geometry: geography) {
+  current_feeds_aggregate {
+    aggregate {
+      count
+    }
+  }
+  current_feeds(order_by: {id: asc}, where: {feed_state: {last_fetch_error: {_neq: $last_fetch_error}, 
+
+  _or: [
+    {feed_version_id: {_is_null: true}},
+    {feed_version: {geometry: {centroid: {_st_intersects: $geometry}}}}
+  ]
+  
+  
+  }}) {
     id
-    auth
     onestop_id
-    associated_feeds
-    created_at
-    deleted_at
-    feed_namespace_id
-    languages
-    license
-    onestop_id
-    other_ids
-    spec
-    urls
     feed_state {
       last_fetch_error
       last_fetched_at
       last_successful_fetch_at
       feed_version {
+        geometry {
+          centroid
+        }
         id
         feed_version_gtfs_import {
           id

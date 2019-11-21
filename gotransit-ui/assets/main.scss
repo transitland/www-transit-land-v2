@@ -47,3 +47,25 @@ thead {
 th, td {
     padding-right: 20px;
 }
+
+.logo-image {
+    background: url('~assets/transitland_logo.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-left:20px;
+    margin-right:20px;
+    width: 80px;
+    height: 40px;
+  }
+
+  .entity {
+      border-top: solid 1px #ccc;
+      margin-top:10px;
+      padding-top:10px;
+  }
+
+  td[data-label="ID"] {
+    max-width: 40px;
+    white-space: nowrap;
+    overflow-x: hidden;
+  }

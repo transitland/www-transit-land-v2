@@ -1,11 +1,11 @@
 <template>
-  <div>
-    {{ ent.agency_name }}
+  <div class="entity">
+    {{ entity.feed_version_id }} - {{ entity.id }} - {{ entity.agency_name }}
   </div>
 </template>
 
 <script>
 export default {
-  props: ['ent']
+  props: ['entity']
 }
 </script>
