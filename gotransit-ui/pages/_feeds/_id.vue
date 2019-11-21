@@ -8,7 +8,6 @@
 import apolloProvider from '~/graphql'
 
 export default {
-  layout: 'map',
   data () {
     return {
       ent: null

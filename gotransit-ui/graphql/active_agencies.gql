@@ -14,9 +14,6 @@ query active_agencies($feed_version_sha1: String, $geometry: geography) {
     agency_timezone
     agency_url
     feed_version_id
-    feed_version {
-      feed_id
-    }
     id
     agency_geometry {
       centroid
