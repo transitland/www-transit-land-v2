@@ -4,7 +4,7 @@ query active_agencies($feed_version_sha1: String, $geometry: geography) {
       count
     }
   }
-  active_agencies(where: {feed_version: {sha1: {_eq: $feed_version_sha1}}, agency_geometry: {centroid: {_st_intersects: $geometry}}}, order_by: {agency_name: asc}) {
+  entities: active_agencies(where: {feed_version: {sha1: {_eq: $feed_version_sha1}}, agency_geometry: {centroid: {_st_intersects: $geometry}}}, order_by: {agency_id: asc}) {
     agency_email
     agency_fare_url
     agency_id

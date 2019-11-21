@@ -1,5 +1,5 @@
 <template>
-  <b-navbar :fixed-top="fixedTop" class="navbar has-shadow is-light" role="navigation" aria-label="main navigation">
+  <b-navbar :fixedTop="fixedTop" class="navbar has-shadow is-light" role="navigation" aria-label="main navigation">
     <template slot="brand">
       <a class="navbar-item" href="/">
         <div class="logo-image" />

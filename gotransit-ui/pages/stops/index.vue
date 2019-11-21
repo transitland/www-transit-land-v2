@@ -3,20 +3,11 @@
     <div class="column is-two-fifths">
       <div style="padding:20px">
         {{ count }} Stops
-        <template v-if="ents.length != count">
-          / {{ ents.length }} filtered
+        <template v-if="entities.length != count">
+          / {{ entities.length }} filtered
         </template>
 
-        <b-table :data="ents" :columns="columns">
-          <template slot-scope="props">
-            <b-table-column field="onestop_id" label="ID">
-              {{ props.row.onestop_id }}
-            </b-table-column>
-            <b-table-column field="feed_version_count" label="Versions" width="20">
-              {{ props.row.feed_versions_aggregate.aggregate.count }}
-            </b-table-column>
-          </template>
-        </b-table>
+        <b-table :data="entities" :columns="columns" />
       </div>
     </div>
     <div class="column">
@@ -40,18 +31,16 @@ export default {
       layer: null,
       columns: [
         {
-          field: 'onestop_id',
-          label: 'Feed ID',
-          width: 200
+          field: 'stop_name',
+          label: 'Stop Name'
         }
       ]
     }
   },
   mounted () {
+    const initlocation = { type: 'Polygon', coordinates: [[[-122.36889839172365, 47.579536520842055], [-122.30298042297365, 47.579536520842055], [-122.30298042297365, 47.625834810279464], [-122.36889839172365, 47.625834810279464], [-122.36889839172365, 47.579536520842055]]] }
     this.initMap()
-    this.load()
-    this.map.on('moveend', this.updateBbox)
-    this.map.on('zoomend', this.updateBbox)
+    this.load(initlocation)
   },
   validate ({ params }) {
     return true
@@ -72,18 +61,21 @@ export default {
     draw () {
       const circles = []
       this.entities.forEach((ent) => {
-        if (ent.geometry) {
-          const coords = ent.geometry.coordinates
-          circles.push(
-            L.circle([coords[1], coords[0]], {
-              color: 'blue',
-              opacity: 0.5,
-              radius: 2
-            }).bindPopup(ent.stop_name)
-          )
-        }
+        const coords = ent.geometry.coordinates
+        circles.push(
+          L.circle([coords[1], coords[0]], {
+            color: 'blue',
+            opacity: 0.5,
+            radius: 2
+          }).bindPopup(ent.stop_name)
+        )
       })
       const layer = L.featureGroup(circles).addTo(this.map)
+      if (this.layer == null) {
+        this.map.fitBounds(layer.getBounds())
+        this.map.on('moveend', this.updateBbox)
+        this.map.on('zoomend', this.updateBbox)
+      }
       this.layer = layer
     }
   },

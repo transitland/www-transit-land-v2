@@ -3,17 +3,17 @@
     <div class="column is-two-fifths">
       <div style="padding:20px">
         {{ count }} Feeds
-        <template v-if="ents.length != count">
-          / {{ ents.length }} filtered
+        <template v-if="entities.length != count">
+          / {{ entities.length }} filtered
         </template>
 
-        <b-table :data="ents" :columns="columns">
+        <b-table :data="entities" :columns="columns">
           <template slot-scope="props">
             <b-table-column field="onestop_id" label="ID">
               {{ props.row.onestop_id }}
             </b-table-column>
             <b-table-column field="feed_version_count" label="Versions" width="20">
-              {{ props.row.feed_versions_aggregate.aggregate.count }}
+              {{ 0 }}
             </b-table-column>
           </template>
         </b-table>
@@ -35,7 +35,7 @@ export default {
   mixins: [mapMixin],
   data () {
     return {
-      ents: [],
+      entities: [],
       count: 0,
       layer: null,
       columns: [
@@ -50,8 +50,6 @@ export default {
   mounted () {
     this.initMap()
     this.load()
-    this.map.on('moveend', this.updateBbox)
-    this.map.on('zoomend', this.updateBbox)
   },
   validate ({ params }) {
     return true
@@ -64,14 +62,14 @@ export default {
           variables: { geometry: bbox }
         })
         .then((response) => {
-          this.count = response.data.current_feeds_aggregate.aggregate.count
-          this.ents = response.data.current_feeds
+          this.count = response.data.count.aggregate.count
+          this.entities = response.data.entities
           this.draw()
         })
     },
     draw () {
       const circles = []
-      this.ents.forEach((ent) => {
+      this.entities.forEach((ent) => {
         const fs = ent.feed_state.feed_version
         if (fs && fs.geometry) {
           const coords = fs.geometry.centroid.coordinates
@@ -85,6 +83,11 @@ export default {
         }
       })
       const layer = L.featureGroup(circles).addTo(this.map)
+      if (this.layer == null) {
+        this.map.fitBounds(layer.getBounds())
+        this.map.on('moveend', this.updateBbox)
+        this.map.on('zoomend', this.updateBbox)
+      }
       this.layer = layer
     }
   },

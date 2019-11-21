@@ -39,10 +39,9 @@ export default {
     }
   },
   mounted () {
+    const initlocation = { 'type': 'Polygon', 'coordinates': [[[-123.22373986244203, 36.89701428965626], [-121.11436486244203, 36.89701428965626], [-121.11436486244203, 38.63386045533023], [-123.22373986244203, 38.63386045533023], [-123.22373986244203, 36.89701428965626]]] }
     this.initMap()
-    this.load()
-    this.map.on('moveend', this.updateBbox)
-    this.map.on('zoomend', this.updateBbox)
+    this.load(initlocation)
   },
   validate ({ params }) {
     return true
@@ -56,7 +55,7 @@ export default {
         })
         .then((response) => {
           this.count = response.data.count.aggregate.count
-          this.entities = response.data.active_agencies
+          this.entities = response.data.entities
           this.draw()
         })
     },
@@ -76,6 +75,11 @@ export default {
         }
       })
       const layer = L.featureGroup(circles).addTo(this.map)
+      if (this.layer === null) {
+        this.map.fitBounds(layer.getBounds())
+        this.map.on('moveend', this.updateBbox)
+        this.map.on('zoomend', this.updateBbox)
+      }
       this.layer = layer
     }
   },
