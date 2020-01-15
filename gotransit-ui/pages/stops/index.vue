@@ -6,8 +6,6 @@
         <template v-if="entities.length != count">
           / {{ entities.length }} filtered
         </template>
-
-        <b-table :data="entities" :columns="columns" />
       </div>
     </div>
     <div class="column">
@@ -38,12 +36,20 @@ export default {
     }
   },
   mounted () {
-    const initlocation = { type: 'Polygon', coordinates: [[[-122.36889839172365, 47.579536520842055], [-122.30298042297365, 47.579536520842055], [-122.30298042297365, 47.625834810279464], [-122.36889839172365, 47.625834810279464], [-122.36889839172365, 47.579536520842055]]] }
+    const initlocation = {
+      type: 'Polygon',
+      coordinates: [
+        [
+          [-122.58819580078126, 37.520618678869305],
+          [-122.06085205078126, 37.520618678869305],
+          [-122.06085205078126, 37.95502661288625],
+          [-122.58819580078126, 37.95502661288625],
+          [-122.58819580078126, 37.520618678869305]
+        ]
+      ]
+    }
     this.initMap()
     this.load(initlocation)
-  },
-  validate ({ params }) {
-    return true
   },
   methods: {
     load (bbox) {
@@ -53,7 +59,7 @@ export default {
           variables: { geometry: bbox }
         })
         .then((response) => {
-          this.count = 0 // response.data.count.aggregate.count
+          this.count = 0
           this.entities = response.data.entities
           this.draw()
         })
@@ -70,13 +76,18 @@ export default {
           }).bindPopup(ent.stop_name)
         )
       })
-      const layer = L.featureGroup(circles).addTo(this.map)
-      if (this.layer == null) {
-        this.map.fitBounds(layer.getBounds())
+      if (this.layer) {
+        this.layer.clearLayers()
+        // this.layer.addLayer(circles)
+        circles.forEach((c) => {
+          this.layer.addLayer(c)
+        })
+      } else {
+        this.layer = L.featureGroup(circles).addTo(this.map)
+        // this.map.fitBounds(this.layer.getBounds())
         this.map.on('moveend', this.updateBbox)
         this.map.on('zoomend', this.updateBbox)
       }
-      this.layer = layer
     }
   },
   apolloProvider

@@ -13,7 +13,7 @@ export default {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      { rel: 'stylesheet', href: 'https://unpkg.com/leaflet@1.2.0/dist/leaflet.css' }
+      { rel: 'stylesheet', href: 'https://api.tiles.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.css' }
     ]
   },
   /*
@@ -29,8 +29,8 @@ export default {
   /*
   ** Plugins to load before mounting the App
   */
- plugins: ['~/plugins/global.js'],
- /*
+  plugins: ['~/plugins/global.js'],
+  /*
   ** Nuxt.js dev-modules
   */
   buildModules: [
@@ -44,7 +44,7 @@ export default {
     // Doc: https://buefy.github.io/#/documentation
     'nuxt-buefy',
     // Doc: https://axios.nuxtjs.org/usage
-    '@nuxtjs/axios',
+    '@nuxtjs/axios'
   ],
   /*
   ** Axios module configuration

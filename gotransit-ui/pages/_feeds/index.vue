@@ -12,9 +12,6 @@
             <b-table-column field="onestop_id" label="ID">
               {{ props.row.onestop_id }}
             </b-table-column>
-            <b-table-column field="feed_version_count" label="Versions" width="20">
-              {{ 0 }}
-            </b-table-column>
           </template>
         </b-table>
       </div>
@@ -84,7 +81,7 @@ export default {
       })
       const layer = L.featureGroup(circles).addTo(this.map)
       if (this.layer == null) {
-        this.map.fitBounds(layer.getBounds())
+        this.map.fitBounds(layer.getBounds(), { animate: false, noMoveStart: true })
         this.map.on('moveend', this.updateBbox)
         this.map.on('zoomend', this.updateBbox)
       }
