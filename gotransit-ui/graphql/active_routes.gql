@@ -1,9 +1,0 @@
-query active_routes($agency_id: Int){
-  active_routes(where: {agency_id: {_eq: $agency_id}}) {
-    route_short_name
-    route_long_name
-    agency {
-      agency_name
-    }
-  }
-}

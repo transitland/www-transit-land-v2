@@ -48,14 +48,9 @@ export default {
           to: '/feeds'
         },
         {
-          title: 'Agencies',
+          title: 'Map',
           icon: 'lightbulb',
-          to: { name: 'agencies' }
-        },
-        {
-          title: 'Stops',
-          icon: 'lightbulb',
-          to: { name: 'stops' }
+          to: { name: 'map' }
         }
       ]
     }

@@ -1,0 +1,73 @@
+query route($feed_onestop_id: String!, $route_id: String!) {
+  gtfs_routes(limit: 1, where: {feed_version: {current_feed: {onestop_id: {_eq: $feed_onestop_id}}}, route_id: {_eq: $route_id}}) {
+    id
+    agency {
+      id
+      agency_name
+      agency_url
+    }
+    feed_version {
+      id
+      sha1
+      current_feed {
+        id
+        onestop_id
+      }
+    }
+    route_id
+    route_color
+    route_desc
+    route_long_name
+    route_short_name
+    route_sort_order
+    route_text_color
+    route_type
+    route_url
+    route_stops {
+      stop {
+        id
+        stop_name
+        stop_url
+        wheelchair_boarding
+        geometry
+      }
+    }
+    trip_shapes: trips(distinct_on:shape_id){
+      shape {
+        id
+        geometry
+      }
+    }
+    trip_headsigns: trips(distinct_on: stop_pattern_id) {
+      id
+      direction_id
+      trip_headsign
+      stop_pattern_id
+      stop_times {
+        id
+        timepoint
+        stop_sequence
+        stop_id
+      }
+    }
+    trip_calendars: trips(distinct_on: service_id) {
+      calendar {
+        id
+        service_id
+        friday
+        monday
+        saturday
+        wednesday
+        thursday
+        tuesday
+        start_date
+        sunday
+        end_date
+        calendar_dates {
+          date
+          exception_type
+        }
+      }
+    }
+  }
+}

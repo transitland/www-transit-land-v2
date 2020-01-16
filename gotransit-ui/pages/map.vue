@@ -1,7 +1,7 @@
 <template>
   <div class="columns">
-    <div class="column is-two-fifths">
-      <div style="padding:20px">
+    <div class="column is-one-quarter">
+      <div style="padding:10px">
         <div :key="agency" v-for="(routes,agency) in agencyFeatures">
           <strong>{{ agency }}</strong>
           <template v-if="hovering.length > 20">
@@ -9,7 +9,11 @@
           </template>
           <template v-else>
             <div :key="route.id" v-for="route in routes">
-              {{ route.route_short_name || route.route_long_name }}
+              <b-icon icon="bus" />
+              {{ route.route_short_name }}
+              <div>
+                {{ route.route_long_name }}
+              </div>
             </div>
           </template>
         </div>
@@ -64,12 +68,12 @@ const routelayers = [
   {
     name: 'rail-outline',
     filter: ['all', ['==', 'route_type', 2]],
-    paint: { 'line-opacity': 1.0, 'line-width': 3.0, 'line-gap-width': 1.0, 'line-color': colors.railoutline }
+    paint: { 'line-width': 3.0, 'line-gap-width': 1.0, 'line-color': colors.railoutline }
   },
   {
     name: 'rail',
     filter: ['all', ['<', 'route_type', 3]],
-    paint: { 'line-opacity': 1.0, 'line-width': 3.0, 'line-color': colors.rail }
+    paint: { 'line-width': 3.0, 'line-color': colors.rail }
   },
 
   // BUS LOW AND UNKNOWN
@@ -98,32 +102,23 @@ const routelayers = [
   {
     name: 'tram-outline',
     filter: ['all', ['==', 'route_type', 0]],
-    paint: { 'line-opacity': 1.0, 'line-width': 3.0, 'line-gap-width': 1.0, 'line-color': colors.tramoutline }
+    paint: { 'line-width': 3.0, 'line-gap-width': 1.0, 'line-color': colors.tramoutline }
   },
   {
     name: 'tram',
     filter: ['all', ['==', 'route_type', 0]],
-    paint: {
-      'line-opacity': 1.0,
-      'line-width': 3.0,
-      'line-color': [
-        'match',
-        ['get', 'route_color'],
-        '', colors.tram,
-        ['get', 'route_color']
-      ]
-    }
+    paint: { 'line-width': 3.0, 'line-color': ['coalesce', ['get', 'route_color'], colors.tram] }
   },
   // METRO
   {
     name: 'metro-outline',
     filter: ['all', ['==', 'route_type', 1]],
-    paint: { 'line-opacity': 1.0, 'line-width': 3.0, 'line-gap-width': 1.0, 'line-color': colors.metrooutline }
+    paint: { 'line-width': 3.0, 'line-gap-width': 1.0, 'line-color': colors.metrooutline }
   },
   {
     name: 'metro',
     filter: ['all', ['==', 'route_type', 1]],
-    paint: { 'line-opacity': 1.0, 'line-width': 3.0, 'line-color': ['get', 'route_color'] }
+    paint: { 'line-width': 3.0, 'line-color': ['coalesce', ['get', 'route_color'], colors.metro] }
   },
   // OTHER
   {

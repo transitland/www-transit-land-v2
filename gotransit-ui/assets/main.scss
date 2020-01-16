@@ -29,6 +29,19 @@ $link-focus-border: $primary;
 
 //////////////
 
+.route-icon {
+    display:inline-block;
+    padding:4px;
+    padding-left:10px;
+    padding-right:10px;
+    margin-left:10px;
+    margin-right:10px;
+    border:solid 1px #666;
+    border-radius:6px;
+}
+.route-icon i {
+}
+
 .entity-box {
     margin:5px;
     padding:5px;
@@ -58,14 +71,14 @@ th, td {
     height: 40px;
   }
 
-  .entity {
-      border-top: solid 1px #ccc;
-      margin-top:10px;
-      padding-top:10px;
-  }
+.entity {
+    border-top: solid 1px #ccc;
+    margin-top:10px;
+    padding-top:10px;
+}
 
-  td[data-label="ID"] {
+td[data-label="ID"] {
     max-width: 40px;
     white-space: nowrap;
     overflow-x: hidden;
-  }
+}

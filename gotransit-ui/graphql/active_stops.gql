@@ -1,7 +1,0 @@
-query active_stops($geometry: geography) {
-  entities: active_stops(limit: 1000, where: {geometry: {_st_intersects: $geometry}}) {
-    id
-    stop_name
-    geometry
-  }
-}
