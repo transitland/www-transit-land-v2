@@ -44,7 +44,9 @@ export default {
     // Doc: https://buefy.github.io/#/documentation
     'nuxt-buefy',
     // Doc: https://axios.nuxtjs.org/usage
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    // https://github.com/nuxt-community/apollo-module
+    '@nuxtjs/apollo'
   ],
   /*
   ** Axios module configuration

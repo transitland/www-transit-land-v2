@@ -3,13 +3,17 @@
     <div class="column is-one-third">
       <div id="mapelem" ref="mapelem" />
 
-      <b-datepicker
-        :events="serviceDates"
-        :nearby-month-days="false"
-        size="is-small"
-        indicators="bars"
-        inline
-      />
+      <div style="margin-left:40px;margin-top:20px;">
+        <b-datepicker
+          :events="serviceDates"
+          :nearby-month-days="false"
+          :focusable="false"
+          v-model="selectDate"
+          size="is-small"
+          indicators="bars"
+          inline
+        />
+      </div>
     </div>
 
     <div class="column is-two-thirds">
@@ -18,32 +22,29 @@
       </h2>
 
       <h1 class="title">
-        <b-icon icon="bus" size="is-small" />
-        <span class="route-icon">
-          {{ entity.route_short_name }}
-        </span>
-        {{ entity.route_long_name }}
+        <route-icon :routeType="entity.route_type" :routeShortName="entity.route_short_name" :routeLongName="entity.route_long_name" />
         <a :href="entity.route_url"><b-icon icon="link" /></a>
       </h1>
 
-      <div>{{ entity.route_desc }}</div>
+      <nuxt-child :entity="entity" v-if="entity.id" />
 
-      <route-patterns :tripHeadsigns="entity.trip_headsigns" :stops="entity.route_stops" />
+      <div>{{ entity.route_desc }}</div>
     </div>
   </div>
 </template>
 
 <script>
 import apolloProvider from '~/graphql'
-import RoutePatterns from '~/components/route_patterns'
+import RouteIcon from '~/components/route_icon'
 const mapboxgl = require('mapbox-gl/dist/mapbox-gl.js')
 
 export default {
-  components: { RoutePatterns },
+  components: { RouteIcon },
   data () {
     return {
       entity: { agency: { routes: [] }, trip_calendars: [], trip_headsigns: [] },
-      map: null
+      map: null,
+      selectDate: null
     }
   },
   computed: {
@@ -93,29 +94,36 @@ export default {
       return Array.from(serviceDates)
     }
   },
+  watch: {
+    selectDate () {
+      this.$router.push({
+        name: 'feeds-feed-version-routes-route-trips-date',
+        params: {
+          feed: this.$route.params.feed,
+          version: this.$route.params.version,
+          route: this.$route.params.route,
+          date: this.selectDate.toISOString().substr(0, 10)
+        }
+      })
+    }
+  },
   mounted () {
     this.load()
   },
   methods: {
-    sortByKey (array, key) {
-      return array.sort(function (a, b) {
-        const x = a[key]; const y = b[key]
-        return ((x < y) ? -1 : ((x > y) ? 1 : 0))
-      })
-    },
     load () {
-      this.initMap()
       this.$apollo
         .query({
           query: require('~/graphql/route_details.gql'),
           variables: {
-            feed_onestop_id: 'AC', // this.$route.query.feed,
-            route_id: '20'
+            feed_onestop_id: this.$route.params.feed,
+            route_id: this.$route.params.route
           }
         })
         .then((response) => {
           this.entity = response.data.gtfs_routes[0]
-          this.drawMap()
+          this.route_id = this.entity.id
+          this.initMap()
         })
     },
     drawMap () {
@@ -144,14 +152,14 @@ export default {
         type: 'geojson',
         data: { type: 'FeatureCollection', features: shapes }
       })
-      // const coordinates = stops.map((s) => { return s.geometry.coordinates })
-      // const bounds = stops.reduce(function (bounds, coord) {
-      //   return bounds.extend(coord)
-      // }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]))
-      // this.map.fitBounds(bounds, {
-      //   duration: 0,
-      //   padding: 20
-      // })
+      const coordinates = stops.map((s) => { return s.geometry.coordinates })
+      const bounds = coordinates.reduce(function (bounds, coord) {
+        return bounds.extend(coord)
+      }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]))
+      this.map.fitBounds(bounds, {
+        duration: 0,
+        padding: 20
+      })
       // ----------
       this.map.addLayer({
         id: 'shapes-outline',
@@ -217,6 +225,7 @@ export default {
           ]
         }
       })
+      this.map.on('load', this.drawMap)
     }
   },
   apolloProvider

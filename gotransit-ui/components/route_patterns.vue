@@ -14,6 +14,13 @@
 export default {
   props: ['tripHeadsigns', 'stops'],
   computed: {
+    // sortedTripHeadsigns () {
+    //   let ret = {};
+    //   for (const [k,v] of Object.entries(this.tripHeadsigns)) {
+    //     ret[k] =
+    //   }
+    //   return ret
+    // },
     stopNames () {
       const stopNames = {}
       for (const stop of this.stops) {

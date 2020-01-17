@@ -29,6 +29,12 @@ $link-focus-border: $primary;
 
 //////////////
 
+
+.datepicker .dropdown-content {
+    box-shadow:none !important;
+}
+  
+
 .route-icon {
     display:inline-block;
     padding:4px;
