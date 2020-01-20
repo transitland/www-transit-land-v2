@@ -1,14 +1,8 @@
 <template>
-  <b-navbar :fixedTop="fixedTop" class="navbar has-shadow is-light" role="navigation" aria-label="main navigation">
+  <b-navbar class="navbar has-shadow is-light" role="navigation" aria-label="main navigation">
     <template slot="brand">
       <a class="navbar-item" href="/">
         <div class="logo-image" />
-      </a>
-
-      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-        <span aria-hidden="true" />
-        <span aria-hidden="true" />
-        <span aria-hidden="true" />
       </a>
     </template>
 
@@ -19,21 +13,19 @@
         </nuxt-link>
       </b-navbar-item>
 
-      <b-navbar-dropdown label="Info">
-        <b-navbar-item href="#">
-          About
-        </b-navbar-item>
-        <b-navbar-item href="#">
-          Contact
-        </b-navbar-item>
-      </b-navbar-dropdown>
+      <b-navbar-item href="#">
+        About
+      </b-navbar-item>
+
+      <b-navbar-item href="#">
+        Contact
+      </b-navbar-item>
     </template>
   </b-navbar>
 </template>
 
 <script>
 export default {
-  props: ['fixedTop'],
   data () {
     return {
       items: [

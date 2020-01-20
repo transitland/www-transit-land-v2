@@ -1,6 +1,19 @@
 <template>
   <div class="columns">
-    <div class="column is-one-third">
+    <div class="column is-two-thirds">
+      <h2 class="subtitle">
+        {{ route.agency.agency_name }}
+      </h2>
+      <h1 class="title">
+        <route-icon :routeType="route.route_type" :routeShortName="route.route_short_name" :routeLongName="route.route_long_name" />
+        <a :href="route.route_url"><b-icon icon="link" /></a>
+      </h1>
+
+      <nuxt-child :route="route" v-if="route.id" />
+      <div>{{ route.route_desc }}</div>
+    </div>
+
+    <div class="column is-one-third" style="width:400px">
       <div id="mapelem" ref="mapelem" />
 
       <div style="margin-left:40px;margin-top:20px;">
@@ -15,46 +28,35 @@
         />
       </div>
     </div>
-
-    <div class="column is-two-thirds">
-      <h2 class="subtitle">
-        {{ entity.agency.agency_name }}
-      </h2>
-
-      <h1 class="title">
-        <route-icon :routeType="entity.route_type" :routeShortName="entity.route_short_name" :routeLongName="entity.route_long_name" />
-        <a :href="entity.route_url"><b-icon icon="link" /></a>
-      </h1>
-
-      <nuxt-child :entity="entity" v-if="entity.id" />
-
-      <div>{{ entity.route_desc }}</div>
-    </div>
   </div>
 </template>
 
 <script>
-import apolloProvider from '~/graphql'
-import RouteIcon from '~/components/route_icon'
 const mapboxgl = require('mapbox-gl/dist/mapbox-gl.js')
 
+function dateSplit (value) {
+  const a = value.split('-').map((i) => { return parseInt(i) })
+  return [a[0], a[1] - 1, a[2]]
+}
+
 export default {
-  components: { RouteIcon },
   data () {
     return {
-      entity: { agency: { routes: [] }, trip_calendars: [], trip_headsigns: [] },
       map: null,
       selectDate: null
     }
   },
   computed: {
+    route () {
+      return this.gtfs_routes[0]
+    },
     serviceDates () {
       const serviceDates = new Set()
-      for (const tc of this.entity.trip_calendars) {
+      for (const tc of this.route.trip_calendars) {
         const cal = tc.calendar
         const calDates = new Set()
-        let start = new Date(cal.start_date)
-        const end = new Date(cal.end_date)
+        let start = new Date(...dateSplit(cal.start_date))
+        const end = new Date(...dateSplit(cal.end_date))
         while (start <= end) {
           const dow = start.getDay()
           let add = false
@@ -74,24 +76,23 @@ export default {
             add = true
           }
           if (add === true) {
-            calDates.add(new Date(start))
+            calDates.add(start.toISOString().substr(0, 10))
           }
           const newDate = start.setDate(start.getDate() + 1)
           start = new Date(newDate)
         }
         for (const cd of tc.calendar.calendar_dates) {
-          const d = new Date(cd.date)
           if (cd.exception_type === 1) {
-            calDates.add(new Date(d))
+            calDates.add(cd.date)
           } else if (cd.exception_type === 2) {
-            calDates.delete(d)
+            calDates.delete(cd.date)
           }
         }
         for (const d of calDates) {
           serviceDates.add(d)
         }
       }
-      return Array.from(serviceDates)
+      return Array.from(serviceDates).map((d) => { return new Date(...dateSplit(d)) })
     }
   },
   watch: {
@@ -107,28 +108,55 @@ export default {
       })
     }
   },
+  asyncData (context) {
+    const client = context.app.apolloProvider.defaultClient
+    return client.query({
+      query: require('~/graphql/route_details.gql'),
+      variables: {
+        feed_onestop_id: context.route.params.feed,
+        route_id: context.route.params.route
+      }
+    })
+      .then(({ data }) => {
+        return data
+      })
+  },
   mounted () {
-    this.load()
+    this.initMap()
   },
   methods: {
-    load () {
-      this.$apollo
-        .query({
-          query: require('~/graphql/route_details.gql'),
-          variables: {
-            feed_onestop_id: this.$route.params.feed,
-            route_id: this.$route.params.route
-          }
-        })
-        .then((response) => {
-          this.entity = response.data.gtfs_routes[0]
-          this.route_id = this.entity.id
-          this.initMap()
-        })
+    initMap () {
+      this.map = new mapboxgl.Map({
+        container: this.$refs.mapelem,
+        style: {
+          'version': 8,
+          'sources': {
+            'raster-tiles': {
+              'type': 'raster',
+              'tiles': [
+                'https://0.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{scale}.png'
+              ],
+              'tileSize': 256,
+              'attribution':
+                        'Transitland | Interline | &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>'
+            }
+          },
+          'layers': [
+            {
+              'id': 'simple-tiles',
+              'type': 'raster',
+              'source': 'raster-tiles',
+              'minzoom': 0,
+              'maxzoom': 22
+            }
+          ]
+        }
+      })
+      this.map.on('load', this.drawMap)
     },
     drawMap () {
       const stops = []
-      for (const stop of this.entity.route_stops) {
+      for (const stop of this.route.route_stops) {
         stops.push({
           type: 'Feature',
           geometry: stop.stop.geometry,
@@ -141,7 +169,7 @@ export default {
       })
 
       const shapes = []
-      for (const shape of this.entity.trip_shapes) {
+      for (const shape of this.route.trip_shapes) {
         shapes.push({
           type: 'Feature',
           geometry: shape.shape.geometry,
@@ -197,44 +225,14 @@ export default {
           'circle-color': '#B42222'
         }
       })
-    },
-    initMap () {
-      this.map = new mapboxgl.Map({
-        container: this.$refs.mapelem,
-        style: {
-          'version': 8,
-          'sources': {
-            'raster-tiles': {
-              'type': 'raster',
-              'tiles': [
-                'https://0.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{scale}.png'
-              ],
-              'tileSize': 256,
-              'attribution':
-                        'Transitland | Interline | &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>'
-            }
-          },
-          'layers': [
-            {
-              'id': 'simple-tiles',
-              'type': 'raster',
-              'source': 'raster-tiles',
-              'minzoom': 0,
-              'maxzoom': 22
-            }
-          ]
-        }
-      })
-      this.map.on('load', this.drawMap)
     }
-  },
-  apolloProvider
+  }
 }
 </script>
 
 <style scoped>
 #mapelem {
   width: 100%;
-  height: 340px;
+  height: 320px;
 }
 </style>

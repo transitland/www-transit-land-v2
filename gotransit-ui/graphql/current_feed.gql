@@ -21,6 +21,7 @@ query current_feeds($onestop_id: String) {
         id
         routes {
           id
+          route_id
           route_type
           route_short_name
           route_long_name

@@ -54,6 +54,18 @@ export default {
   */
   axios: {
   },
+  /* APOLLO */
+  apollo: {
+    clientConfigs: {
+      default: {
+        // httpEndpoint: 'http://localhost:8080/v1/graphql',
+        httpEndpoint: 'http://api.transit.land/api/v2/graphql',
+        httpLinkOptions: {
+          credentials: 'same-origin'
+        }
+      }
+    }
+  },
   /*
   ** Build configuration
   */
@@ -61,12 +73,5 @@ export default {
     /*
     ** You can extend webpack config here
     */
-    extend (config, ctx) {
-      config.module.rules.push({
-        test: /\.(graphql|gql)$/,
-        exclude: /node_modules/,
-        loader: 'graphql-tag/loader'
-      })
-    }
   }
 }

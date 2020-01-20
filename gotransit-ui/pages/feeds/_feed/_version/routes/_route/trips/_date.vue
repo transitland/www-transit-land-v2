@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-tabs>
+    <b-tabs v-if="!this.$apollo.loading">
       <b-tab-item v-if="inboundTrips.length === 0 && outboundTrips.length === 0" label="No scheduled service">
         There are no scheduled trips on {{ serviceDate }}.
       </b-tab-item>
@@ -73,15 +73,32 @@
 
 <script>
 export default {
-  props: ['entity'],
+  props: ['route'],
   data () {
     return {
-      trips: [],
       defaultSort: ['first_departure_time', 'asc'],
       serviceDate: this.$route.params.date
     }
   },
   computed: {
+    trips () {
+      const trips = []
+      for (const c of this.services_on_date || []) {
+        for (const trip of c.trips || []) {
+          trips.push({
+            id: trip.id,
+            direction_id: trip.direction_id,
+            trip_headsign: trip.trip_headsign,
+            first_departure_time: trip.first_stop_time[0].departure_time,
+            last_arrival_time: trip.last_stop_time[0].arrival_time,
+            stop_times_count: trip.stop_times_aggregate.aggregate.count,
+            first_stop_name: trip.first_stop_time[0].stop.stop_name,
+            last_stop_name: trip.last_stop_time[0].stop.stop_name
+          })
+        }
+      }
+      return trips
+    },
     inboundTrips () {
       return this.trips.filter((t) => { return t.direction_id === 0 }).sort((a, b) => { return a.first_departure_time - b.first_departure_time })
     },
@@ -89,38 +106,16 @@ export default {
       return this.trips.filter((t) => { return t.direction_id === 1 }).sort((a, b) => { return a.first_departure_time - b.first_departure_time })
     }
   },
-  mounted () {
-    this.load()
-  },
-  methods: {
-    load () {
-      this.$apollo
-        .query({
-          query: require('~/graphql/route_trips.gql'),
-          variables: {
-            route_id: this.entity.id,
-            feed_version_id: this.entity.feed_version_id,
-            service_date: this.$route.params.date
-          }
-        })
-        .then((response) => {
-          const trips = []
-          for (const c of response.data.services_on_date) {
-            for (const trip of c.trips) {
-              trips.push({
-                id: trip.id,
-                direction_id: trip.direction_id,
-                trip_headsign: trip.trip_headsign,
-                first_departure_time: trip.first_stop_time[0].departure_time,
-                last_arrival_time: trip.last_stop_time[0].arrival_time,
-                stop_times_count: trip.stop_times_aggregate.aggregate.count,
-                first_stop_name: trip.first_stop_time[0].stop.stop_name,
-                last_stop_name: trip.last_stop_time[0].stop.stop_name
-              })
-            }
-          }
-          this.trips = trips
-        })
+  apollo: {
+    services_on_date: {
+      query: require('~/graphql/route_trips.gql'),
+      variables () {
+        return {
+          route_id: this.route.id,
+          feed_version_id: this.route.feed_version_id,
+          service_date: this.$route.params.date
+        }
+      }
     }
   }
 }

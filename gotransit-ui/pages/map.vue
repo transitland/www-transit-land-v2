@@ -1,31 +1,36 @@
 <template>
-  <div class="columns">
-    <div class="column is-one-quarter">
-      <div style="padding:10px">
-        <div :key="agency" v-for="(routes,agency) in agencyFeatures">
-          <strong>{{ agency }}</strong>
-          <template v-if="hovering.length > 20">
-            <div>{{ Object.keys(routes).length }} routes</div>
-          </template>
-          <template v-else>
-            <div :key="route.id" v-for="route in routes">
-              <b-icon icon="bus" />
-              {{ route.route_short_name }}
-              <div>
-                {{ route.route_long_name }}
-              </div>
-            </div>
-          </template>
-        </div>
+  <div>
+    <div id="map" ref="mapelem" class="map" />
+
+    <div class="is-hidden-mobile">
+      <div class="map-agencies">
+        <route-select :agencyFeatures="agencyFeatures" :collapse="true" />
       </div>
     </div>
-    <div class="column">
-      <div id="map" ref="mapelem" class="map" />
-    </div>
+
+    <b-modal
+      :active.sync="isComponentModalActive"
+      :can-cancel="true"
+      has-modal-card
+      full-screen
+    >
+      <div v-if="isComponentModalActive" class="modal-card" style="width: auto">
+        <header class="modal-card-head">
+          <p class="modal-card-title">
+            Select Route
+          </p>
+        </header>
+        <section class="modal-card-body">
+          <route-select :agencyFeatures="agencyFeatures" />
+        </section>
+      </div>
+    </b-modal>
   </div>
 </template>
 
 <script>
+
+import routeSelect from '~/components/route-select'
 const mapboxgl = require('mapbox-gl/dist/mapbox-gl.js')
 
 const headways = {
@@ -142,11 +147,13 @@ const routelayers = [
 /// ///////
 
 export default {
+  components: { routeSelect },
   layout: 'map',
   data () {
     return {
       map: null,
       hovering: [],
+      isComponentModalActive: false,
       agencyFeatures: {}
     }
   },
@@ -187,8 +194,9 @@ export default {
       })
       this.map.addControl(new mapboxgl.NavigationControl())
       this.map.on('mousemove', this.mapMouseMove)
-      this.map.on('moveend', this.mapMoveEnd)
+      // this.map.on('moveend', this.mapMoveEnd)
       this.map.on('load', this.mapLoad)
+      this.map.on('click', 'route-active', this.mapClick)
     },
     mapLoad () {
       const map = this.map
@@ -238,6 +246,9 @@ export default {
         }
       )
     },
+    mapClick (e) {
+      this.isComponentModalActive = true
+    },
     mapMouseMove (e) {
       const map = this.map
       const features = map.queryRenderedFeatures(e.point, { layers: ['route-active'] })
@@ -249,10 +260,12 @@ export default {
         )
       }
       this.hovering = []
-      const agencyFeatures = {}
       for (const v of features) {
         this.hovering.push(v.id)
         map.setFeatureState({ source: 'routes', sourceLayer: 'routes', id: v.id }, { hover: true })
+      }
+      const agencyFeatures = {}
+      for (const v of features) {
         const agencyId = v.properties.agency_name
         const routeId = v.properties.route_id
         if (agencyFeatures[agencyId] == null) {
@@ -278,9 +291,14 @@ export default {
 }
 </script>
 
-<style>
-#map {
-    width: 100%;
-    height: 600px;
+<style scoped>
+.map-agencies {
+  position:absolute;
+  top:80px;
+  left:0px;
+  background:#ffffff;
+  width:400px;
+  overflow-x:hidden;
+  opacity:0.5;
 }
 </style>

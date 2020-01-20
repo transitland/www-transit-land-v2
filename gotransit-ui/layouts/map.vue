@@ -1,6 +1,6 @@
 <template>
   <div>
-    <tlnav :fixed-top="true" />
+    <tlnav />
     <section class="main-content">
       <nuxt />
     </section>

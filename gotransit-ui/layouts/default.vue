@@ -2,7 +2,7 @@
   <div>
     <tlnav />
     <section class="main-content columns">
-      <div class="container column is-10" style="margin-top:20px;">
+      <div class="container column is-10" style="margin-top:20px">
         <nuxt />
       </div>
     </section>
