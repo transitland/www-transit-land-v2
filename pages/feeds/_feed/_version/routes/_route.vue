@@ -4,9 +4,8 @@
       <h2 class="subtitle">
         {{ route.agency.agency_name }}
       </h2>
-      <h1 class="title">
-        <route-icon :routeType="route.route_type" :routeShortName="route.route_short_name" :routeLongName="route.route_long_name" />
-        <a :href="route.route_url"><b-icon icon="link" /></a>
+      <h1 class="title" style="margin-top:20px;">
+        <route-icon :routeLink="route.route_url" :routeType="route.route_type" :routeShortName="route.route_short_name" :routeLongName="route.route_long_name" />
       </h1>
 
       <nuxt-child :route="route" v-if="route.id" />

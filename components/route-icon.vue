@@ -12,12 +12,13 @@
     </span>
     <span v-if="routeLongName" class="route-icon-long-name">
       {{ routeLongName }}
+      <a :href="routeLink" v-if="routeLink"><b-icon icon="link" /></a>
     </span>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['routeType', 'routeShortName', 'routeLongName']
+  props: ['routeType', 'routeShortName', 'routeLongName', 'routeLink']
 }
 </script>
