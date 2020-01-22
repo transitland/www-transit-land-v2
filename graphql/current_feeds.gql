@@ -1,21 +1,29 @@
-query current_feeds($onestop_id: String, $geometry: geography) {
-  count: current_feeds_aggregate {
-    aggregate {
-      count
-    }
-  }
-  entities: current_feeds(order_by: {id: asc}, where: {feed_state: {_or: [{feed_version_id: {_is_null: true}}, {feed_version: {geometry: {centroid: {_st_intersects: $geometry}}}}]}}) {
-    id
+{
+  current_feeds(order_by: {id: asc}, where: {spec: {_eq: "gtfs"}}) {
     onestop_id
+    feed_versions_aggregate {
+      aggregate {
+        count
+      }
+    }
     feed_state {
+      feed_version {
+        feed_version_gtfs_import {
+          id
+          created_at
+        }
+      }
       last_fetch_error
       last_fetched_at
       last_successful_fetch_at
-      feed_version {
-        geometry {
-          centroid
-        }
-        id
+    }
+    import_errors: feed_versions(where: {feed_version_gtfs_import: {success: {_eq: false}, in_progress: {_eq: false}}}, order_by: {id: desc}) {
+      id
+      feed_version_gtfs_import {
+        created_at
+        success
+        in_progress
+        exception_log
       }
     }
   }

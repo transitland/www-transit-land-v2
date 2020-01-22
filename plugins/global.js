@@ -1,11 +1,9 @@
 import Vue from 'vue'
-import VueAffix from 'vue-affix'
 import RouteIcon from '~/components/route-icon'
 
 Vue.use(require('vue-moment'))
 
 Vue.component('route-icon', RouteIcon)
-Vue.use(VueAffix)
 
 Vue.filter('formatHMS', function (value) {
   value = value % (24 * 3600)

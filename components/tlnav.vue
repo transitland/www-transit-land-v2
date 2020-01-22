@@ -35,14 +35,14 @@ export default {
           to: { name: 'index' }
         },
         {
-          title: 'Feeds',
-          icon: 'lightbulb',
-          to: '/feeds'
-        },
-        {
           title: 'Map',
           icon: 'lightbulb',
           to: { name: 'map' }
+        },
+        {
+          title: 'Feeds',
+          icon: 'lightbulb',
+          to: '/feeds'
         }
       ]
     }

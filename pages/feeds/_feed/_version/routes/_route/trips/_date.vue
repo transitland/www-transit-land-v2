@@ -11,16 +11,16 @@
           The first trip departs from <a href="">{{ inboundTrips[0].first_stop_name }}</a> at {{ inboundTrips[0].first_departure_time | formatHMS }} and makes {{ inboundTrips[0].stop_times_count-1 }} stops before arriving at <a href="">{{ inboundTrips[0].last_stop_name }}</a> at {{ inboundTrips[0].last_arrival_time | formatHMS }}.
 
           The last trip departs from <a href="">{{ inboundTrips[inboundTrips.length-1].first_stop_name }}</a> at {{ inboundTrips[inboundTrips.length-1].first_departure_time | formatHMS }} and makes {{ inboundTrips[inboundTrips.length-1].stop_times_count-1 }} stops before arriving at <a href="">{{ inboundTrips[inboundTrips.length-1].last_stop_name }}</a> at {{ inboundTrips[inboundTrips.length-1].last_arrival_time | formatHMS }}.
-        </div>
+        </div><br>
 
         <b-table
           :data="inboundTrips"
           :striped="true"
-          :narrowed="true"
           :default-sort="defaultSort"
           :paginated="true"
           :pagination-simple="true"
           sort-icon="menu-up"
+          pagination-position="top"
         >
           <template slot-scope="props">
             <b-table-column :sortable="true" field="first_departure_time" label="Begin" width="120" numeric>
@@ -43,16 +43,16 @@
           The first trip departs from <a href="">{{ outboundTrips[0].first_stop_name }}</a> at {{ outboundTrips[0].first_departure_time | formatHMS }} and makes {{ outboundTrips[0].stop_times_count-1 }} stops before arriving at <a href="">{{ outboundTrips[0].last_stop_name }}</a> at {{ outboundTrips[0].last_arrival_time | formatHMS }}.
 
           The last trip departs from <a href="">{{ outboundTrips[outboundTrips.length-1].first_stop_name }}</a> at {{ outboundTrips[outboundTrips.length-1].first_departure_time | formatHMS }} and makes {{ outboundTrips[outboundTrips.length-1].stop_times_count-1 }} stops before arriving at <a href="">{{ outboundTrips[outboundTrips.length-1].last_stop_name }}</a> at {{ outboundTrips[outboundTrips.length-1].last_arrival_time | formatHMS }}.
-        </div>
+        </div><br>
 
         <b-table
           :data="outboundTrips"
           :striped="true"
-          :narrowed="true"
           :default-sort="defaultSort"
           :paginated="true"
           :pagination-simple="true"
           sort-icon="menu-up"
+          pagination-position="top"
         >
           <template slot-scope="props">
             <b-table-column :sortable="true" field="first_departure_time" label="Begin" width="120" numeric>

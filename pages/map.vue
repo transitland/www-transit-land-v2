@@ -4,7 +4,7 @@
 
     <div class="is-hidden-mobile">
       <div class="map-agencies">
-        <route-select :agencyFeatures="agencyFeatures" :collapse="true" />
+        <route-select :agency-features="agencyFeatures" :collapse="true" />
       </div>
     </div>
 
@@ -21,7 +21,7 @@
           </p>
         </header>
         <section class="modal-card-body">
-          <route-select :agencyFeatures="agencyFeatures" />
+          <route-select :agency-features="agencyFeatures" />
         </section>
       </div>
     </b-modal>
@@ -165,26 +165,26 @@ export default {
       this.map = new mapboxgl.Map({
         container: this.$refs.mapelem,
         style: {
-          'version': 8,
-          'sources': {
+          version: 8,
+          sources: {
             'raster-tiles': {
-              'type': 'raster',
-              'tiles': [
+              type: 'raster',
+              tiles: [
                 'https://0.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{scale}.png'
               ],
-              'tileSize': 256,
-              'attribution':
+              tileSize: 256,
+              attribution:
                         'Transitland | Interline | &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>'
 
             }
           },
-          'layers': [
+          layers: [
             {
-              'id': 'simple-tiles',
-              'type': 'raster',
-              'source': 'raster-tiles',
-              'minzoom': 0,
-              'maxzoom': 22
+              id: 'simple-tiles',
+              type: 'raster',
+              source: 'raster-tiles',
+              minzoom: 0,
+              maxzoom: 22
             }
           ]
         },
@@ -201,25 +201,25 @@ export default {
     mapLoad () {
       const map = this.map
       map.addSource('routes', {
-        'type': 'vector',
-        'tiles': [
+        type: 'vector',
+        tiles: [
           'http://transit.land/mbtiles/routes/tiles/{z}/{x}/{y}.pbf'
         ],
-        'minzoom': 0,
-        'maxzoom': 14
+        minzoom: 0,
+        maxzoom: 14
       }
       )
       for (const v of routelayers) {
         const l = {
-          'id': v.name,
-          'type': 'line',
-          'source': 'routes',
+          id: v.name,
+          type: 'line',
+          source: 'routes',
           'source-layer': 'routes',
-          'layout': {
+          layout: {
             'line-cap': 'round',
             'line-join': 'round'
           },
-          'paint': v.paint
+          paint: v.paint
         }
         if (v.filter != null) {
           l.filter = v.filter
@@ -228,18 +228,18 @@ export default {
       }
       map.addLayer(
         {
-          'id': 'stops',
-          'source': {
-            'type': 'vector',
-            'tiles': [
+          id: 'stops',
+          source: {
+            type: 'vector',
+            tiles: [
               'http://transit.land/mbtiles/stops/tiles/{z}/{x}/{y}.pbf'
             ],
-            'minzoom': 14,
-            'maxzoom': 14
+            minzoom: 14,
+            maxzoom: 14
           },
           'source-layer': 'stops',
-          'type': 'circle',
-          'paint': {
+          type: 'circle',
+          paint: {
             'circle-radius': 5,
             'circle-color': colors.stop
           }

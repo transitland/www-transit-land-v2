@@ -4,8 +4,8 @@
       <h2 class="subtitle">
         {{ route.agency.agency_name }}
       </h2>
-      <h1 class="title" style="margin-top:20px;">
-        <route-icon :routeLink="route.route_url" :routeType="route.route_type" :routeShortName="route.route_short_name" :routeLongName="route.route_long_name" />
+      <h1 class="title">
+        <route-icon :route-link="route.route_url" :route-type="route.route_type" :route-short-name="route.route_short_name" :route-long-name="route.route_long_name" />
       </h1>
 
       <nuxt-child :route="route" v-if="route.id" />
@@ -128,25 +128,25 @@ export default {
       this.map = new mapboxgl.Map({
         container: this.$refs.mapelem,
         style: {
-          'version': 8,
-          'sources': {
+          version: 8,
+          sources: {
             'raster-tiles': {
-              'type': 'raster',
-              'tiles': [
+              type: 'raster',
+              tiles: [
                 'https://0.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{scale}.png'
               ],
-              'tileSize': 256,
-              'attribution':
+              tileSize: 256,
+              attribution:
                         'Transitland | Interline | &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>'
             }
           },
-          'layers': [
+          layers: [
             {
-              'id': 'simple-tiles',
-              'type': 'raster',
-              'source': 'raster-tiles',
-              'minzoom': 0,
-              'maxzoom': 22
+              id: 'simple-tiles',
+              type: 'raster',
+              source: 'raster-tiles',
+              minzoom: 0,
+              maxzoom: 22
             }
           ]
         }
