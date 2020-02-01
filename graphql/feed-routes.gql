@@ -1,0 +1,14 @@
+query ($feed_version_sha1: String, $offset: Int!, $limit: Int!, $route_id: String, $route_short_name: String, $route_long_name: String) {
+  total: gtfs_routes_aggregate(where: {feed_version: {sha1: {_eq: $feed_version_sha1}}, route_id: {_ilike: $route_id}, route_short_name: {_ilike: $route_short_name}, route_long_name: {_ilike: $route_long_name}}) {
+    aggregate {
+      count
+    }
+  }
+  routes: gtfs_routes(limit: $limit, where: {feed_version: {sha1: {_eq: $feed_version_sha1}}, route_id: {_ilike: $route_id}, route_short_name: {_ilike: $route_short_name}, route_long_name: {_ilike: $route_long_name}}, order_by: {route_id: desc}, offset: $offset) {
+    id
+    route_id
+    route_short_name
+    route_long_name
+    route_url
+  }
+}

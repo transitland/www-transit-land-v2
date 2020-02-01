@@ -13,7 +13,7 @@ query current_feeds($feed_onestop_id: String) {
     other_ids
     spec
     urls
-    feed_versions {
+    feed_versions(order_by: {fetched_at: desc}) {
       id
       sha1
       earliest_calendar_date

@@ -1,0 +1,17 @@
+query ($feed_version_sha1: String, $offset: Int!, $limit: Int!, $stop_id: String, $stop_name: String) {
+  total: gtfs_stops_aggregate(where: {feed_version: {sha1: {_eq: $feed_version_sha1}}, stop_id: {_ilike: $stop_id}, stop_name: {_ilike: $stop_name}}) {
+    aggregate {
+      count
+    }
+  }
+  stops: gtfs_stops(limit: $limit, where: {feed_version: {sha1: {_eq: $feed_version_sha1}}, stop_id: {_ilike: $stop_id}, stop_name: {_ilike: $stop_name}}, order_by: {stop_id: desc}, offset: $offset) {
+    id
+    stop_id
+    stop_name
+    stop_code
+    stop_desc
+    stop_url
+    location_type
+    wheelchair_boarding
+  }
+}

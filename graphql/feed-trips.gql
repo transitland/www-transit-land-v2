@@ -1,0 +1,13 @@
+query ($feed_version_sha1: String, $offset: Int!, $limit: Int!, $trip_id: String, $trip_short_name: String, $trip_headsign: String) {
+  total: gtfs_trips_aggregate(where: {feed_version: {sha1: {_eq: $feed_version_sha1}}, trip_id: {_ilike: $trip_id}, trip_short_name: {_ilike: $trip_short_name}, , trip_headsign: {_ilike: $trip_headsign}}) {
+    aggregate {
+      count
+    }
+  }
+  trips: gtfs_trips(limit: $limit, where: {feed_version: {sha1: {_eq: $feed_version_sha1}}, trip_id: {_ilike: $trip_id}, trip_short_name: {_ilike: $trip_short_name}, trip_headsign: {_ilike: $trip_headsign}}, order_by: {trip_id: desc}, offset: $offset) {
+    id
+    trip_id
+    trip_short_name
+    trip_headsign
+  }
+}

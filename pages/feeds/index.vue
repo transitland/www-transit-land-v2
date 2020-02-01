@@ -1,12 +1,15 @@
 <template>
   <div>
     <h1 class="title">
-      {{ feeds.length }} Feeds
+      Transitland Atlas
     </h1>
 
     <div>
-      Feeds Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis pariatur suscipit necessitatibus corrupti. Doloremque natus aperiam nisi veritatis vero enim. Omnis voluptates qui natus, fugit expedita impedit laboriosam sunt iste. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Et, totam modi numquam facilis accusamus delectus. Corrupti ab dignissimos quaerat accusantium provident debitis nisi dolore quam libero, alias aspernatur quidem repellat.
-    </div><br>
+      These {{ feeds.length }} feeds are the raw data sources used by Transitland and are continually synced with the <a href="https://github.com/transitland/transitland-atlas">Transitland Atlas github repository</a>.
+      <br><br>
+      Each feed contains a list of URLs that are checked at least once per day, and a feed version record is created each time a new or updated file is found. If the request fails or produces invalid data, the error is noted and an exception icon appears in the fetched column. Newly discovered feed versions are immediately imported into the Transitland database.
+    </div>
+    <br>
 
     <b-table
       :data="feeds"
@@ -17,7 +20,7 @@
       sort-icon="menu-up"
     >
       <template slot-scope="props">
-        <b-table-column :sortable="true" field="onestop_id" label="ID">
+        <b-table-column :sortable="true" field="onestop_id" label="Feed ID">
           <nuxt-link :to="{name: 'feeds-feed', params: {feed: props.row.onestop_id}}">
             {{ props.row.onestop_id }}
           </nuxt-link>
@@ -27,7 +30,7 @@
           {{ props.row.feed_version_count }}
         </b-table-column>
 
-        <b-table-column :sortable="true" :width="150" field="last_successful_fetch_at" label="Fetched">
+        <b-table-column :sortable="true" :width="150" field="last_successful_fetch_at" label="Last Fetched">
           <span v-if="props.row.last_successful_fetch_at">
             {{ props.row.last_successful_fetch_at | moment("from","now") }}
           </span>
@@ -40,7 +43,7 @@
           </b-tooltip>
         </b-table-column>
 
-        <b-table-column :sortable="true" :width="150" field="last_successful_import_at" label="Imported">
+        <b-table-column :sortable="true" :width="150" field="last_successful_import_at" label="Last Imported">
           <span v-if="props.row.last_successful_import_at">
             {{ props.row.last_successful_import_at | moment("from","now") }}
           </span>
@@ -59,6 +62,14 @@
 
 <script>
 export default {
+  asyncData (context) {
+    const client = context.app.apolloProvider.defaultClient
+    return client.query({
+      query: require('~/graphql/current_feeds.gql')
+    }).then(({ data }) => {
+      return data
+    })
+  },
   computed: {
     feeds () {
       return this.current_feeds.map((feed) => {
@@ -81,14 +92,6 @@ export default {
         }
       })
     }
-  },
-  asyncData (context) {
-    const client = context.app.apolloProvider.defaultClient
-    return client.query({
-      query: require('~/graphql/current_feeds.gql')
-    }).then(({ data }) => {
-      return data
-    })
   }
 }
 </script>

@@ -40,9 +40,14 @@ export default {
           to: { name: 'map' }
         },
         {
-          title: 'Feeds',
+          title: 'Atlas',
           icon: 'lightbulb',
           to: '/feeds'
+        },
+        {
+          title: 'Operators',
+          icon: 'lightbulb',
+          to: '/operators'
         }
       ]
     }

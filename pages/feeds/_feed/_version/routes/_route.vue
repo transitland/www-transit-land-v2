@@ -8,7 +8,7 @@
         <route-icon :route-link="route.route_url" :route-type="route.route_type" :route-short-name="route.route_short_name" :route-long-name="route.route_long_name" />
       </h1>
 
-      <nuxt-child :route="route" v-if="route.id" />
+      <nuxt-child v-if="route.id" :route="route" />
       <div>{{ route.route_desc }}</div>
     </div>
 
@@ -17,10 +17,10 @@
 
       <div style="margin-left:40px;margin-top:20px;">
         <b-datepicker
+          v-model="selectDate"
           :events="serviceDates"
           :nearby-month-days="false"
           :focusable="false"
-          v-model="selectDate"
           size="is-small"
           indicators="bars"
           inline
@@ -39,6 +39,19 @@ function dateSplit (value) {
 }
 
 export default {
+  asyncData (context) {
+    const client = context.app.apolloProvider.defaultClient
+    return client.query({
+      query: require('~/graphql/route_details.gql'),
+      variables: {
+        feed_onestop_id: context.route.params.feed,
+        route_id: context.route.params.route
+      }
+    })
+      .then(({ data }) => {
+        return data
+      })
+  },
   data () {
     return {
       map: null,
@@ -106,19 +119,6 @@ export default {
         }
       })
     }
-  },
-  asyncData (context) {
-    const client = context.app.apolloProvider.defaultClient
-    return client.query({
-      query: require('~/graphql/route_details.gql'),
-      variables: {
-        feed_onestop_id: context.route.params.feed,
-        route_id: context.route.params.route
-      }
-    })
-      .then(({ data }) => {
-        return data
-      })
   },
   mounted () {
     this.initMap()

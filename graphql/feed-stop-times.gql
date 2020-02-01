@@ -1,0 +1,21 @@
+query ($feed_version_sha1: String!, $trip_id: String!, $offset: Int!, $limit: Int!) {
+  total: gtfs_stop_times_aggregate(where: {feed_version: {sha1: {_eq: $feed_version_sha1}}, trip: {trip_id: {_eq: $trip_id}}}) {
+    aggregate {
+      count
+    }
+  }
+  gtfs_stop_times(offset: $offset, limit: $limit, where: {feed_version: {sha1: {_eq: $feed_version_sha1}}, trip: {trip_id: {_eq: $trip_id}}}) {
+    id
+    stop_sequence
+    arrival_time
+    departure_time
+    stop_headsign
+    timepoint
+    trip {
+      trip_id
+    }
+    stop {
+      stop_id
+    }
+  }
+}

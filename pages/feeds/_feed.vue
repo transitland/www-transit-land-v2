@@ -7,11 +7,65 @@
       {{ feed.onestop_id }}
     </h1>
 
-    <div>URLs: {{ feed.urls }}</div>
-    <div>Authorization: {{ feed.authorization }}</div>
-    <div>License: {{ feed.license }}</div>
-    <div>Languages: {{ feed.languages }}</div>
-    <div>Other IDs: {{ feed.other_ids }}</div>
+    <table class="property-list">
+      <tr>
+        <td>Onestop ID</td>
+        <td>{{ feed.onestop_id }}</td>
+      </tr>
+      <tr><td>Format</td><td>{{ feed.spec }}</td></tr>
+      <tr>
+        <td>URLs</td>
+        <td>
+          <ul>
+            <li v-for="(url,key) in feed.urls" :key="key">
+              {{ key }}: <a :href="url">{{ url }}</a>
+            </li>
+          </ul>
+          </dt>
+        </td>
+      </tr>
+      <tr>
+        <td>Authorization</td>
+        <td>
+          {{ feed.authorization }}
+        </td>
+      </tr>
+      <tr>
+        <td>License</td>
+        <td>
+          <ul>
+            <li>License URL: {{ feed.license.url }}</li>
+            <li>License Identifier: {{ feed.license.spdx_identifier }}</li>
+            <li>
+              Attribution optional:
+              <span v-if="feed.license.share_alike_optional === 'yes'">Yes</span>
+              <span v-else-if="feed.license.share_alike_optional === 'no'">No</span>
+              <span v-else>Unknown</span>
+            </li>
+            <li>
+              Commercial use allowed:
+              <span v-if="feed.license.commercial_use_allowed === 'yes'">Yes</span>
+              <span v-else-if="feed.license.commercial_use_allowed === 'no'">No</span>
+              <span v-else>Unknown</span>
+            </li>
+            <li>
+              Derivitive use allowed:
+              <span v-if="feed.license.create_derived_product === 'yes'">Yes</span>
+              <span v-else-if="feed.license.create_derived_product === 'no'">No</span>
+              <span v-else>Unknown</span>
+            </li>
+            <li>Attribution instructions: {{ feed.license.attribution_instructions }}</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td>Languages</td>
+        <td>{{ feed.languages }}</td>
+      </tr><tr>
+        <td>Other IDs</td>
+        <td>{{ feed.other_ids }}</td>
+      </tr>
+    </table>
 
     <b-table
       :data="feed.feed_versions"
@@ -53,11 +107,6 @@
 
 <script>
 export default {
-  computed: {
-    feed () {
-      return this.current_feeds[0]
-    }
-  },
   asyncData (context) {
     const client = context.app.apolloProvider.defaultClient
     return client.query({
@@ -68,7 +117,26 @@ export default {
     }).then(({ data }) => {
       return data
     })
+  },
+  computed: {
+    feed () {
+      return this.current_feeds[0]
+    }
   }
 
 }
 </script>
+
+<style scoped>
+table.property-list td {
+  padding:5px;
+}
+table.property-list td:first-child {
+  padding-left:100px;
+  padding-right:20px;
+  font-weight:bold;
+  text-align:right;
+}
+table.property-list td:nth-child(2) {
+}
+</style>

@@ -1,0 +1,21 @@
+query active_agencies($city_name: String, $admin_name: String, $country_name: String) {
+  active_agencies(limit: 1000, order_by: {agency_name: asc}, where: {agency_places: {name: {_ilike: $city_name}, adm1name: {_ilike: $admin_name}, adm0name: {_ilike: $country_name}}}) {
+    id
+    agency_name
+    agency_url
+    agency_places(limit: 1, order_by: {rank: desc}, where: {name: {_is_null: false}}) {
+      name
+      adm1name
+      adm0name
+      rank
+    }
+    feed_version {
+        id
+        sha1
+        current_feed {
+            id
+            onestop_id
+        }
+    }
+  }
+}
