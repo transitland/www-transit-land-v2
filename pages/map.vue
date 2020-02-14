@@ -203,7 +203,7 @@ export default {
       map.addSource('routes', {
         type: 'vector',
         tiles: [
-          'http://transit.land/mbtiles/routes/tiles/{z}/{x}/{y}.pbf'
+          'https://transit.land/mbtiles/routes/tiles/{z}/{x}/{y}.pbf'
         ],
         minzoom: 0,
         maxzoom: 14
@@ -232,7 +232,7 @@ export default {
           source: {
             type: 'vector',
             tiles: [
-              'http://transit.land/mbtiles/stops/tiles/{z}/{x}/{y}.pbf'
+              'https://transit.land/mbtiles/stops/tiles/{z}/{x}/{y}.pbf'
             ],
             minzoom: 14,
             maxzoom: 14
