@@ -1,5 +1,10 @@
-query active_agencies($city_name: String, $admin_name: String, $country_name: String) {
-  active_agencies(limit: 1000, order_by: {agency_name: asc}, where: {agency_places: {name: {_ilike: $city_name}, adm1name: {_ilike: $admin_name}, adm0name: {_ilike: $country_name}}}) {
+query active_agencies($agency_name: String, $city_name: String, $admin_name: String, $country_name: String, $offset: Int, $limit: Int) {
+  count: active_agencies_aggregate(where: {agency_name: {_like: $agency_name}, agency_places: {name: {_ilike: $city_name}, adm1name: {_ilike: $admin_name}, adm0name: {_ilike: $country_name}}}) {
+    aggregate {
+      count
+    }
+  }
+  active_agencies(limit: $limit, offset: $offset, order_by: {agency_name: asc}, where: {agency_name: {_like: $agency_name}, agency_places: {name: {_ilike: $city_name}, adm1name: {_ilike: $admin_name}, adm0name: {_ilike: $country_name}}}) {
     id
     agency_name
     agency_url
@@ -10,12 +15,12 @@ query active_agencies($city_name: String, $admin_name: String, $country_name: St
       rank
     }
     feed_version {
+      id
+      sha1
+      current_feed {
         id
-        sha1
-        current_feed {
-            id
-            onestop_id
-        }
+        onestop_id
+      }
     }
   }
 }
