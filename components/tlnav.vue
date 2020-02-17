@@ -14,11 +14,15 @@
       </b-navbar-item>
 
       <b-navbar-item href="#">
-        About
+        Docs
       </b-navbar-item>
 
       <b-navbar-item href="#">
-        Contact
+        News
+      </b-navbar-item>
+
+      <b-navbar-item href="#">
+        About
       </b-navbar-item>
     </template>
   </b-navbar>
@@ -40,7 +44,7 @@ export default {
           to: { name: 'map' }
         },
         {
-          title: 'Atlas',
+          title: 'Feeds',
           icon: 'lightbulb',
           to: '/feeds'
         },

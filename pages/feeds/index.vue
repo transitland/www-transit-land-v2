@@ -92,6 +92,9 @@ export default {
         }
       })
     }
+  },
+  head: {
+    title: 'Browse all Feeds'
   }
 }
 </script>
