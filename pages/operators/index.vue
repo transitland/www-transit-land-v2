@@ -1,14 +1,14 @@
 <template>
   <div>
     <h1 class="title">
-      Feed Registry
+      Transitland Operators
     </h1>
 
-    <div>The Feed Registry lists all the transit operators and feeds included in Transitland. Click through to get more details about feeds associated with each operator.</div>
+    <div>This is a list of all the transit operators included in Transitland. Click through to get more details about feeds associated with each operator.</div>
 
     <br><br>
 
-    <b-field label="Search by agency name or location">
+    <b-field label="Search by operator name or location">
       <div v-if="$route.query.agency_name || $route.query.city_name || $route.query.state_name || $route.query.country_name">
         <b-tag
           size="is-medium"
@@ -40,7 +40,7 @@
       @page-change="onPageChange"
     >
       <template slot-scope="props">
-        <b-table-column field="agency_name" label="Agency Name">
+        <b-table-column field="agency_name" label="Operator Name">
           {{ props.row.agency_name }}
         </b-table-column>
         <b-table-column field="city_name" label="City" :width="200">
@@ -127,19 +127,19 @@ export default {
   },
   methods: {
     clearQuery () {
-      this.$router.push({ path: 'agencies', query: { } })
+      this.$router.push({ path: 'operators', query: { } })
     },
     onAutocomplete (a, b) {
       const q = {}
       q.page = 1
       q[a] = b
-      this.$router.push({ path: 'agencies', query: q })
+      this.$router.push({ path: 'operators', query: q })
     },
     onPageChange (page) {
       const obj = Object.assign({}, this.$route.query)
       obj.page = page
-      this.$router.push({ path: 'agencies', query: obj })
-      // this.$router.push({ path: 'agencies', query: Object.assign(this.$route.query, { page }) })
+      this.$router.push({ path: 'operators', query: obj })
+      // this.$router.push({ path: 'operators', query: Object.assign(this.$route.query, { page }) })
     },
     onSort (field, order) {
     }

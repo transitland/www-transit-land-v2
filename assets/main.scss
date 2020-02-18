@@ -2,7 +2,7 @@
 @import "~bulma/sass/utilities/_all";
 
 // Set your colors
-$primary: #666;
+$primary: #ee914b;
 $primary-invert: findColorInvert($primary);
 
 // Setup $colors to use as bulma classes (e.g. 'is-twitter')
@@ -18,6 +18,9 @@ $colors: (
     "danger": ($danger, $danger-invert),
 );
 
+// Footer
+$footer-background-color: $light;
+
 // Links
 $link: $primary;
 $link-invert: $primary-invert;
@@ -29,11 +32,16 @@ $link-focus-border: $primary;
 
 //////////////
 
-#map {
-    width: 100%;
-    height: 100vh;
+table.property-list td, table.property-list th {
+    padding:5px;
 }
-
+table.property-list td:first-child {
+    padding-right:20px;
+    font-weight:bold;
+    text-align:right;
+    width:200px;
+}
+  
 .datepicker .dropdown-content {
     box-shadow:none !important;
 }
@@ -43,16 +51,6 @@ $link-focus-border: $primary;
     padding:5px;
     border:solid 1px $primary;
 }
-
-.logo-image {
-    background: url('~assets/transitland_logo.svg');
-    background-size: contain;
-    background-repeat: no-repeat;
-    margin-left:20px;
-    margin-right:20px;
-    width: 80px;
-    height: 40px;
-  }
 
 .route-icon {
     margin-top:10px;
@@ -79,3 +77,13 @@ $link-focus-border: $primary;
     left:0px;
 }
   
+.subtitle {
+    font-size:20px;
+    clear:both;
+}
+
+.clearfix:after {
+    clear: both;
+    content: "";
+    display: table;
+}

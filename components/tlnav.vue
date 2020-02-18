@@ -12,18 +12,6 @@
           {{ item.title }}
         </nuxt-link>
       </b-navbar-item>
-
-      <b-navbar-item href="#">
-        Docs
-      </b-navbar-item>
-
-      <b-navbar-item href="#">
-        News
-      </b-navbar-item>
-
-      <b-navbar-item href="#">
-        About
-      </b-navbar-item>
     </template>
   </b-navbar>
 </template>
@@ -39,9 +27,14 @@ export default {
           to: { name: 'index' }
         },
         {
-          title: 'Map',
+          title: 'Atlas',
           icon: 'lightbulb',
-          to: { name: 'map' }
+          to: { name: 'atlas' }
+        },
+        {
+          title: 'Operators',
+          icon: 'lightbulb',
+          to: '/operators'
         },
         {
           title: 'Feeds',
@@ -49,12 +42,35 @@ export default {
           to: '/feeds'
         },
         {
-          title: 'Operators',
+          title: 'Docs',
           icon: 'lightbulb',
-          to: '/operators'
+          to: '/documentation'
+        },
+        {
+          title: 'News',
+          icon: 'lightbulb',
+          to: '/news'
         }
+
       ]
     }
   }
 }
 </script>
+
+<style scoped>
+a {
+  color: #000;
+}
+
+.logo-image {
+    background: url('~assets/transitland_logo.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-left:20px;
+    margin-right:20px;
+    width: 80px;
+    height: 40px;
+  }
+
+</style>

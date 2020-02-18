@@ -1,10 +1,7 @@
 <template>
   <div>
-    <h2 class="subtitle">
-      Feeds
-    </h2>
     <h1 class="title">
-      {{ feed.onestop_id }}
+      <a href="/feeds">Feeds</a> / {{ feed.onestop_id }}
     </h1>
 
     <table class="property-list">
@@ -80,7 +77,9 @@
           {{ props.row.fetched_at | moment("from","now") }}
         </b-table-column>
         <b-table-column :sortable="true" field="sha1" label="SHA1">
-          {{ props.row.sha1.substr(0,8) }}
+          <nuxt-link :to="{name: 'feeds-feed-versions-version', params: {feed: feed.onestop_id, version: props.row.sha1}}">
+            {{ props.row.sha1.substr(0,6) }}…
+          </nuxt-link>
         </b-table-column>
         <b-table-column :sortable="true" field="earliest_calendar_date" label="Earliest date">
           {{ props.row.earliest_calendar_date }}
@@ -123,20 +122,5 @@ export default {
       return this.current_feeds[0]
     }
   }
-
 }
 </script>
-
-<style scoped>
-table.property-list td {
-  padding:5px;
-}
-table.property-list td:first-child {
-  padding-left:100px;
-  padding-right:20px;
-  font-weight:bold;
-  text-align:right;
-}
-table.property-list td:nth-child(2) {
-}
-</style>

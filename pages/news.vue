@@ -1,3 +1,3 @@
 <template>
-  <div>Route _id</div>
+  <div>News</div>
 </template>

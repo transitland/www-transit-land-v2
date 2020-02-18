@@ -1,30 +1,40 @@
 <template>
-  <div class="columns">
-    <div class="column is-two-thirds">
-      <h2 class="subtitle">
-        {{ route.agency.agency_name }}
-      </h2>
-      <h1 class="title">
-        <route-icon :route-link="route.route_url" :route-type="route.route_type" :route-short-name="route.route_short_name" :route-long-name="route.route_long_name" />
-      </h1>
+  <div>
+    <h1 class="title">
+      <a href="/feeds">Feeds</a> /
+      <a :href="`/feeds/${$route.params.feed}`">{{ $route.params.feed }}</a> /
+      <a :href="`/feeds/${$route.params.feed}/versions/${$route.params.version}`">{{ $route.params.version.substr(0,6) }}…</a> /
+      {{ $route.params.route }}
+    </h1>
+    <div class="columns">
+      <div class="column is-two-thirds">
+        <h1 class="title">
+          <route-icon :route-link="route.route_url" :route-type="route.route_type" :route-short-name="route.route_short_name" :route-long-name="route.route_long_name" />
+        </h1>
 
-      <nuxt-child v-if="route.id" :route="route" />
-      <div>{{ route.route_desc }}</div>
-    </div>
+        <h2 class="subtitle clearfix">
+          {{ route.agency.agency_name }}
+        </h2>
 
-    <div class="column is-one-third" style="width:400px">
-      <div id="mapelem" ref="mapelem" />
+        <nuxt-child v-if="route.id" :route="route" />
 
-      <div style="margin-left:40px;margin-top:20px;">
-        <b-datepicker
-          v-model="selectDate"
-          :events="serviceDates"
-          :nearby-month-days="false"
-          :focusable="false"
-          size="is-small"
-          indicators="bars"
-          inline
-        />
+        <div>{{ route.route_desc }}</div>
+      </div>
+
+      <div class="column is-one-third" style="width:400px">
+        <div id="mapelem" ref="mapelem" />
+
+        <div style="margin-left:40px;margin-top:20px;">
+          <b-datepicker
+            v-model="selectDate"
+            :events="serviceDates"
+            :nearby-month-days="false"
+            :focusable="false"
+            size="is-small"
+            indicators="bars"
+            inline
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -42,9 +52,9 @@ export default {
   asyncData (context) {
     const client = context.app.apolloProvider.defaultClient
     return client.query({
-      query: require('~/graphql/route_details.gql'),
+      query: require('~/graphql/feed-version-route.gql'),
       variables: {
-        feed_onestop_id: context.route.params.feed,
+        feed_version_sha1: context.route.params.version,
         route_id: context.route.params.route
       }
     })
