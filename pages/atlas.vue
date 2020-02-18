@@ -147,6 +147,9 @@ const routelayers = [
 /// ///////
 
 export default {
+  header: {
+    title: 'Global Map of Transit Routes'
+  },
   components: { routeSelect },
   layout: 'map',
   data () {

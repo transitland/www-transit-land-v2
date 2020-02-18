@@ -1,7 +1,7 @@
 {
-  "name": "gotransit-ui",
+  "name": "www-transit-land-v2",
   "version": "1.0.0",
-  "description": "My epic Nuxt.js project",
+  "description": "Transitland v2 website/app for data and documentation",
   "author": "Ian Rees",
   "private": true,
   "scripts": {
