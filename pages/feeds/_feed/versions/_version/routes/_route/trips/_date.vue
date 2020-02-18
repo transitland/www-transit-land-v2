@@ -108,11 +108,11 @@ export default {
   },
   apollo: {
     services_on_date: {
-      query: require('~/graphql/route_trips.gql'),
+      query: require('~/graphql/feed-version-route-trips.gql'),
       variables () {
         return {
-          route_id: this.route.id,
-          feed_version_id: this.route.feed_version_id,
+          route_id: this.$route.params.route,
+          feed_version_id: 'abc', // this.route.feed_version_id,
           service_date: this.$route.params.date
         }
       }

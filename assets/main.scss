@@ -32,6 +32,16 @@ $link-focus-border: $primary;
 
 //////////////
 
+table.property-list td, table.property-list th {
+    padding:5px;
+}
+table.property-list td:first-child {
+    padding-right:20px;
+    font-weight:bold;
+    text-align:right;
+    width:200px;
+}
+  
 .datepicker .dropdown-content {
     box-shadow:none !important;
 }
@@ -67,3 +77,13 @@ $link-focus-border: $primary;
     left:0px;
 }
   
+.subtitle {
+    font-size:20px;
+    clear:both;
+}
+
+.clearfix:after {
+    clear: both;
+    content: "";
+    display: table;
+}

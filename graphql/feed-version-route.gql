@@ -1,5 +1,5 @@
-query route($feed_onestop_id: String!, $route_id: String!) {
-  gtfs_routes(limit: 1, where: {feed_version: {current_feed: {onestop_id: {_eq: $feed_onestop_id}}}, route_id: {_eq: $route_id}}) {
+query route($feed_version_sha1: String!, $route_id: String!) {
+  gtfs_routes(limit: 1, where: {feed_version: {sha1: {_eq: $feed_version_sha1}}, route_id: {_eq: $route_id}}) {
     feed_version_id
     id
     agency {
