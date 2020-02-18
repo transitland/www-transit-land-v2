@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 class="title">
-      Transitland Atlas
+      Transitland Feeds
     </h1>
 
     <div>

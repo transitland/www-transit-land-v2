@@ -292,6 +292,11 @@ export default {
 </script>
 
 <style scoped>
+#map {
+    width: 100%;
+    height: 100vh;
+}
+
 .map-agencies {
   position:absolute;
   top:80px;

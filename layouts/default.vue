@@ -6,13 +6,15 @@
         <nuxt />
       </div>
     </section>
+    <tlfooter />
   </div>
 </template>
 
 <script>
 import tlnav from '~/components/tlnav'
+import tlfooter from '~/components/tlfooter'
 
 export default {
-  components: { tlnav }
+  components: { tlnav, tlfooter }
 }
 </script>
