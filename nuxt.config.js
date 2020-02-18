@@ -59,7 +59,7 @@ export default {
     clientConfigs: {
       default: {
         // httpEndpoint: 'http://localhost:8080/v1/graphql',
-        httpEndpoint: 'http://api.transit.land/api/v2/graphql',
+        httpEndpoint: 'https://api.transit.land/api/v2/graphql',
         httpLinkOptions: {
           credentials: 'same-origin'
         }
