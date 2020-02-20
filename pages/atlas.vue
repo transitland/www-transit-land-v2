@@ -150,9 +150,6 @@ const routelayers = [
 /// ///////
 
 export default {
-  header: {
-    title: 'Global Map of Transit Routes'
-  },
   components: { routeSelect },
   layout: 'map',
   data () {
@@ -293,6 +290,9 @@ export default {
         document.getElementById('summary').innerHTML = `features:, ${Object.keys(count).length} agencies: ${Object.keys(agencies).length}`
       })
     }
+  },
+  head: {
+    title: 'Global Map of Transit Routes'
   }
 }
 </script>
