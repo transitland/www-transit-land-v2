@@ -25,6 +25,11 @@ export default {
     return {
       operator: {}
     }
+  },
+  head () {
+    return {
+      title: `${this.operator.operator_name} • operator details`
+    }
   }
 }
 </script>
