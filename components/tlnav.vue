@@ -1,5 +1,5 @@
 <template>
-  <b-navbar class="navbar has-shadow is-light" role="navigation" aria-label="main navigation">
+  <b-navbar class="has-shadow is-light" aria-label="main navigation" fixed-top>
     <template slot="brand">
       <a class="navbar-item" href="/">
         <div class="logo-image" />
@@ -11,6 +11,14 @@
         <nuxt-link :to="item.to">
           {{ item.title }}
         </nuxt-link>
+      </b-navbar-item>
+    </template>
+
+    <template slot="end">
+      <b-navbar-item>
+        <div class="notification is-warning content is-small">
+          Welcome to <strong>Transitland v2</strong>! We're in the process of migrating content from <a href="https://transit.land">Transitland v1</a>.
+        </div>
       </b-navbar-item>
     </template>
   </b-navbar>
@@ -73,4 +81,7 @@ a {
     height: 40px;
   }
 
+.notification {
+  padding: 0.6em;
+}
 </style>
