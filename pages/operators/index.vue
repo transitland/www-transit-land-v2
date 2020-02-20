@@ -4,9 +4,9 @@
       Transitland Operators
     </h1>
 
-    <div>This is a list of all the transit operators included in Transitland. Click through to get more details about feeds associated with each operator.</div>
-
-    <br><br>
+    <div class="content is-medium">
+      <p>Transitland uses operators to group together <a href="/feeds">feeds</a> and other relevant data. This table can be searched and sorted; click on an operator name to drill down for more information.</p>
+    </div>
 
     <b-field label="Search by operator name or location">
       <div v-if="$route.query.agency_name || $route.query.city_name || $route.query.state_name || $route.query.country_name">
@@ -30,7 +30,7 @@
       :striped="true"
       :paginated="true"
       :pagination-simple="true"
-      pagination-position="top"
+      pagination-position="both"
       sort-icon="menu-up"
       :total="total"
       :current-page="currentPage"
@@ -39,9 +39,12 @@
       @sort="onSort"
       @page-change="onPageChange"
     >
+    <!-- TODO: fix sorting -->
       <template slot-scope="props">
         <b-table-column field="agency_name" label="Operator Name">
-          {{ props.row.agency_name }}
+          <nuxt-link :to="{name: 'operators-operator', params: {operator: props.row.operator_onestop_id}}">
+            {{ props.row.agency_name }}
+          </nuxt-link>
         </b-table-column>
         <b-table-column field="city_name" label="City" :width="200">
           {{ props.row.city_name }}
@@ -55,23 +58,18 @@
       </template>
     </b-table>
 
-    <div style="margin-top:40px">
-      <b-message type="is-info">
-        <div>
-          Know a feed that's missing? <a href="https://github.com/transitland/transitland-atlas#readme" class="button" style="float:right">Add a feed</a>
-        </div>
-      </b-message>
-
-      <b-message type="is-info" has-icon>
-        December 2019 update: Feed Registry's "add a feed" function has been deprecated. This is part of the larger effort to migrate to <a href="https://transit.land/news/2019/10/17/tlv2.html">Transitland v2</a>. The Feed Registry is now powered by Distributed Mobility Feed Registry files in the Transitland Atlas. <a href="https://github.com/transitland/transitland-atlas#readme">Transitland Atlas</a> is open to edits and additions from all on GitHub.
-      </b-message>
-    </div>
-
+    <!-- NOTE: bring this disclaimer back after adding license info columns
     <div style="font-size:10pt;margin-top:40px">
       This list is provided for informational purposes only and does not constitute legal advice. We do not guarantee the accuracy or reliability of the Feed Registry whatsoever. You are advised to consult with your own legal counsel before using and relying on the information provided in the Feed Registry.
     </div>
-  </div>
-  </div>
+    -->
+    <div style="margin-top:40px">
+      <b-message type="is-info">
+        <div>
+          Know an operator that's missing? <a href="https://github.com/transitland/transitland-atlas#readme" class="button" style="float:right">Add an operator to Transitland Atlas</a>
+        </div>
+      </b-message>
+    </div>
   </div>
 </template>
 
@@ -143,6 +141,9 @@ export default {
     },
     onSort (field, order) {
     }
+  },
+  head: {
+    title: 'Browse all Operators'
   }
 }
 </script>

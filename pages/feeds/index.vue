@@ -82,6 +82,14 @@
         </b-table-column>
       </template>
     </b-table>
+
+    <div style="margin-top:40px">
+      <b-message type="is-info">
+        <div>
+          Know a feed that's missing? <a href="https://github.com/transitland/transitland-atlas#readme" class="button" style="float:right">Add a feed to Transitland Atlas</a>
+        </div>
+      </b-message>
+    </div>
   </div>
 </template>
 
