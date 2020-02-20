@@ -36,6 +36,7 @@
       :paginated="true"
       :pagination-simple="true"
       pagination-position="both"
+      :loading="$apollo.loading"
       sort-icon="menu-up"
     >
       <template slot-scope="props">
