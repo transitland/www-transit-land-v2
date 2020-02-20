@@ -4,12 +4,26 @@
       Transitland Feeds
     </h1>
 
-    <div>
-      These {{ feeds.length }} feeds are the raw data sources used by Transitland and are continually synced with the <a href="https://github.com/transitland/transitland-atlas">Transitland Atlas github repository</a>.
-      <br><br>
-      Each feed contains a list of URLs that are checked at least once per day, and a feed version record is created each time a new or updated file is found. If the request fails or produces invalid data, the error is noted and an exception icon appears in the fetched column. Newly discovered feed versions are immediately imported into the Transitland database.
+    <div class="content is-medium">
+      <p>These feeds are the raw data sources aggregated by Transitland.</p>
+      <p>These {{ feeds.length.toLocaleString() }} feeds are the raw data sources used by Transitland and are continually synced with the <a href="https://github.com/transitland/transitland-atlas">Transitland Atlas github repository</a>.</p>
+      <p>Each feed contains a list of URLs that are checked at least once per day, and a feed version record is created each time a new or updated file is found. If the request fails or produces invalid data, the error is noted and an exception icon appears in the fetched column. Newly discovered feed versions are immediately imported into the Transitland database.</p>
     </div>
-    <br>
+
+    <div class="block">
+      <b-checkbox v-model="feedSpecs" native-value="gtfs">
+        GTFS
+      </b-checkbox>
+      <b-checkbox v-model="feedSpecs" native-value="gtfs-rt">
+        GTFS Realtime
+      </b-checkbox>
+      <b-checkbox v-model="feedSpecs" native-value="gbfs" disabled="">
+        GBFS
+      </b-checkbox>
+      <b-checkbox v-model="feedSpecs" native-value="mds" disabled="">
+         MDS
+      </b-checkbox>
+    </div>
 
     <b-table
       :data="feeds"
@@ -62,13 +76,21 @@
 
 <script>
 export default {
-  asyncData (context) {
-    const client = context.app.apolloProvider.defaultClient
-    return client.query({
-      query: require('~/graphql/current_feeds.gql')
-    }).then(({ data }) => {
-      return data
-    })
+  apollo: {
+    current_feeds: {
+      query: require('~/graphql/current_feeds.gql'),
+      variables () {
+        return {
+          specs: this.feedSpecs
+        }
+      }
+    }
+  },
+  data () {
+    return {
+      feedSpecs: ['gtfs', 'gtfs-rt'],
+      current_feeds: []
+    }
   },
   computed: {
     feeds () {

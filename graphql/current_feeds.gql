@@ -1,5 +1,6 @@
-{
-  current_feeds(order_by: {id: asc}, where: {spec: {_eq: "gtfs"}}) {
+
+query current_feeds($specs: [String!]) {
+  current_feeds(order_by: {id: asc}, where: {spec: {_in: $specs}}) {
     onestop_id
     feed_versions_aggregate {
       aggregate {
