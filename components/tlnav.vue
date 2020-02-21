@@ -7,7 +7,7 @@
     </template>
 
     <template slot="start">
-      <b-navbar-item v-for="(item,key) in items" :key="key">
+      <b-navbar-item v-for="(item,key) in items" :key="key" :active="$route.path.startsWith(item.to)">
         <nuxt-link :to="item.to">
           {{ item.title }}
         </nuxt-link>
