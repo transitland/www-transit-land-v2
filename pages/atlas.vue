@@ -299,8 +299,8 @@ export default {
 
 <style scoped>
 #map {
-    width: 100%;
-    height: 100vh;
+  width: 100%;
+  height: calc(100vh - 60px);
 }
 
 .map-agencies {
