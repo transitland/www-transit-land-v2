@@ -50,6 +50,11 @@ export default {
           to: '/feeds'
         },
         {
+          title: 'API Console',
+          icon: 'lightbulb',
+          to: '/api-console'
+        },
+        {
           title: 'Docs',
           icon: 'lightbulb',
           to: '/documentation'
