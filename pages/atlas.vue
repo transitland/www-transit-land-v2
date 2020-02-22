@@ -3,7 +3,10 @@
     <div id="map" ref="mapelem" class="map" />
 
     <div class="is-hidden-mobile">
-      <div class="map-agencies">
+      <div class="map-agencies notification">
+        <p v-show="Object.keys(agencyFeatures).length == 0">
+          <strong>Use your mouse cursor</strong> to highlight routes and see their names here. <strong>Click</strong> to select for more details.
+        </p>
         <route-select :agency-features="agencyFeatures" :collapse="true" />
       </div>
     </div>
@@ -147,9 +150,6 @@ const routelayers = [
 /// ///////
 
 export default {
-  header: {
-    title: 'Global Map of Transit Routes'
-  },
   components: { routeSelect },
   layout: 'map',
   data () {
@@ -290,14 +290,17 @@ export default {
         document.getElementById('summary').innerHTML = `features:, ${Object.keys(count).length} agencies: ${Object.keys(agencies).length}`
       })
     }
+  },
+  head: {
+    title: 'Global Map of Transit Routes'
   }
 }
 </script>
 
 <style scoped>
 #map {
-    width: 100%;
-    height: 100vh;
+  width: 100%;
+  height: calc(100vh - 60px);
 }
 
 .map-agencies {

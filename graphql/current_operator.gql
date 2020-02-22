@@ -1,0 +1,15 @@
+query current_operators($operator_onestop_id: String) {
+  agency_operator_merge(where: {operator_onestop_id: {_eq: $operator_onestop_id}}, limit: 1) {
+    operator_id
+    operator_name
+    operator_short_name
+    operator_onestop_id
+    agency {
+      feed_version {
+        current_feed {
+          onestop_id
+        }
+      }
+    }
+  }
+}
