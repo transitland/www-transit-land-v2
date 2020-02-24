@@ -13,6 +13,10 @@ jobs:
         node-version: '12.x'
     - run: yarn install
     - run: yarn run build
+      env:
+        GRAPHQL_ENDPOINT: ${{ secrets.GRAPHQL_ENDPOINT }}
+        GRAPHQL_APIKEY: ${{ secrets.GRAPHQL_APIKEY }}
+        TILE_APIKEY: ${{ secrets.TILE_APIKEY }}
     - uses: actions/setup-python@v1
       with:
         python-version: '3.x'
