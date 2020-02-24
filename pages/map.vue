@@ -166,6 +166,14 @@ export default {
     initMap () {
       this.map = new mapboxgl.Map({
         container: this.$refs.mapelem,
+        transformRequest: (url, resourceType) => {
+          if (resourceType === 'Tile' && url.startsWith('https://transit.land')) {
+            return {
+              url,
+              headers: { apikey: process.env.tileApikey }
+            }
+          }
+        },
         style: {
           version: 8,
           sources: {
@@ -205,7 +213,7 @@ export default {
       map.addSource('routes', {
         type: 'vector',
         tiles: [
-          `https://transit.land/mbtiles/routes/tiles/{z}/{x}/{y}.pbf?apikey=${process.env.tileApikey}`
+          `${process.env.tileEndpoint}/routes/tiles/{z}/{x}/{y}.pbf`
         ],
         minzoom: 0,
         maxzoom: 14
@@ -234,7 +242,7 @@ export default {
           source: {
             type: 'vector',
             tiles: [
-              'https://transit.land/mbtiles/stops/tiles/{z}/{x}/{y}.pbf'
+              `${process.env.tileEndpoint}/stops/tiles/{z}/{x}/{y}.pbf`
             ],
             minzoom: 14,
             maxzoom: 14

@@ -24,9 +24,10 @@ export default {
     height: '5px'
   },
   env: {
+    tileEndpoint: process.env.TILE_ENDPOINT,
     tileApikey: process.env.TILE_APIKEY,
-    graphqlApikey: process.env.GRAPHQL_APIKEY,
-    graphqlEndpoint: process.env.GRAPHQL_ENDPOINT
+    graphqlEndpoint: process.env.GRAPHQL_ENDPOINT,
+    graphqlApikey: process.env.GRAPHQL_APIKEY
   },
   /*
   ** Global CSS
@@ -54,17 +55,9 @@ export default {
   modules: [
     // Doc: https://buefy.github.io/#/documentation
     'nuxt-buefy',
-    // Doc: https://axios.nuxtjs.org/usage
-    '@nuxtjs/axios',
     // https://github.com/nuxt-community/apollo-module
     '@nuxtjs/apollo'
   ],
-  /*
-  ** Axios module configuration
-  ** See https://axios.nuxtjs.org/options
-  */
-  axios: {
-  },
   /* APOLLO */
   apollo: {
     clientConfigs: {
