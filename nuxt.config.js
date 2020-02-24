@@ -23,6 +23,11 @@ export default {
     color: 'blue',
     height: '5px'
   },
+  env: {
+    tileApikey: process.env.TILE_APIKEY,
+    graphqlApikey: process.env.GRAPHQL_APIKEY,
+    graphqlEndpoint: process.env.GRAPHQL_ENDPOINT
+  },
   /*
   ** Global CSS
   */
@@ -64,10 +69,12 @@ export default {
   apollo: {
     clientConfigs: {
       default: {
-        // httpEndpoint: 'http://localhost:8080/v1/graphql',
-        httpEndpoint: 'https://api.transit.land/api/v2/graphql',
+        httpEndpoint: process.env.GRAPHQL_ENDPOINT,
         httpLinkOptions: {
-          credentials: 'same-origin'
+          credentials: 'same-origin',
+          headers: {
+            apikey: process.env.GRAPHQL_APIKEY
+          }
         }
       }
     }

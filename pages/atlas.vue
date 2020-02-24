@@ -32,7 +32,6 @@
 </template>
 
 <script>
-
 import routeSelect from '~/components/route-select'
 const mapboxgl = require('mapbox-gl/dist/mapbox-gl.js')
 
@@ -206,7 +205,7 @@ export default {
       map.addSource('routes', {
         type: 'vector',
         tiles: [
-          'https://transit.land/mbtiles/routes/tiles/{z}/{x}/{y}.pbf'
+          `https://transit.land/mbtiles/routes/tiles/{z}/{x}/{y}.pbf?apikey=${process.env.tileApikey}`
         ],
         minzoom: 0,
         maxzoom: 14
