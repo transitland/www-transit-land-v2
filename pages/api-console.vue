@@ -4,7 +4,10 @@
 
 <script>
 export default {
-  layout: 'map'
+  layout: 'map',
+  head: {
+    title: 'API Explorer'
+  }
 }
 </script>
 
