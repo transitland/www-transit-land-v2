@@ -1,8 +1,5 @@
 name: Publish
-on:
-  push:
-    branches:
-    - master
+on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,11 +10,26 @@ jobs:
         node-version: '12.x'
     - run: yarn install
     - run: yarn run build
+    - name: Store Nuxt build
+      uses: actions/upload-artifact@v1
+      with:
+        name: nuxt-build
+        path: ${{ github.workspace }}/dist
+  publish:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/branch/master'
+    needs: build
+    steps:
+    - uses: actions/checkout@v1
     - uses: actions/setup-python@v1
       with:
         python-version: '3.x'
     - run: pip install -U awscli
-    - run: aws s3 sync dist s3://www-transit-land-v2/
+    - name: Download Nuxt build
+      uses: actions/download-artifact@v1
+      with:
+        name: nuxt-build
+    - run: aws s3 sync nuxt-build/dist s3://www-transit-land-v2/
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
