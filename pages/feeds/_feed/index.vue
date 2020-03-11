@@ -18,7 +18,6 @@
               {{ key }}: <a :href="url">{{ url }}</a>
             </li>
           </ul>
-          </dt>
         </td>
       </tr>
       <tr>
@@ -109,7 +108,7 @@ export default {
   asyncData (context) {
     const client = context.app.apolloProvider.defaultClient
     return client.query({
-      query: require('~/graphql/current_feed.gql'),
+      query: require('~/graphql/current-feed.gql'),
       variables: {
         feed_onestop_id: context.route.params.feed
       }

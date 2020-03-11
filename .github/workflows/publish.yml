@@ -10,6 +10,11 @@ jobs:
         node-version: '12.x'
     - run: yarn install
     - run: yarn run build
+      env:
+        GRAPHQL_ENDPOINT: ${{ secrets.GRAPHQL_ENDPOINT }}
+        GRAPHQL_APIKEY: ${{ secrets.GRAPHQL_APIKEY }}
+        TILE_APIKEY: ${{ secrets.TILE_APIKEY }}
+        TILE_ENDPOINT: ${{ secrets.TILE_ENDPOINT }}
     - name: Store Nuxt build
       uses: actions/upload-artifact@v1
       with:

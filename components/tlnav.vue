@@ -35,9 +35,9 @@ export default {
           to: { name: 'index' }
         },
         {
-          title: 'Atlas',
+          title: 'Map',
           icon: 'lightbulb',
-          to: { name: 'atlas' }
+          to: { name: 'map' }
         },
         {
           title: 'Operators',

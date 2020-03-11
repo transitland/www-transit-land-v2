@@ -23,6 +23,12 @@ export default {
     color: 'blue',
     height: '5px'
   },
+  env: {
+    tileEndpoint: process.env.TILE_ENDPOINT,
+    tileApikey: process.env.TILE_APIKEY,
+    graphqlEndpoint: process.env.GRAPHQL_ENDPOINT,
+    graphqlApikey: process.env.GRAPHQL_APIKEY
+  },
   /*
   ** Global CSS
   */
@@ -49,25 +55,19 @@ export default {
   modules: [
     // Doc: https://buefy.github.io/#/documentation
     'nuxt-buefy',
-    // Doc: https://axios.nuxtjs.org/usage
-    '@nuxtjs/axios',
     // https://github.com/nuxt-community/apollo-module
     '@nuxtjs/apollo'
   ],
-  /*
-  ** Axios module configuration
-  ** See https://axios.nuxtjs.org/options
-  */
-  axios: {
-  },
   /* APOLLO */
   apollo: {
     clientConfigs: {
       default: {
-        // httpEndpoint: 'http://localhost:8080/v1/graphql',
-        httpEndpoint: 'https://api.transit.land/api/v2/graphql',
+        httpEndpoint: process.env.GRAPHQL_ENDPOINT,
         httpLinkOptions: {
-          credentials: 'same-origin'
+          credentials: 'same-origin',
+          headers: {
+            apikey: process.env.GRAPHQL_APIKEY
+          }
         }
       }
     }
