@@ -22,7 +22,7 @@ jobs:
         path: ${{ github.workspace }}/dist
   publish:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/branch/master'
+    if: github.ref == 'refs/heads/master'
     needs: build
     steps:
     - uses: actions/checkout@v1
