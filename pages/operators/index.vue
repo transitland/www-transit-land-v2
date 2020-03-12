@@ -142,8 +142,10 @@ export default {
     onSort (field, order) {
     }
   },
-  head: {
-    title: 'Browse all Operators'
+  head () {
+    return {
+      title: 'Browse all Operators'
+    }
   }
 }
 </script>

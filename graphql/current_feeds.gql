@@ -1,6 +1,6 @@
 
 query current_feeds($specs: [String!]) {
-  current_feeds(order_by: {id: asc}, where: {spec: {_in: $specs}}) {
+  current_feeds(order_by: {id: asc}, where: {spec: {_in: $specs}, deleted_at: {_is_null: true}}) {
     onestop_id
     spec
     feed_versions_aggregate {

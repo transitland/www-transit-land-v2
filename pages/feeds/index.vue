@@ -135,8 +135,10 @@ export default {
       })
     }
   },
-  head: {
-    title: 'Browse all GTFS and GTFS-RT Feeds'
+  head () {
+    return {
+      title: 'Browse all GTFS and GTFS-RT Feeds'
+    }
   }
 }
 </script>

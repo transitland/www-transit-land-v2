@@ -14,9 +14,9 @@
   "dependencies": {
     "@nuxtjs/apollo": "^4.0.0-rc19",
     "@nuxtjs/axios": "^5.3.6",
+    "buefy": "=0.8.9",
     "nuxt": "^2.0.0",
-    "nuxt-buefy": "^0.3.2",
-    "buefy": "=0.8.9"
+    "nuxt-buefy": "^0.3.2"
   },
   "devDependencies": {
     "@babel/polyfill": "^7.0.0",
