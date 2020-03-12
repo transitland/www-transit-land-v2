@@ -1,7 +1,8 @@
 <template>
   <div>
     <h1 class="title">
-      <a href="/feeds">Feeds</a> / {{ feed.onestop_id }}
+      <a href="/feeds">Feeds</a>
+      / {{ feed.onestop_id }}
     </h1>
 
     <table class="property-list">
@@ -9,22 +10,24 @@
         <td>Onestop ID</td>
         <td>{{ feed.onestop_id }}</td>
       </tr>
-      <tr><td>Format</td><td>{{ feed.spec }}</td></tr>
+      <tr>
+        <td>Format</td>
+        <td>{{ feed.spec }}</td>
+      </tr>
       <tr>
         <td>URLs</td>
         <td>
           <ul>
             <li v-for="(url,key) in feed.urls" :key="key">
-              {{ key }}: <a :href="url">{{ url }}</a>
+              {{ key }}:
+              <a :href="url">{{ url }}</a>
             </li>
           </ul>
         </td>
       </tr>
       <tr>
         <td>Authorization</td>
-        <td>
-          {{ feed.authorization }}
-        </td>
+        <td>{{ feed.authorization }}</td>
       </tr>
       <tr>
         <td>License</td>
@@ -57,7 +60,8 @@
       <tr>
         <td>Languages</td>
         <td>{{ feed.languages }}</td>
-      </tr><tr>
+      </tr>
+      <tr>
         <td>Other IDs</td>
         <td>{{ feed.other_ids }}</td>
       </tr>
@@ -72,31 +76,44 @@
       sort-icon="menu-up"
     >
       <template slot-scope="props">
-        <b-table-column :sortable="true" field="fetched_at" label="Fetched">
-          {{ props.row.fetched_at | moment("from","now") }}
-        </b-table-column>
+        <b-table-column
+          :sortable="true"
+          field="fetched_at"
+          label="Fetched"
+        >{{ props.row.fetched_at | moment("from","now") }}</b-table-column>
         <b-table-column :sortable="true" field="sha1" label="SHA1">
-          <nuxt-link :to="{name: 'feeds-feed-versions-version', params: {feed: feed.onestop_id, version: props.row.sha1}}">
-            {{ props.row.sha1.substr(0,6) }}…
-          </nuxt-link>
+          <nuxt-link
+            :to="{name: 'feeds-feed-versions-version', params: {feed: feed.onestop_id, version: props.row.sha1}}"
+          >{{ props.row.sha1.substr(0,6) }}…</nuxt-link>
         </b-table-column>
-        <b-table-column :sortable="true" field="earliest_calendar_date" label="Earliest date">
-          {{ props.row.earliest_calendar_date }}
-        </b-table-column>
-        <b-table-column :sortable="true" field="latest_calendar_date" label="Latest date">
-          {{ props.row.latest_calendar_date }}
-        </b-table-column>
+        <b-table-column
+          :sortable="true"
+          field="earliest_calendar_date"
+          label="Earliest date"
+        >{{ props.row.earliest_calendar_date }}</b-table-column>
+        <b-table-column
+          :sortable="true"
+          field="latest_calendar_date"
+          label="Latest date"
+        >{{ props.row.latest_calendar_date }}</b-table-column>
         <b-table-column field="feed_version_gtfs_import" label="Imported">
           <template v-if="props.row.feed_version_gtfs_import">
             <b-icon v-if="props.row.feed_version_gtfs_import.success" icon="check" />
             <b-icon v-else-if="props.row.feed_version_gtfs_import.in_progress" icon="clock" />
-            <b-tooltip v-else-if="props.row.feed_version_gtfs_import.success == false" :label="props.row.feed_version_gtfs_import.exception_log" position="is-top">
+            <b-tooltip
+              v-else-if="props.row.feed_version_gtfs_import.success == false"
+              :label="props.row.feed_version_gtfs_import.exception_log"
+              position="is-top"
+            >
               <b-icon icon="alert" />
             </b-tooltip>
           </template>
         </b-table-column>
         <b-table-column label="Active">
-          <b-icon v-if="feed.feed_state && feed.feed_state.feed_version && feed.feed_state.feed_version.id === props.row.id" icon="check" />
+          <b-icon
+            v-if="feed.feed_state && feed.feed_state.feed_version && feed.feed_state.feed_version.id === props.row.id"
+            icon="check"
+          />
         </b-table-column>
       </template>
     </b-table>
@@ -119,6 +136,11 @@ export default {
   computed: {
     feed () {
       return this.current_feeds[0]
+    }
+  },
+  head () {
+    return {
+      title: `${this.feed.onestop_id} • feed details`
     }
   }
 }
