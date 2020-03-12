@@ -298,8 +298,10 @@ export default {
       })
     }
   },
-  head: {
-    title: 'Global Map of Transit Routes'
+  head () {
+    return {
+      title: 'Global Map of Transit Routes'
+    }
   }
 }
 </script>

@@ -5,8 +5,10 @@
 <script>
 export default {
   layout: 'map',
-  head: {
-    title: 'API Explorer'
+  head () {
+    return {
+      title: 'API Explorer'
+    }
   }
 }
 </script>

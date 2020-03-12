@@ -43,8 +43,10 @@
 
 <script>
 export default {
-  head: {
-    title: 'Welcome'
+  head () {
+    return {
+      title: 'Welcome'
+    }
   }
 }
 </script>
