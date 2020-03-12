@@ -18,7 +18,7 @@ jobs:
     - name: Store Nuxt build
       uses: actions/upload-artifact@v1
       with:
-        name: nuxt-build
+        name: dist
         path: ${{ github.workspace }}/dist
   publish:
     runs-on: ubuntu-latest
@@ -33,8 +33,8 @@ jobs:
     - name: Download Nuxt build
       uses: actions/download-artifact@v1
       with:
-        name: nuxt-build
-    - run: aws s3 sync nuxt-build/dist s3://www-transit-land-v2/
+        name: dist
+    - run: aws s3 sync dist/ s3://www-transit-land-v2/
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
