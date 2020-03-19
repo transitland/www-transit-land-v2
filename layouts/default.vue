@@ -7,14 +7,16 @@
       </div>
     </section>
     <tlfooter />
+    <simple-analytics />
   </div>
 </template>
 
 <script>
 import tlnav from '~/components/tlnav'
 import tlfooter from '~/components/tlfooter'
+import simpleAnalytics from '~/components/simple-analytics'
 
 export default {
-  components: { tlnav, tlfooter }
+  components: { tlnav, tlfooter, simpleAnalytics }
 }
 </script>
