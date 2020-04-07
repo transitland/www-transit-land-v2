@@ -3,6 +3,11 @@
     <h1 class="title">
       <a href="/operators">Operators</a> / {{ operator.operator_onestop_id }}
     </h1>
+    <span v-for="feedOnestopId in feedOnestopIds" :key="feedOnestopId">
+      <nuxt-link :to="{name: 'feeds-feed', params: {feed: feedOnestopId}}">
+        {{ feedOnestopId }}
+      </nuxt-link>
+    </span>
   </div>
 </template>
 
@@ -24,6 +29,16 @@ export default {
   data () {
     return {
       operator: {}
+    }
+  },
+  computed: {
+    feedOnestopIds () {
+      try {
+        // TODO: make sure this can handle multiple associated feeds
+        return [this.operator.agency.feed_version.current_feed.onestop_id]
+      } catch {
+        return []
+      }
     }
   },
   head () {
