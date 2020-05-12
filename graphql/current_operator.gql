@@ -1,5 +1,5 @@
 query current_operators($operator_onestop_id: String) {
-  agency_operator_merge(where: {operator_onestop_id: {_eq: $operator_onestop_id}}, limit: 1) {
+  tl_agency_operator_merge(where: {operator_onestop_id: {_eq: $operator_onestop_id}}, limit: 1) {
     operator_id
     operator_name
     operator_short_name

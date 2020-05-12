@@ -22,7 +22,7 @@ export default {
         }
       },
       update (data) {
-        this.operator = data.agency_operator_merge[0]
+        this.operator = data.tl_agency_operator_merge[0]
       }
     }
   },
