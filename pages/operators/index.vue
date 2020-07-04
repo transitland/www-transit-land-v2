@@ -30,10 +30,11 @@
     </b-field>
 
     <b-table
-      :data="agencies"
+      :data="currentPageEntities"
       :striped="true"
       :paginated="true"
       :pagination-simple="true"
+      :loading="$apollo.loading"
       pagination-position="both"
       sort-icon="menu-up"
       :total="total"
@@ -80,51 +81,60 @@
 <script>
 import AgencyAutocomplete from '~/components/agency-autocomplete'
 
-function query (client, vars) {
-  const defaultOrderBy = [{ country_name: 'asc' }, { state_name: 'asc' }, { city_name: 'asc' }, { agency_name: 'asc' }]
-  vars.limit = vars.limit ? vars.limit : 20
-  vars.offset = vars.offset ? vars.offset : 0
-  vars.order_by = vars.order_by ? vars.order_by : defaultOrderBy
-  return client
-    .query({
-      query: require('~/graphql/agency-operator-merge.gql'),
-      variables: vars
-    })
-    .then(({ data }) => {
-      return data
-    })
-}
-
 export default {
   components: { AgencyAutocomplete },
-  watchQuery: true,
-  asyncData (context) {
-    const vars = {}
-    const q = context.query
-    vars.agency_name = q.agency_name ? `%${q.agency_name}%` : null
-    vars.city_name = q.city_name ? `%${q.city_name}%` : null
-    vars.state_name = q.state_name ? `%${q.state_name}%` : null
-    vars.country_name = q.country_name ? `%${q.country_name}%` : null
-    vars.limit = 20
-    if (q.page) {
-      vars.offset = (parseInt(q.page) - 1) * vars.limit
+  data () {
+    return {
+      blockEntities: new Map(),
+      blockSize: 100,
+      total: 0
     }
-    const client = context.app.apolloProvider.defaultClient
-    return query(client, vars)
+  },
+  apollo: {
+    q: {
+      query: require('~/graphql/agency-operator-merge.gql'),
+      variables () {
+        const vars = {
+          limit: 100,
+          offset: this.blockOffset,
+          order_by: [{ country_name: 'asc' }, { state_name: 'asc' }, { city_name: 'asc' }, { agency_name: 'asc' }]
+        }
+        const q = Object.assign({}, this.$route.query)
+        vars.agency_name = q.agency_name ? `%${q.agency_name}%` : null
+        vars.city_name = q.city_name ? `%${q.city_name}%` : null
+        vars.state_name = q.state_name ? `%${q.state_name}%` : null
+        vars.country_name = q.country_name ? `%${q.country_name}%` : null
+        return vars
+      },
+      update (data) {
+        const b = new Map()
+        for (let i = 0; i < data.entities.length; i++) {
+          b.set(i + this.blockOffset, data.entities[i])
+        }
+        this.blockEntities = b
+        this.total = data.count.aggregate.count
+      }
+    }
   },
   computed: {
-    total () {
-      return this.count.aggregate.count
-    },
-    agencies () {
-      return this.entities
+    blockOffset () {
+      const blockOffset = Math.floor(((this.currentPage - 1) * 20) / this.blockSize) * this.blockSize
+      return blockOffset
     },
     currentPage () {
-      const page = this.$route.query.page
-      if (page) {
-        return parseInt(page)
+      return this.$route.query.page ? parseInt(this.$route.query.page) : 1
+    },
+    currentPageEntities () {
+      const a = (this.currentPage - 1) * 20
+      const b = []
+      for (let i = a; i < a + 20; i++) {
+        const row = this.blockEntities.get(i)
+        if (!row) {
+          return b
+        }
+        b.push(row)
       }
-      return 1
+      return b
     }
   },
   methods: {
@@ -132,16 +142,14 @@ export default {
       this.$router.push({ path: 'operators', query: { } })
     },
     onAutocomplete (a, b) {
-      const q = {}
-      q.page = 1
+      const q = { page: 1 }
       q[a] = b
       this.$router.push({ path: 'operators', query: q })
     },
     onPageChange (page) {
-      const obj = Object.assign({}, this.$route.query)
-      obj.page = page
-      this.$router.push({ path: 'operators', query: obj })
-      // this.$router.push({ path: 'operators', query: Object.assign(this.$route.query, { page }) })
+      const q = Object.assign({}, this.$route.query)
+      q.page = page
+      this.$router.push({ path: 'operators', query: q })
     },
     onSort (field, order) {
     }

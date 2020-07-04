@@ -8,7 +8,7 @@
       <template v-else>
         <div v-for="route in routes" :key="route.id">
           <nuxt-link
-            :to="{name: 'data-feed-version-routes-route', params:{feed:route.onestop_id,version:'latest',route:route.route_id}}"
+            :to="{name: 'data-feed-versions-version-routes-route', params:{feed:route.onestop_id,version:route.feed_version_sha1,route:route.route_id}}"
           >
             <route-icon
               :key="route.id"
