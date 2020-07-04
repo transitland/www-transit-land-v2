@@ -23,8 +23,10 @@
         </h2>
 
         <nuxt-child :route="route" />
-
-        <div>{{ route.route_desc }}</div>
+        <br><br>
+        <div class="clearfix">
+          {{ route.route_desc }}
+        </div>
       </div>
 
       <div class="column is-one-third" style="width:400px">

@@ -112,7 +112,7 @@ export default {
       variables () {
         return {
           route_id: this.$route.params.route,
-          feed_version_id: 'abc', // this.route.feed_version_id,
+          feed_version_id: this.$route.params.version,
           service_date: this.$route.params.date
         }
       }
