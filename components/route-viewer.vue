@@ -19,9 +19,11 @@
         field="route_id"
         label="route_id"
       >
-        <a :href="`/feeds/${feedId}/versions/${fvid}/routes/${props.row.route_id}`">
+        <nuxt-link
+          :to="{name:'data-feed-versions-version-routes-route', params:{feed:feedId, version:fvid, route:props.row.route_id}}"
+        >
           {{ props.row.route_id }}
-        </a>
+        </nuxt-link>
       </b-table-column>
       <b-table-column
         field="route_short_name"

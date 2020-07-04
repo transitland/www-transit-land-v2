@@ -1,7 +1,13 @@
 <template>
   <div>
     <h1 class="title">
-      <a href="/feeds">Feeds</a> / <a :href="`/feeds/${feedId}`">{{ feedId }}</a> / {{ $route.params.version.substr(0,6) }}…
+      <nuxt-link :to="{name:'data'}">
+        Data
+      </nuxt-link> /
+      <nuxt-link :to="{name:'data-feed', params:{feed:feedId}}">
+        {{ feedId }}
+      </nuxt-link>  /
+      {{ $route.params.version.substr(0,6) }}…
     </h1>
 
     <nav class="level">

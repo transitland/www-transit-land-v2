@@ -1,8 +1,9 @@
 <template>
   <div>
     <h1 class="title">
-      <a href="/feeds">Feeds</a>
-      / {{ feed.onestop_id }}
+      <nuxt-link :to="{name: 'data'}">
+        Data
+      </nuxt-link> / {{ feed.onestop_id }}
     </h1>
 
     <table class="property-list">
@@ -80,22 +81,30 @@
           :sortable="true"
           field="fetched_at"
           label="Fetched"
-        >{{ props.row.fetched_at | moment("from","now") }}</b-table-column>
+        >
+          {{ props.row.fetched_at | moment("from","now") }}
+        </b-table-column>
         <b-table-column :sortable="true" field="sha1" label="SHA1">
           <nuxt-link
-            :to="{name: 'feeds-feed-versions-version', params: {feed: feed.onestop_id, version: props.row.sha1}}"
-          >{{ props.row.sha1.substr(0,6) }}…</nuxt-link>
+            :to="{name: 'data-feed-versions-version', params: {feed: feed.onestop_id, version: props.row.sha1}}"
+          >
+            {{ props.row.sha1.substr(0,6) }}…
+          </nuxt-link>
         </b-table-column>
         <b-table-column
           :sortable="true"
           field="earliest_calendar_date"
           label="Earliest date"
-        >{{ props.row.earliest_calendar_date }}</b-table-column>
+        >
+          {{ props.row.earliest_calendar_date }}
+        </b-table-column>
         <b-table-column
           :sortable="true"
           field="latest_calendar_date"
           label="Latest date"
-        >{{ props.row.latest_calendar_date }}</b-table-column>
+        >
+          {{ props.row.latest_calendar_date }}
+        </b-table-column>
         <b-table-column field="feed_version_gtfs_import" label="Imported">
           <template v-if="props.row.feed_version_gtfs_import">
             <b-icon v-if="props.row.feed_version_gtfs_import.success" icon="check" />

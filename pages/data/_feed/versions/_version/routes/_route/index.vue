@@ -1,9 +1,15 @@
 <template>
   <div>
     <h1 class="title">
-      <a href="/feeds">Feeds</a> /
-      <a :href="`/feeds/${$route.params.feed}`">{{ $route.params.feed }}</a> /
-      <a :href="`/feeds/${$route.params.feed}/versions/${$route.params.version}`">{{ $route.params.version.substr(0,6) }}…</a> /
+      <nuxt-link to="{name:'data'}">
+        Data
+      </nuxt-link> /
+      <nuxt-link :to="{name: 'data-feed', params:{feed:$route.params.feed}}">
+        {{ $route.params.feed }}
+      </nuxt-link> /
+      <nuxt-link :to="{name: 'data-feed-versions-version', params:{feed:$route.params.feed, version:$route.params.version}}">
+        {{ $route.params.version.substr(0,6) }}…
+      </nuxt-link> /
       {{ $route.params.route }}
     </h1>
     <div class="columns">
@@ -120,7 +126,7 @@ export default {
   watch: {
     selectDate () {
       this.$router.push({
-        name: 'feeds-feed-version-routes-route-trips-date',
+        name: 'data-feed-version-routes-route-trips-date',
         params: {
           feed: this.$route.params.feed,
           version: this.$route.params.version,

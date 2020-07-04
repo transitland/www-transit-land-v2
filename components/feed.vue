@@ -1,13 +1,13 @@
 <template>
   <div>
     <div>
-      <router-link :to="{name: 'feeds-id', params: {id:ent.onestop_id}}">
+      <router-link :to="{name: 'data-id', params: {id:ent.onestop_id}}">
         Onestop ID: {{ ent.onestop_id }}
       </router-link>
     </div>
     <div>Spec: {{ ent.spec }}</div>
     <ul>
-      <li :key="name" v-for="(url,name) in ent.urls">
+      <li v-for="(url,name) in ent.urls" :key="name">
         {{ name }}: {{ url }}
       </li>
     </ul>

@@ -1,14 +1,19 @@
 <template>
   <div>
     <h1 class="title">
-      Transitland Feeds
+      Transitland Data Feeds
     </h1>
 
     <div class="content is-medium">
       <p>These feeds are the raw data sources aggregated and processed by Transitland. This list is regularly synced from GitHub, where it lives as a series of <abbr title="Distributed Mobility Feed Registry">DMFR</abbr> files in the <a href="https://github.com/transitland/transitland-atlas">Transitland Atlas repository</a>. Edits and additions to the repo are welcome.</p>
       <p>GTFS feeds are checked at least once per day, and a feed version record is created each time a new or updated file is found. If the request fails or produces invalid data, the error is noted and an exception icon appears in the fetched column. Newly discovered feed versions are immediately imported into the Transitland Datastore.</p>
       <p>GTFS-RT feeds are cataloged with URLs for clients to query using your own tools.</p>
-      <p>Transitland provides additional metadata and grouped related feeds using <a href="/operators">operators</a>.</p>
+      <p>
+        Transitland provides additional metadata and grouped related feeds using
+        <nuxt-link :to="{name:'operators'}">
+          operators
+        </nuxt-link>.
+      </p>
     </div>
 
     <div class="form">
@@ -42,7 +47,7 @@
     >
       <template slot-scope="props">
         <b-table-column :sortable="true" field="onestop_id" label="Feed Onestop ID">
-          <nuxt-link :to="{name: 'feeds-feed', params: {feed: props.row.onestop_id}}">
+          <nuxt-link :to="{name: 'data-feed', params: {feed: props.row.onestop_id}}">
             {{ props.row.onestop_id }}
           </nuxt-link>
         </b-table-column>

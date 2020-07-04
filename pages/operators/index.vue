@@ -5,7 +5,11 @@
     </h1>
 
     <div class="content is-medium">
-      <p>Transitland uses operators to group together <a href="/feeds">feeds</a> and other relevant data. This table can be searched and sorted; click on an operator name to drill down for more information.</p>
+      <p>
+        Transitland uses operators to group together <nuxt-link :to="{name:'data'}">
+          feeds
+        </nuxt-link> and other relevant data. This table can be searched and sorted; click on an operator name to drill down for more information.
+      </p>
     </div>
 
     <b-field label="Search by operator name or location">
@@ -39,7 +43,7 @@
       @sort="onSort"
       @page-change="onPageChange"
     >
-    <!-- TODO: fix sorting -->
+      <!-- TODO: fix sorting -->
       <template slot-scope="props">
         <b-table-column field="agency_name" label="Operator Name">
           <nuxt-link :to="{name: 'operators-operator', params: {operator: props.row.operator_onestop_id}}">

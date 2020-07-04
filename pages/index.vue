@@ -1,44 +1,42 @@
 <template>
-  <section class="section">
-    <div class="columns is-centered">
-      <div class="column is-three-quarters rows-wrapper">
-        <div data-item="bus" class="row">
-          <h2>
-            A COMMUNITY-EDITED DATA SERVICE
-          </h2>
-          <div id="bus" class="animation bus moveToRight">
-            <div class="figure bus" />
-          </div>
+  <div class="columns is-centered">
+    <div class="column is-three-quarters rows-wrapper">
+      <div data-item="bus" class="row">
+        <h2>
+          A COMMUNITY-EDITED DATA SERVICE
+        </h2>
+        <div id="bus" class="animation bus moveToRight">
+          <div class="figure bus" />
         </div>
-        <div data-item="ferry" class="row">
-          <h2>
-            AGGREGATING
-          </h2>
-          <div id="ferry" class="animation ferry moveToRight">
-            <div class="figure ferry" />
-          </div>
-          <h2> TRANSIT NETWORKS </h2>
+      </div>
+      <div data-item="ferry" class="row">
+        <h2>
+          AGGREGATING
+        </h2>
+        <div id="ferry" class="animation ferry moveToRight">
+          <div class="figure ferry" />
         </div>
-        <div data-item="bike" class="row">
-          <h2>
-            ACROSS METROPOLITAN
-          </h2>
-          <div id="bike" class="animation bike moveToLeft">
-            <div class="figure bike" />
-          </div>
-          <h2>AND RURAL </h2>
+        <h2> TRANSIT NETWORKS </h2>
+      </div>
+      <div data-item="bike" class="row">
+        <h2>
+          ACROSS METROPOLITAN
+        </h2>
+        <div id="bike" class="animation bike moveToLeft">
+          <div class="figure bike" />
         </div>
-        <div data-item="train" class="row">
-          <h2>
-            AREAS AROUND THE WORLD.
-          </h2>
-          <div id="train" class="animation train moveToLeft">
-            <div class="figure train" />
-          </div>
+        <h2>AND RURAL </h2>
+      </div>
+      <div data-item="train" class="row">
+        <h2>
+          AREAS AROUND THE WORLD.
+        </h2>
+        <div id="train" class="animation train moveToLeft">
+          <div class="figure train" />
         </div>
       </div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script>
