@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="feed">
     <h1 class="title">
       <nuxt-link :to="{name: 'data'}">
         Data
@@ -131,25 +131,29 @@
 
 <script>
 export default {
-  asyncData (context) {
-    const client = context.app.apolloProvider.defaultClient
-    return client.query({
+  apollo: {
+    entities: {
       query: require('~/graphql/current-feed.gql'),
-      variables: {
-        feed_onestop_id: context.route.params.feed
+      variables () {
+        return {
+          feed_onestop_id: this.$route.params.feed
+        }
       }
-    }).then(({ data }) => {
-      return data
-    })
+    }
+  },
+  data () {
+    return {
+      entities: []
+    }
   },
   computed: {
     feed () {
-      return this.current_feeds[0]
+      return this.entities.length > 0 ? this.entities[0] : null
     }
   },
   head () {
     return {
-      title: `${this.feed.onestop_id} • feed details`
+      title: `${this.$route.params.feed} • feed details`
     }
   }
 }

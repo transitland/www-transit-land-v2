@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="feed_version">
     <h1 class="title">
       <nuxt-link :to="{name:'data'}">
         Data
@@ -129,25 +129,25 @@ import RouteViewer from '~/components/route-viewer'
 
 export default {
   components: { RouteViewer },
-  asyncData (context) {
-    const client = context.app.apolloProvider.defaultClient
-    return client.query({
+  apollo: {
+    feed_versions: {
       query: require('~/graphql/feed-version.gql'),
-      variables: {
-        feed_version_sha1: context.route.params.version
+      variables () {
+        return {
+          feed_version_sha1: this.$route.params.version
+        }
       }
-    }).then(({ data }) => {
-      return data
-    })
+    }
   },
   data () {
     return {
-      showImportDetails: false
+      showImportDetails: false,
+      feed_versions: []
     }
   },
   computed: {
     feed_version () {
-      return this.feed_versions[0]
+      return this.feed_versions.length > 0 ? this.feed_versions[0] : null
     },
     feedId () {
       return this.$route.params.feed
