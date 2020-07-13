@@ -1,10 +1,12 @@
 <template>
   <div>
     <h1 class="title">
-      <a href="/operators">Operators</a> / {{ operator.operator_onestop_id }}
+      <nuxt-link :to="{name:'operators'}">
+        Operators
+      </nuxt-link> / {{ operator.operator_onestop_id }}
     </h1>
     <span v-for="feedOnestopId in feedOnestopIds" :key="feedOnestopId">
-      <nuxt-link :to="{name: 'feeds-feed', params: {feed: feedOnestopId}}">
+      <nuxt-link :to="{name: 'data-feed', params: {feed: feedOnestopId}}">
         {{ feedOnestopId }}
       </nuxt-link>
     </span>

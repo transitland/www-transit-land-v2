@@ -1,14 +1,19 @@
 <template>
   <div>
     <h1 class="title">
-      Transitland Feeds
+      Transitland Data Feeds
     </h1>
 
     <div class="content is-medium">
       <p>These feeds are the raw data sources aggregated and processed by Transitland. This list is regularly synced from GitHub, where it lives as a series of <abbr title="Distributed Mobility Feed Registry">DMFR</abbr> files in the <a href="https://github.com/transitland/transitland-atlas">Transitland Atlas repository</a>. Edits and additions to the repo are welcome.</p>
       <p>GTFS feeds are checked at least once per day, and a feed version record is created each time a new or updated file is found. If the request fails or produces invalid data, the error is noted and an exception icon appears in the fetched column. Newly discovered feed versions are immediately imported into the Transitland Datastore.</p>
       <p>GTFS-RT feeds are cataloged with URLs for clients to query using your own tools.</p>
-      <p>Transitland provides additional metadata and grouped related feeds using <a href="/operators">operators</a>.</p>
+      <p>
+        Transitland provides additional metadata and grouped related feeds using
+        <nuxt-link :to="{name:'operators'}">
+          operators
+        </nuxt-link>.
+      </p>
     </div>
 
     <div class="form">
@@ -36,46 +41,52 @@
       :striped="true"
       :paginated="true"
       :pagination-simple="true"
-      pagination-position="both"
       :loading="$apollo.loading"
+      pagination-position="both"
       sort-icon="menu-up"
+      :total="total"
+      :current-page="currentPage"
+      backend-pagination
+      backend-sorting
+      @sort="onSort"
+      @page-change="onPageChange"
     >
       <template slot-scope="props">
-        <b-table-column :sortable="true" field="onestop_id" label="Feed Onestop ID">
-          <nuxt-link :to="{name: 'feeds-feed', params: {feed: props.row.onestop_id}}">
+        <b-table-column field="onestop_id" label="Feed Onestop ID">
+          <nuxt-link :to="{name: 'data-feed', params: {feed: props.row.onestop_id}}">
             {{ props.row.onestop_id }}
           </nuxt-link>
         </b-table-column>
 
-        <b-table-column :sortable="true" :width="100" field="spec" label="Spec">
+        <b-table-column :width="100" field="spec" label="Spec">
           {{ props.row.spec }}
         </b-table-column>
 
-        <b-table-column :sortable="true" :width="60" numeric field="feed_version_count" label="Versions">
+        <b-table-column :width="60" numeric field="feed_version_count" label="Versions">
           {{ props.row.feed_version_count }}
         </b-table-column>
 
-        <b-table-column :sortable="true" :width="150" field="last_successful_fetch_at" label="Last Fetched">
+        <b-table-column :width="150" field="last_successful_fetch_at" label="Last Fetched">
           <span v-if="props.row.last_successful_fetch_at">
             {{ props.row.last_successful_fetch_at | moment("from","now") }}
           </span>
           <span v-else>Never</span>
         </b-table-column>
 
-        <b-table-column :sortable="true" :width="60" field="last_fetch_error" label="Fetch Errors?">
+        <b-table-column :width="60" field="last_fetch_error" label="Fetch Errors?">
           <b-tooltip :label="props.row.last_fetch_error">
             <b-icon v-if="props.row.last_fetch_error" icon="alert" />
           </b-tooltip>
         </b-table-column>
 
-        <b-table-column :sortable="true" :width="150" field="last_successful_import_at" label="Last Imported">
+        <b-table-column :width="150" field="last_successful_import_at" label="Last Imported">
           <span v-if="props.row.last_successful_import_at">
             {{ props.row.last_successful_import_at | moment("from","now") }}
           </span>
           <span v-else>Never</span>
         </b-table-column>
 
-        <b-table-column :sortable="true" :width="60" field="last_import_fail" label="Import Errors?">
+        <b-table-column :width="60" field="last_import_fail" label="Import Errors?">
           <b-tooltip :label="props.row.last_import_fail">
             <b-icon v-if="props.row.last_import_fail" icon="alert" />
           </b-tooltip>
@@ -96,24 +107,55 @@
 <script>
 export default {
   apollo: {
-    current_feeds: {
+    q: {
       query: require('~/graphql/current_feeds.gql'),
       variables () {
         return {
-          specs: this.feedSpecs
+          specs: this.feedSpecs,
+          offset: this.blockOffset,
+          limit: 100
         }
+      },
+      update (data) {
+        const b = new Map()
+        for (let i = 0; i < data.entities.length; i++) {
+          b.set(i + this.blockOffset, data.entities[i])
+        }
+        this.blockEntities = b
+        this.total = data.count.aggregate.count
       }
     }
   },
   data () {
     return {
       feedSpecs: ['gtfs', 'gtfs-rt'],
-      current_feeds: []
+      blockEntities: new Map(),
+      blockSize: 100,
+      total: 0
     }
   },
   computed: {
+    blockOffset () {
+      const blockOffset = Math.floor(((this.currentPage - 1) * 20) / this.blockSize) * this.blockSize
+      return blockOffset
+    },
+    currentPage () {
+      return this.$route.query.page ? parseInt(this.$route.query.page) : 1
+    },
+    currentPageEntities () {
+      const a = (this.currentPage - 1) * 20
+      const b = []
+      for (let i = a; i < a + 20; i++) {
+        const row = this.blockEntities.get(i)
+        if (!row) {
+          return b
+        }
+        b.push(row)
+      }
+      return b
+    },
     feeds () {
-      return this.current_feeds.map((feed) => {
+      return this.currentPageEntities.map((feed) => {
         const feedState = feed.feed_state || {}
         const currentFeedVersion = feedState.feed_version || {}
         const currentImport = (currentFeedVersion && currentFeedVersion.feed_version_gtfs_import) || {}
@@ -133,6 +175,23 @@ export default {
           feed_version_count: feed.feed_versions_aggregate.aggregate.count
         }
       })
+    }
+  },
+  methods: {
+    clearQuery () {
+      this.$router.push({ path: 'data', query: { } })
+    },
+    onAutocomplete (a, b) {
+      const q = { page: 1 }
+      q[a] = b
+      this.$router.push({ path: 'data', query: q })
+    },
+    onPageChange (page) {
+      const q = Object.assign({}, this.$route.query)
+      q.page = page
+      this.$router.push({ path: 'data', query: q })
+    },
+    onSort (field, order) {
     }
   },
   head () {

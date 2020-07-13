@@ -1,9 +1,15 @@
 <template>
-  <div>
+  <div v-if="route">
     <h1 class="title">
-      <a href="/feeds">Feeds</a> /
-      <a :href="`/feeds/${$route.params.feed}`">{{ $route.params.feed }}</a> /
-      <a :href="`/feeds/${$route.params.feed}/versions/${$route.params.version}`">{{ $route.params.version.substr(0,6) }}…</a> /
+      <nuxt-link to="{name:'data'}">
+        Data
+      </nuxt-link> /
+      <nuxt-link :to="{name: 'data-feed', params:{feed:$route.params.feed}}">
+        {{ $route.params.feed }}
+      </nuxt-link> /
+      <nuxt-link :to="{name: 'data-feed-versions-version', params:{feed:$route.params.feed, version:$route.params.version}}">
+        {{ $route.params.version.substr(0,6) }}…
+      </nuxt-link> /
       {{ $route.params.route }}
     </h1>
     <div class="columns">
@@ -16,9 +22,11 @@
           {{ route.agency.agency_name }}
         </h2>
 
-        <nuxt-child v-if="route.id" :route="route" />
-
-        <div>{{ route.route_desc }}</div>
+        <nuxt-child :route="route" />
+        <br><br>
+        <div class="clearfix">
+          {{ route.route_desc }}
+        </div>
       </div>
 
       <div class="column is-one-third" style="width:400px">
@@ -49,28 +57,27 @@ function dateSplit (value) {
 }
 
 export default {
-  asyncData (context) {
-    const client = context.app.apolloProvider.defaultClient
-    return client.query({
-      query: require('~/graphql/feed-version-route.gql'),
-      variables: {
-        feed_version_sha1: context.route.params.version,
-        route_id: context.route.params.route
-      }
-    })
-      .then(({ data }) => {
-        return data
-      })
-  },
   data () {
     return {
       map: null,
-      selectDate: null
+      selectDate: null,
+      gtfs_routes: []
+    }
+  },
+  apollo: {
+    gtfs_routes: {
+      query: require('~/graphql/feed-version-route.gql'),
+      variables () {
+        return {
+          feed_version_sha1: this.$route.params.version,
+          route_id: this.$route.params.route
+        }
+      }
     }
   },
   computed: {
     route () {
-      return this.gtfs_routes[0]
+      return this.gtfs_routes.length > 0 ? this.gtfs_routes[0] : null
     },
     serviceDates () {
       const serviceDates = new Set()
@@ -120,7 +127,7 @@ export default {
   watch: {
     selectDate () {
       this.$router.push({
-        name: 'feeds-feed-version-routes-route-trips-date',
+        name: 'data-feed-versions-version-routes-route-trips-date',
         params: {
           feed: this.$route.params.feed,
           version: this.$route.params.version,
@@ -128,10 +135,16 @@ export default {
           date: this.selectDate.toISOString().substr(0, 10)
         }
       })
+    },
+    route (v) {
+      if (v) {
+        console.log('next tick init map')
+        this.$nextTick(() => {
+          console.log('init map')
+          this.initMap()
+        })
+      }
     }
-  },
-  mounted () {
-    this.initMap()
   },
   methods: {
     initMap () {

@@ -1,6 +1,11 @@
 
-query current_feeds($specs: [String!]) {
-  current_feeds(order_by: {id: asc}, where: {spec: {_in: $specs}, deleted_at: {_is_null: true}}) {
+query current_feeds($specs: [String!], $offset:Int, $limit:Int) {
+  count: current_feeds_aggregate(where: {spec: {_in: $specs}, deleted_at: {_is_null: true}}) {
+    aggregate {
+      count
+    }
+  }
+  entities: current_feeds(offset:$offset, limit:$limit, order_by: {id: asc}, where: {spec: {_in: $specs}, deleted_at: {_is_null: true}}) {
     onestop_id
     spec
     feed_versions_aggregate {

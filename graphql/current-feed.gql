@@ -1,5 +1,5 @@
 query current_feeds($feed_onestop_id: String) {
-  current_feeds(where: {onestop_id: {_eq: $feed_onestop_id}}, limit: 1) {
+  entities: current_feeds(where: {onestop_id: {_eq: $feed_onestop_id}}, limit: 1) {
     id
     auth
     onestop_id

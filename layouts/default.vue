@@ -1,13 +1,19 @@
 <template>
-  <div>
-    <tlnav />
-    <section class="main-content columns">
-      <div class="container column is-10" style="margin-top:20px">
+  <div class="hero is-medium">
+    <div class="hero-head">
+      <tlnav />
+    </div>
+
+    <div class="main">
+      <div class="container section">
         <nuxt />
       </div>
-    </section>
-    <tlfooter />
+    </div>
     <simple-analytics />
+
+    <div class="hero-foot">
+      <tlfooter />
+    </div>
   </div>
 </template>
 
@@ -20,3 +26,19 @@ export default {
   components: { tlnav, tlfooter, simpleAnalytics }
 }
 </script>
+
+<style scoped>
+.hero-head {
+  background: #efefef;
+}
+.hero-foot {
+  background:#efefef;
+}
+.hero {
+  height:100vh
+}
+.main {
+  background:white;
+  flex-grow:2;
+}
+</style>

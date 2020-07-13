@@ -1,8 +1,9 @@
 <template>
-  <div>
+  <div v-if="feed">
     <h1 class="title">
-      <a href="/feeds">Feeds</a>
-      / {{ feed.onestop_id }}
+      <nuxt-link :to="{name: 'data'}">
+        Data
+      </nuxt-link> / {{ feed.onestop_id }}
     </h1>
 
     <table class="property-list">
@@ -80,22 +81,30 @@
           :sortable="true"
           field="fetched_at"
           label="Fetched"
-        >{{ props.row.fetched_at | moment("from","now") }}</b-table-column>
+        >
+          {{ props.row.fetched_at | moment("from","now") }}
+        </b-table-column>
         <b-table-column :sortable="true" field="sha1" label="SHA1">
           <nuxt-link
-            :to="{name: 'feeds-feed-versions-version', params: {feed: feed.onestop_id, version: props.row.sha1}}"
-          >{{ props.row.sha1.substr(0,6) }}…</nuxt-link>
+            :to="{name: 'data-feed-versions-version', params: {feed: feed.onestop_id, version: props.row.sha1}}"
+          >
+            {{ props.row.sha1.substr(0,6) }}…
+          </nuxt-link>
         </b-table-column>
         <b-table-column
           :sortable="true"
           field="earliest_calendar_date"
           label="Earliest date"
-        >{{ props.row.earliest_calendar_date }}</b-table-column>
+        >
+          {{ props.row.earliest_calendar_date }}
+        </b-table-column>
         <b-table-column
           :sortable="true"
           field="latest_calendar_date"
           label="Latest date"
-        >{{ props.row.latest_calendar_date }}</b-table-column>
+        >
+          {{ props.row.latest_calendar_date }}
+        </b-table-column>
         <b-table-column field="feed_version_gtfs_import" label="Imported">
           <template v-if="props.row.feed_version_gtfs_import">
             <b-icon v-if="props.row.feed_version_gtfs_import.success" icon="check" />
@@ -122,25 +131,29 @@
 
 <script>
 export default {
-  asyncData (context) {
-    const client = context.app.apolloProvider.defaultClient
-    return client.query({
+  apollo: {
+    entities: {
       query: require('~/graphql/current-feed.gql'),
-      variables: {
-        feed_onestop_id: context.route.params.feed
+      variables () {
+        return {
+          feed_onestop_id: this.$route.params.feed
+        }
       }
-    }).then(({ data }) => {
-      return data
-    })
+    }
+  },
+  data () {
+    return {
+      entities: []
+    }
   },
   computed: {
     feed () {
-      return this.current_feeds[0]
+      return this.entities.length > 0 ? this.entities[0] : null
     }
   },
   head () {
     return {
-      title: `${this.feed.onestop_id} • feed details`
+      title: `${this.$route.params.feed} • feed details`
     }
   }
 }

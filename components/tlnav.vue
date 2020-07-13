@@ -1,33 +1,53 @@
 <template>
-  <b-navbar class="has-shadow is-light" aria-label="main navigation" fixed-top>
-    <template slot="brand">
-      <a class="navbar-item" href="/">
+  <nav class="navbar has-shadow" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <nuxt-link class="navbar-item" :to="{name:'index'}">
         <div class="logo-image" />
-      </a>
-    </template>
-
-    <template slot="start">
-      <b-navbar-item v-for="(item,key) in items" :key="key" :active="$route.path.startsWith(item.to)">
+      </nuxt-link>
+    </div>
+    <div class="navbar-menu">
+      <div v-for="(item,key) in items" :key="key" class="navbar-item" :active="$route.path.startsWith(item.to)">
         <nuxt-link :to="item.to">
           {{ item.title }}
         </nuxt-link>
-      </b-navbar-item>
-    </template>
-
-    <template slot="end">
-      <b-navbar-item>
-        <div class="notification is-warning content is-small">
-          Welcome to <strong>Transitland v2</strong>! We're in the process of migrating content from <a href="https://transit.land">Transitland v1</a>.
+      </div>
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <div class="notification is-warning content is-small">
+            Welcome to <strong>Transitland v2</strong>! We're in the process of migrating content from <a href="https://transit.land">Transitland v1</a>.
+          </div>
         </div>
-      </b-navbar-item>
-    </template>
-  </b-navbar>
+        <div class="navbar-item">
+          <a href="#TODO" class="button">
+            <span class="icon">
+              <b-icon icon="help-box" />
+            </span>
+            <span>Help</span>
+          </a>
+        </div>
+        <div class="navbar-item">
+          <a href="#TODO" class="button">
+            <span class="icon">
+              <b-icon icon="account" />
+            </span>
+            <span v-if="apikey" @click="logout">Logout</span>
+            <span v-else @click="openLogin = true">Account</span>
+            <b-modal :active="openLogin" has-modal-card :can-cancel="false">
+              <!-- <login @login="login" /> -->
+            </b-modal>
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
 </template>
 
 <script>
 export default {
   data () {
     return {
+      apikey: null,
+      openLogin: false,
       items: [
         {
           title: 'Home',
@@ -42,30 +62,40 @@ export default {
         {
           title: 'Operators',
           icon: 'lightbulb',
-          to: '/operators'
+          to: { name: 'operators' }
         },
         {
-          title: 'Feeds',
+          title: 'Data',
           icon: 'lightbulb',
-          to: '/feeds'
+          to: { name: 'data' }
         },
         {
-          title: 'API Console',
+          title: 'API',
           icon: 'lightbulb',
-          to: '/api-console'
+          to: { name: 'api-console' }
         },
         {
           title: 'Docs',
           icon: 'lightbulb',
-          to: '/documentation'
+          to: { name: 'documentation' }
         },
         {
           title: 'News',
           icon: 'lightbulb',
-          to: '/news'
+          to: { name: 'news' }
         }
 
       ]
+    }
+  },
+  methods: {
+    login (apikey) {
+      localStorage.setItem('apikey', apikey)
+      location.reload()
+    },
+    logout () {
+      localStorage.removeItem('apikey')
+      location.reload()
     }
   }
 }
@@ -75,7 +105,6 @@ export default {
 a {
   color: #000;
 }
-
 .logo-image {
     background: url('~assets/transitland_logo.svg');
     background-size: contain;
@@ -84,8 +113,7 @@ a {
     margin-right:20px;
     width: 80px;
     height: 40px;
-  }
-
+}
 .notification {
   padding: 0.6em;
 }

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div :key="agency" v-for="(routes,agency) in agencyFeatures">
+    <div v-for="(routes,agency) in agencyFeatures" :key="agency">
       <strong>{{ agency }} </strong>
       <template v-if="routeCount > 5 && collapse">
         <div>{{ Object.keys(routes).length }} routes</div>
@@ -8,13 +8,13 @@
       <template v-else>
         <div v-for="route in routes" :key="route.id">
           <nuxt-link
-            :to="{name: 'feeds-feed-version-routes-route', params:{feed:route.onestop_id,version:'latest',route:route.route_id}}"
+            :to="{name: 'data-feed-versions-version-routes-route', params:{feed:route.onestop_id,version:route.feed_version_sha1,route:route.route_id}}"
           >
             <route-icon
               :key="route.id"
-              :routeType="route.route_type"
-              :routeShortName="route.route_short_name"
-              :routeLongName="route.route_long_name"
+              :route-type="route.route_type"
+              :route-short-name="route.route_short_name"
+              :route-long-name="route.route_long_name"
             />
           </nuxt-link>
         </div>
