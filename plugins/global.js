@@ -23,3 +23,13 @@ Vue.filter('formatHMS', function (value) {
   if (s < 10) { s = '0' + s }
   return `${h}:${m} ${ampm}`
 })
+
+Vue.filter('shortenName', function (value, len) {
+  if (!len) {
+    len = 16
+  }
+  if (value.length > len) {
+    return value.substr(0, len) + '…'
+  }
+  return value
+})
