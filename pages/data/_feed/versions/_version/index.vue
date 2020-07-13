@@ -5,9 +5,9 @@
         Data
       </nuxt-link> /
       <nuxt-link :to="{name:'data-feed', params:{feed:feedId}}">
-        {{ feedId }}
+        {{ feedId | shortenName }}
       </nuxt-link>  /
-      {{ $route.params.version.substr(0,6) }}…
+      {{ $route.params.version }}
     </h1>
 
     <nav class="level">

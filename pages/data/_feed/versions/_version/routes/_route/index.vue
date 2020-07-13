@@ -5,10 +5,10 @@
         Data
       </nuxt-link> /
       <nuxt-link :to="{name: 'data-feed', params:{feed:$route.params.feed}}">
-        {{ $route.params.feed }}
+        {{ $route.params.feed | shortenName }}
       </nuxt-link> /
       <nuxt-link :to="{name: 'data-feed-versions-version', params:{feed:$route.params.feed, version:$route.params.version}}">
-        {{ $route.params.version.substr(0,6) }}…
+        {{ $route.params.version | shortenName(8) }}
       </nuxt-link> /
       {{ $route.params.route }}
     </h1>
