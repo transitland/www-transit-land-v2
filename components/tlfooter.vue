@@ -3,7 +3,7 @@
     <div class="container">
       <ul>
         <li class="is-active">
-          <a>Interline Gotransit &copy; Interline Technologies LLC</a>
+          <a>Transitland</a>
         </li>
         <li>
           Map Data:
