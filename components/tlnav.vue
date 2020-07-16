@@ -25,18 +25,6 @@
             <span>Help</span>
           </a>
         </div>
-        <div class="navbar-item">
-          <a href="#TODO" class="button">
-            <span class="icon">
-              <b-icon icon="account" />
-            </span>
-            <span v-if="apikey" @click="logout">Logout</span>
-            <span v-else @click="openLogin = true">Account</span>
-            <b-modal :active="openLogin" has-modal-card :can-cancel="false">
-              <!-- <login @login="login" /> -->
-            </b-modal>
-          </a>
-        </div>
       </div>
     </div>
   </nav>

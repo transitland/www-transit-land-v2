@@ -1,10 +1,25 @@
 <template>
   <div>
-    <b-tabs v-if="!this.$apollo.loading">
+    <div class="title is-4">
+      Scheduled trips for {{ serviceDate }}
+    </div>
+    <div v-if="$apollo.loading">
+      loading
+    </div>
+    <b-tabs
+      v-else
+      type="is-boxed"
+    >
       <b-tab-item v-if="inboundTrips.length === 0 && outboundTrips.length === 0" label="No scheduled service">
         There are no scheduled trips on {{ serviceDate }}.
       </b-tab-item>
       <b-tab-item v-if="inboundTrips.length > 0" label="Inbound">
+        <template slot="header">
+          Inbound &nbsp;
+          <b-tag rounded>
+            {{ inboundTrips.length }}
+          </b-tag>
+        </template>
         <div>
           There are {{ inboundTrips.length }} inbound trips on {{ serviceDate }}.
 
@@ -37,6 +52,12 @@
       </b-tab-item>
 
       <b-tab-item v-if="outboundTrips.length > 0" label="Outbound">
+        <template slot="header">
+          Outbound &nbsp;
+          <b-tag rounded>
+            {{ outboundTrips.length }}
+          </b-tag>
+        </template>
         <div>
           There are {{ outboundTrips.length }} outbound trips on {{ serviceDate }}.
 
@@ -73,7 +94,12 @@
 
 <script>
 export default {
-  props: ['route'],
+  props: {
+    entity: {
+      type: Object,
+      default () { return {} }
+    }
+  },
   data () {
     return {
       defaultSort: ['first_departure_time', 'asc'],
@@ -109,11 +135,12 @@ export default {
   apollo: {
     services_on_date: {
       query: require('~/graphql/feed-version-route-trips.gql'),
+      skip () { return !this.entity },
       variables () {
         return {
-          route_id: this.$route.params.route,
-          feed_version_id: this.$route.params.version,
-          service_date: this.$route.params.date
+          route_id: this.entity.id,
+          feed_version_id: this.entity.feed_version_id,
+          service_date: this.serviceDate
         }
       }
     }
