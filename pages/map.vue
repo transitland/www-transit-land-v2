@@ -180,7 +180,7 @@ export default {
             'raster-tiles': {
               type: 'raster',
               tiles: [
-                'https://0.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{scale}.png'
+                'https://0.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{scale}.png'
               ],
               tileSize: 256,
               attribution:

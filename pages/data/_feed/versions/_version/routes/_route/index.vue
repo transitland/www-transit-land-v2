@@ -1,7 +1,7 @@
 <template>
-  <div v-if="route">
-    <h1 class="title">
-      <nuxt-link to="{name:'data'}">
+  <div v-if="entity">
+    <h1 class="title clearfix">
+      <nuxt-link :to="{name:'data'}">
         Data
       </nuxt-link> /
       <nuxt-link :to="{name: 'data-feed', params:{feed:$route.params.feed}}">
@@ -10,23 +10,22 @@
       <nuxt-link :to="{name: 'data-feed-versions-version', params:{feed:$route.params.feed, version:$route.params.version}}">
         {{ $route.params.version | shortenName(8) }}
       </nuxt-link> /
-      {{ $route.params.route }}
+      <a href="#">{{ entity.agency.agency_name }}</a>
+    </h1>
+    <h1 class="title">
+      <nuxt-link
+        :to="{name: 'data-feed-versions-version-routes-route', params:{feed:$route.params.feed,version:$route.params.version,route:$route.params.route}}"
+      >
+        <route-icon :route-link="entity.route_url" :route-type="entity.route_type" :route-short-name="entity.route_short_name" :route-long-name="entity.route_long_name" />
+      </nuxt-link>
     </h1>
     <div class="columns">
       <div class="column is-two-thirds">
-        <h1 class="title">
-          <route-icon :route-link="route.route_url" :route-type="route.route_type" :route-short-name="route.route_short_name" :route-long-name="route.route_long_name" />
-        </h1>
-
-        <h2 class="subtitle clearfix">
-          {{ route.agency.agency_name }}
-        </h2>
-
-        <nuxt-child :route="route" />
-        <br><br>
         <div class="clearfix">
-          {{ route.route_desc }}
+          {{ entity.entity_desc }}
         </div>
+        <nuxt-child :entity="entity" />
+        <br><br>
       </div>
 
       <div class="column is-one-third" style="width:400px">
@@ -61,11 +60,11 @@ export default {
     return {
       map: null,
       selectDate: null,
-      gtfs_routes: []
+      entities: []
     }
   },
   apollo: {
-    gtfs_routes: {
+    entities: {
       query: require('~/graphql/feed-version-route.gql'),
       variables () {
         return {
@@ -76,12 +75,12 @@ export default {
     }
   },
   computed: {
-    route () {
-      return this.gtfs_routes.length > 0 ? this.gtfs_routes[0] : null
+    entity () {
+      return this.entities.length > 0 ? this.entities[0] : null
     },
     serviceDates () {
       const serviceDates = new Set()
-      for (const tc of this.route.trip_calendars) {
+      for (const tc of (this.entity.trip_calendars || [])) {
         const cal = tc.calendar
         const calDates = new Set()
         let start = new Date(...dateSplit(cal.start_date))
@@ -127,7 +126,7 @@ export default {
   watch: {
     selectDate () {
       this.$router.push({
-        name: 'data-feed-versions-version-routes-route-trips-date',
+        name: 'data-feed-versions-version-routes-route-index-trips-date',
         params: {
           feed: this.$route.params.feed,
           version: this.$route.params.version,
@@ -136,11 +135,9 @@ export default {
         }
       })
     },
-    route (v) {
+    entity (v) {
       if (v) {
-        console.log('next tick init map')
         this.$nextTick(() => {
-          console.log('init map')
           this.initMap()
         })
       }
@@ -178,7 +175,7 @@ export default {
     },
     drawMap () {
       const stops = []
-      for (const stop of this.route.route_stops) {
+      for (const stop of this.entity.route_stops) {
         stops.push({
           type: 'Feature',
           geometry: stop.stop.geometry,
@@ -191,10 +188,10 @@ export default {
       })
 
       const shapes = []
-      for (const shape of this.route.trip_shapes) {
+      for (const shape of this.entity.geometries) {
         shapes.push({
           type: 'Feature',
-          geometry: shape.shape.geometry,
+          geometry: shape.geometry,
           properties: {}
         })
       }

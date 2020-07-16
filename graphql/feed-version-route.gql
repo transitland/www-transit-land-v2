@@ -1,5 +1,5 @@
 query route($feed_version_sha1: String!, $route_id: String!) {
-  gtfs_routes(limit: 1, where: {feed_version: {sha1: {_eq: $feed_version_sha1}}, route_id: {_eq: $route_id}}) {
+  entities: gtfs_routes(limit: 1, where: {feed_version: {sha1: {_eq: $feed_version_sha1}}, route_id: {_eq: $route_id}}) {
     feed_version_id
     id
     agency {
@@ -33,12 +33,15 @@ query route($feed_version_sha1: String!, $route_id: String!) {
         geometry
       }
     }
-    trip_shapes: trips(distinct_on:shape_id){
-      shape {
-        id
-        geometry
-      }
+    geometries {
+      geometry
+      direction_id
     }
+    headways {
+      headway_secs
+      service_id
+      selected_stop_id
+    }    
     trip_headsigns: trips(distinct_on: stop_pattern_id) {
       id
       direction_id
@@ -50,7 +53,7 @@ query route($feed_version_sha1: String!, $route_id: String!) {
         stop_sequence
         stop_id
       }
-    }
+    }    
     trip_calendars: trips(distinct_on: service_id) {
       calendar {
         id
