@@ -3,6 +3,7 @@
     <div class="title is-4">
       Scheduled trips for {{ serviceDate }}
     </div>
+
     <div v-if="$apollo.loading">
       loading
     </div>
@@ -119,7 +120,9 @@ export default {
             last_arrival_time: trip.last_stop_time[0].arrival_time,
             stop_times_count: trip.stop_times_aggregate.aggregate.count,
             first_stop_name: trip.first_stop_time[0].stop.stop_name,
-            last_stop_name: trip.last_stop_time[0].stop.stop_name
+            last_stop_name: trip.last_stop_time[0].stop.stop_name,
+            at_stop_name: trip.at_stop_time[0] ? trip.at_stop_time[0].stop.stop_name : null,
+            at_stop_time: trip.at_stop_time[0] ? trip.at_stop_time[0].arrival_time : null
           })
         }
       }
@@ -140,7 +143,8 @@ export default {
         return {
           route_id: this.entity.id,
           feed_version_id: this.entity.feed_version_id,
-          service_date: this.serviceDate
+          service_date: this.serviceDate,
+          at_stop_id: 0
         }
       }
     }

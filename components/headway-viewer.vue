@@ -4,29 +4,35 @@
       <thead>
         <tr>
           <th />
-          <th>Morning (6-10am)</th>
-          <th>Midday (10am-4pm)</th>
-          <th>Evening (4pm-8pm)</th>
-          <th>Late night (8pm-6am)</th>
+          <th>Morning (6-9am)</th>
+          <th>Midday (9am-4pm)</th>
+          <th>Evening (4pm-7pm)</th>
+          <th>Late night (7pm-6am)</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>Weekday</td>
+          <td>
+            Weekday
+          </td>
           <td>{{ hws.weekday | formatHeadway('morning') }}</td>
           <td>{{ hws.weekday | formatHeadway('midday') }}</td>
           <td>{{ hws.weekday | formatHeadway('evening') }}</td>
           <td>{{ hws.weekday | formatHeadway('latenight') }}</td>
         </tr>
         <tr>
-          <td>Saturday</td>
+          <td>
+            Saturday
+          </td>
           <td>{{ hws.saturday | formatHeadway('morning') }}</td>
           <td>{{ hws.saturday | formatHeadway('midday') }}</td>
           <td>{{ hws.saturday | formatHeadway('evening') }}</td>
           <td>{{ hws.saturday | formatHeadway('latenight') }}</td>
         </tr>
         <tr>
-          <td>Sunday</td>
+          <td>
+            Sunday
+          </td>
           <td>{{ hws.sunday | formatHeadway('morning') }}</td>
           <td>{{ hws.sunday | formatHeadway('midday') }}</td>
           <td>{{ hws.sunday | formatHeadway('evening') }}</td>

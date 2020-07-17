@@ -7,12 +7,14 @@ query ($feed_version_sha1: String, $offset: Int!, $limit: Int!, $route_id: Strin
   }
   routes: gtfs_routes(limit: $limit, where: {feed_version: {sha1: {_eq: $feed_version_sha1}}, route_id: {_ilike: $route_id}, route_short_name: {_ilike: $route_short_name}, route_long_name: {_ilike: $route_long_name}}, order_by: $order_by, offset: $offset) {
     id
+    feed_version_id
     route_id
     route_short_name
     route_long_name
     route_url
     headways {
       selected_stop_id
+      service_date
       dow_category
       headway_seconds_morning_min
       headway_seconds_midday_min

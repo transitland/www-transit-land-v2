@@ -40,6 +40,8 @@ query route($feed_version_sha1: String!, $route_id: String!) {
     headways {
       selected_stop_id
       dow_category
+      service_date
+      direction_id
       headway_seconds_morning_min
       headway_seconds_midday_min
       headway_seconds_evening_min
