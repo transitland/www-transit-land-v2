@@ -26,10 +26,6 @@
         </div>
         <nuxt-child :entity="entity" />
         <br><br>
-
-        <div class="content">
-          <headway-viewer :headways="entity.headways" />
-        </div>
       </div>
 
       <div class="column is-one-third" style="width:400px">
@@ -52,7 +48,6 @@
 </template>
 
 <script>
-import HeadwayViewer from '~/components/headway-viewer'
 const mapboxgl = require('mapbox-gl/dist/mapbox-gl.js')
 
 function dateSplit (value) {
@@ -61,7 +56,6 @@ function dateSplit (value) {
 }
 
 export default {
-  components: { HeadwayViewer },
   data () {
     return {
       map: null,
