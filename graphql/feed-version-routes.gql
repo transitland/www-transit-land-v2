@@ -1,14 +1,36 @@
-query ($feed_version_sha1: String, $offset: Int!, $limit: Int!, $route_id: String, $route_short_name: String, $route_long_name: String) {
+query ($feed_version_sha1: String, $offset: Int!, $limit: Int!, $route_id: String, $route_short_name: String, $route_long_name: String, $order_by:[gtfs_routes_order_by!])
+ {
   total: gtfs_routes_aggregate(where: {feed_version: {sha1: {_eq: $feed_version_sha1}}, route_id: {_ilike: $route_id}, route_short_name: {_ilike: $route_short_name}, route_long_name: {_ilike: $route_long_name}}) {
     aggregate {
       count
     }
   }
-  routes: gtfs_routes(limit: $limit, where: {feed_version: {sha1: {_eq: $feed_version_sha1}}, route_id: {_ilike: $route_id}, route_short_name: {_ilike: $route_short_name}, route_long_name: {_ilike: $route_long_name}}, order_by: {route_id: desc}, offset: $offset) {
+  routes: gtfs_routes(limit: $limit, where: {feed_version: {sha1: {_eq: $feed_version_sha1}}, route_id: {_ilike: $route_id}, route_short_name: {_ilike: $route_short_name}, route_long_name: {_ilike: $route_long_name}}, order_by: $order_by, offset: $offset) {
     id
     route_id
     route_short_name
     route_long_name
     route_url
+    headways {
+      selected_stop_id
+      dow_category
+      headway_seconds_morning_min
+      headway_seconds_midday_min
+      headway_seconds_evening_min
+      headway_seconds_latenight_min
+      headway_seconds_morning_mid
+      headway_seconds_midday_mid
+      headway_seconds_evening_mid
+      headway_seconds_latenight_mid
+      headway_seconds_morning_max
+      headway_seconds_midday_max
+      headway_seconds_evening_max
+      headway_seconds_latenight_max
+    }
+    headways_weekday {
+      headway_seconds_morning_min
+      headway_seconds_morning_mid
+      headway_seconds_morning_max
+    }
   }
 }
