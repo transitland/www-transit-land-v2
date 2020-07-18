@@ -2,7 +2,7 @@
   <div>
     <div v-for="(routes,agency) in agencyFeatures" :key="agency">
       <strong>{{ agency }} </strong>
-      <template v-if="routeCount > 5 && collapse">
+      <template v-if="routeCount > maxAgencyRows && collapse">
         <div>{{ Object.keys(routes).length }} routes</div>
       </template>
       <template v-else>
@@ -26,6 +26,7 @@
 <script>
 export default {
   props: {
+    maxAgencyRows: { type: Number, default () { return 5 } },
     collapse: { type: Boolean },
     agencyFeatures: { type: Object, default () { return {} } }
   },

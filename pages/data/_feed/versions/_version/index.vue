@@ -142,20 +142,10 @@
 </template>
 
 <script>
-import gql from 'graphql-tag'
 import RouteViewer from '~/components/route-viewer'
 import StopViewer from '~/components/stop-viewer'
 import AgencyViewer from '~/components/agency-viewer'
 import MapViewer from '~/components/map-viewer'
-
-const routeFeatures = gql`
-query ($feed_version_id: bigint!, $offset: Int!, $limit: Int!, $agency_id: bigint, $route_id: bigint) {
-  features: tl_route_geometries(limit: $limit, where: {feed_version_id: {_eq: $feed_version_id}, route_id: {_eq: $agency_id}}, order_by: {route_id: desc}, offset: $offset) {
-    route_id
-    geometry
-  }
-}
-`
 
 export default {
   components: { RouteViewer, StopViewer, AgencyViewer, MapViewer },
@@ -169,13 +159,13 @@ export default {
       }
     },
     features: {
-      query: routeFeatures,
+      query: require('~/graphql/map-routes.gql'),
       skip () { return !this.feed_version },
       variables () {
         return {
           feed_version_id: this.feed_version.id,
           offset: 0,
-          limit: 10000
+          limit: 1000
         }
       }
     }
@@ -197,10 +187,32 @@ export default {
     mapFeatures () {
       const features = []
       for (const feature of this.features) {
-        features.push({
-          properties: { id: feature.id },
-          geometry: feature.geometry
-        })
+        if (feature.geometries && feature.geometries.length > 0) {
+          let hw = 10000
+          if (feature.headways_weekday && feature.headways_weekday.headway_seconds_morning_mid) {
+            hw = feature.headways_weekday.headway_seconds_morning_mid
+          }
+          let routeColor = feature.route_color
+          if (routeColor && routeColor.substr(0, 1) !== '#') {
+            routeColor = '#' + routeColor
+          }
+          features.push({
+            id: feature.id,
+            properties: {
+              id: feature.id,
+              route_id: feature.route_id,
+              feed_version_sha1: this.feed_version.sha1,
+              onestop_id: this.$route.params.feed,
+              route_short_name: feature.route_short_name,
+              route_long_name: feature.route_long_name,
+              route_type: feature.route_type,
+              route_color: routeColor,
+              agency_name: feature.agency.agency_name,
+              headway_secs: hw
+            },
+            geometry: feature.geometries[0].geometry
+          })
+        }
       }
       return features
     }

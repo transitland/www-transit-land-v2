@@ -1,0 +1,20 @@
+query ($feed_version_id: bigint!, $offset: Int!, $limit: Int!, $agency_id: bigint, $route_id: bigint) {
+  features: gtfs_routes(limit: $limit, where: {feed_version_id: {_eq: $feed_version_id}, id: {_eq: $route_id}}, order_by: {id: asc}, offset: $offset) {
+    id
+    route_id
+    route_type
+    route_color
+    route_short_name
+    route_long_name
+    headways_weekday {
+      headway_seconds_morning_mid
+    }
+    geometries {
+      geometry
+    }
+    agency {
+        id
+        agency_name
+    }
+  }
+}
