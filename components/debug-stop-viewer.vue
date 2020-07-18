@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div>
+      args: fvid {{ fvid }} route_id {{ routeid }} stop_id {{ stopid }}  direction_id {{ directionid }} service_date {{ servicedate }}
+    </div>
     <div v-for="(value,key) of bycat" :key="key">
       {{ key }}: {{ value }}
     </div>
@@ -10,6 +13,7 @@
             <th>Date</th>
             <th>Trip</th>
             <th>Time</th>
+            <th>Raw time</th>
             <th>Stop</th>
             <th>Since last stop</th>
           </tr>
@@ -19,6 +23,7 @@
             <td>{{ servicedate }}</td>
             <td>{{ st.tid }}</td>
             <td>{{ st.departure_time | formatHMS }}</td>
+            <td>{{ st.departure_time }}</td>
             <td>{{ st.stop.stop_name }}</td>
             <td>
               <span v-if="i>0">

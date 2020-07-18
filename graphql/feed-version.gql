@@ -1,5 +1,6 @@
 query ($feed_version_sha1: String!) {
   feed_versions(limit: 1, where: {sha1: {_eq: $feed_version_sha1}}) {
+    id
     sha1
     earliest_calendar_date
     latest_calendar_date

@@ -90,6 +90,9 @@ export default {
 </script>
 
 <style scoped>
+.navbar {
+  background:#f9f9f9;
+}
 a {
   color: #000;
 }

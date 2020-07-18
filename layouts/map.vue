@@ -1,12 +1,9 @@
 <template>
-  <div class="hero is-medium">
-    <div class="hero-head">
-      <tlnav />
-    </div>
-    <div class="main">
-      <div class="" style="padding-top:0px;">
-        <nuxt />
-      </div>
+  <div class="outer">
+    <tlnav />
+
+    <div class="main" style="flex:1">
+      <nuxt />
     </div>
     <simple-analytics />
   </div>

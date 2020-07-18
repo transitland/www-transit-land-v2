@@ -9,7 +9,6 @@
       </nuxt-link>  /
       {{ $route.params.version }}
     </h1>
-
     <nav class="level">
       <div class="level-item has-text-centered">
         <div>
@@ -120,15 +119,46 @@
       </tr>
     </table>
 
-    <route-viewer :fvid="feed_version.sha1" :feed-id="feedId" />
+    <br>
+
+    <b-tabs type="is-boxed">
+      <b-tab-item label="Map">
+        <map-viewer :features="mapFeatures" />
+      </b-tab-item>
+
+      <b-tab-item label="Agencies">
+        <agency-viewer :fvid="feed_version.sha1" />
+      </b-tab-item>
+
+      <b-tab-item label="Routes">
+        <route-viewer :fvid="feed_version.sha1" />
+      </b-tab-item>
+
+      <b-tab-item label="Stops">
+        <stop-viewer :fvid="feed_version.sha1" />
+      </b-tab-item>
+    </b-tabs>
   </div>
 </template>
 
 <script>
+import gql from 'graphql-tag'
 import RouteViewer from '~/components/route-viewer'
+import StopViewer from '~/components/stop-viewer'
+import AgencyViewer from '~/components/agency-viewer'
+import MapViewer from '~/components/map-viewer'
+
+const routeFeatures = gql`
+query ($feed_version_id: bigint!, $offset: Int!, $limit: Int!, $agency_id: bigint, $route_id: bigint) {
+  features: tl_route_geometries(limit: $limit, where: {feed_version_id: {_eq: $feed_version_id}, route_id: {_eq: $agency_id}}, order_by: {route_id: desc}, offset: $offset) {
+    route_id
+    geometry
+  }
+}
+`
 
 export default {
-  components: { RouteViewer },
+  components: { RouteViewer, StopViewer, AgencyViewer, MapViewer },
   apollo: {
     feed_versions: {
       query: require('~/graphql/feed-version.gql'),
@@ -137,12 +167,24 @@ export default {
           feed_version_sha1: this.$route.params.version
         }
       }
+    },
+    features: {
+      query: routeFeatures,
+      skip () { return !this.feed_version },
+      variables () {
+        return {
+          feed_version_id: this.feed_version.id,
+          offset: 0,
+          limit: 10000
+        }
+      }
     }
   },
   data () {
     return {
       showImportDetails: false,
-      feed_versions: []
+      feed_versions: [],
+      features: []
     }
   },
   computed: {
@@ -151,6 +193,16 @@ export default {
     },
     feedId () {
       return this.$route.params.feed
+    },
+    mapFeatures () {
+      const features = []
+      for (const feature of this.features) {
+        features.push({
+          properties: { id: feature.id },
+          geometry: feature.geometry
+        })
+      }
+      return features
     }
   },
   methods: {

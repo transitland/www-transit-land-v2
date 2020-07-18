@@ -1,6 +1,6 @@
 <template>
   <b-table
-    :data="stops"
+    :data="entities"
     :striped="true"
     :paginated="true"
     :total="total"
@@ -14,21 +14,21 @@
     @filters-change="onFilter"
   >
     <template slot-scope="props">
-      <b-table-column field="stop_id" label="Stop ID">
+      <b-table-column field="agency_id" label="Agency ID">
         <nuxt-link
-          :to="{name:'data-feed-versions-version-stops-stop', params:{feed:props.row.feed_version.current_feed.onestop_id, version:props.row.feed_version.sha1, stop:props.row.stop_id}}"
+          :to="{name:'data-feed-versions-version-agencies-agency', params:{feed:props.row.feed_version.current_feed.onestop_id, version:props.row.feed_version.sha1, agency:props.row.agency_id}}"
         >
-          {{ props.row.stop_id }}
+          {{ props.row.agency_id }}
         </nuxt-link>
       </b-table-column>
       <b-table-column
-        field="stop_name"
+        field="agency_name"
         label="Name"
       >
-        {{ props.row.stop_name }}
+        {{ props.row.agency_name }}
       </b-table-column>
-      <b-table-column field="stop_url" label="URL">
-        <a v-if="props.row.stop_url" :href="props.row.stop_url">
+      <b-table-column field="agency_url" label="URL">
+        <a v-if="props.row.agency_url" :href="props.row.agency_url">
           <b-icon icon="link" />
         </a>
       </b-table-column>
@@ -45,10 +45,10 @@ export default {
     return {
       offset: 0,
       limit: 20,
-      sortField: 'stop_id',
+      sortField: 'agency_id',
       sortOrder: 'asc',
       total: 0,
-      stops: []
+      entities: []
     }
   },
   methods: {
@@ -60,25 +60,21 @@ export default {
       this.sortOrder = order
     },
     onFilter (a) {
-      this.filterStopID = a.stop_id ? `%${a.stop_id}%` : null
-      this.filterStopName = a.stop_name ? `%${a.stop_name}%` : null
     }
   },
   apollo: {
     q: {
-      query: require('~/graphql/feed-stops.gql'),
+      query: require('~/graphql/feed-agencies.gql'),
       variables () {
         return {
           feed_version_sha1: this.fvid,
           offset: this.offset,
-          limit: this.limit,
-          stop_id: this.filterStopID,
-          stop_name: this.filterStopName
+          limit: this.limit
         }
       },
       update (data) {
         this.total = data.total.aggregate.count
-        this.stops = data.stops
+        this.entities = data.entities
       }
     }
   }

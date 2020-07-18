@@ -4,7 +4,6 @@
     :striped="true"
     :paginated="true"
     :total="total"
-    pagination-position="top"
     :pagination-simple="true"
     sort-icon="menu-up"
     backend-pagination
@@ -21,7 +20,7 @@
         :sortable="true"
       >
         <nuxt-link
-          :to="{name:'data-feed-versions-version-routes-route', params:{feed:feedId, version:fvid, route:props.row.route_id}}"
+          :to="{name:'data-feed-versions-version-routes-route', params:{feed:props.row.feed_version.current_feed.onestop_id, version:props.row.feed_version.sha1, route:props.row.route_id}}"
         >
           {{ props.row.route_id }}
         </nuxt-link>
@@ -66,7 +65,9 @@
 <script>
 
 export default {
-  props: ['fvid', 'feedId'],
+  props: {
+    fvid: { type: String, default () { return '' } }
+  },
   data () {
     return {
       offset: 0,
@@ -94,18 +95,7 @@ export default {
 Weekday Morning: ${fmt(ret.weekday, 'morning')} mins
 Weekday Midday: ${fmt(ret.weekday, 'midday')} mins
 Weekday Evening: ${fmt(ret.weekday, 'evening')} mins
-Weekday Late night: ${fmt(ret.weekday, 'latenight')} mins
-
-Saturday Morning: ${fmt(ret.saturday, 'morning')} mins
-Saturday Midday: ${fmt(ret.saturday, 'midday')} mins
-Saturday Evening: ${fmt(ret.saturday, 'evening')} mins
-Saturday Late night: ${fmt(ret.saturday, 'latenight')} mins
-
-Sunday Morning: ${fmt(ret.sunday, 'morning')} mins
-Sunday Midday: ${fmt(ret.sunday, 'midday')} mins
-Sunday Evening: ${fmt(ret.sunday, 'evening')} mins
-Sunday Late night: ${fmt(ret.sunday, 'latenight')} mins
-      `
+Weekday Late night: ${fmt(ret.weekday, 'latenight')} mins`
     },
     onPageChange (page) {
       this.offset = this.limit * (page - 1)
