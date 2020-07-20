@@ -17,7 +17,7 @@
 export default {
   apollo: {
     q: {
-      query: require('~/graphql/current_operator.gql'),
+      query: require('~/graphql/current-operator.gql'),
       variables () {
         return {
           operator_onestop_id: this.$route.params.operator

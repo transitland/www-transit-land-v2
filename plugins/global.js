@@ -54,3 +54,12 @@ Vue.filter('formatHeadway', function (hw, tod) {
   }
   return ''
 })
+
+Vue.filter('formatDate',
+  function formatdate (value) {
+    const v = new Date(value)
+    const y = v.getFullYear().toString()
+    const m = v.getMonth().toString()
+    const d = v.getDate().toString()
+    return `${y}-${m}-${d}`
+  })

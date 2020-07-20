@@ -148,7 +148,7 @@ export default {
   },
   computed: {
     feed () {
-      return this.entities.length > 0 ? this.entities[0] : null
+      return (this.entities && this.entities.length > 0) ? this.entities[0] : null
     }
   },
   head () {

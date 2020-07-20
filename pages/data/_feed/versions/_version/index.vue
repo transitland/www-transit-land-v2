@@ -123,7 +123,10 @@
 
     <b-tabs type="is-boxed">
       <b-tab-item label="Map">
-        <map-viewer :features="mapFeatures" />
+        <button v-if="mapFeatures.length === 0" class="button is-loading">
+          Loading
+        </button>
+        <map-viewer v-else :features="mapFeatures" />
       </b-tab-item>
 
       <b-tab-item label="Agencies">

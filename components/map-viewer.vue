@@ -123,7 +123,6 @@ export default {
           coordinates.push(c)
         }
       }
-
       this.map.resize()
       const bounds = coordinates.reduce(function (bounds, coord) {
         return bounds.extend(coord)

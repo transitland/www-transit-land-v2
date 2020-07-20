@@ -101,7 +101,6 @@ Weekday Late night: ${fmt(ret.weekday, 'latenight')} mins`
       this.offset = this.limit * (page - 1)
     },
     onSort (field, order) {
-      console.log('onSort', field, order)
       this.sortField = field
       this.sortOrder = order
     },

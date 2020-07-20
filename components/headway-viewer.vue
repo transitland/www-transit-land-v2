@@ -4,10 +4,10 @@
       <thead>
         <tr>
           <th />
-          <th>Morning (6-9am)</th>
-          <th>Midday (9am-4pm)</th>
-          <th>Evening (4pm-7pm)</th>
-          <th>Late night (7pm-6am)</th>
+          <th>Morning<br><span class="tag is-small is-centered">6-9am</span></th>
+          <th>Midday<br><span class="tag is-small is-centered">9am-4pm</span></th>
+          <th>Evening<br><span class="tag is-small is-centered">4-7pm</span></th>
+          <th>Late night<br><span class="tag is-small is-centered">7pm-6am</span></th>
         </tr>
       </thead>
       <tbody>

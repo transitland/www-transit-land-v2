@@ -10,7 +10,9 @@
       <nuxt-link :to="{name: 'data-feed-versions-version', params:{feed:$route.params.feed, version:$route.params.version}}">
         {{ $route.params.version | shortenName(8) }}
       </nuxt-link> /
-      <a href="#">{{ entity.agency.agency_name }}</a>
+      <nuxt-link :to="{name: 'data-feed-versions-version-agencies-agency', params:{feed:$route.params.feed, version:$route.params.version, agency: entity.agency.agency_id }}">
+        {{ entity.agency.agency_name }}
+      </nuxt-link>
     </h1>
     <h1 class="title">
       <nuxt-link
@@ -21,15 +23,26 @@
     </h1>
     <div class="columns">
       <div class="column is-two-thirds">
-        <div class="clearfix">
-          {{ entity.entity_desc }}
-        </div>
-        <nuxt-child :entity="entity" />
-        <br><br>
+        <b-tabs v-model="activeTab" type="is-boxed" :animated="false">
+          <b-tab-item label="Summary">
+            <headway-viewer :headways="entity.headways" />
+            <div class="clearfix">
+              {{ entity.entity_desc }}
+            </div>
+          </b-tab-item>
 
-        <div class="content">
-          <headway-viewer :headways="entity.headways" />
-        </div>
+          <b-tab-item label="Inbound">
+            <route-trips-viewer :service-date="serviceDate" :route-id="entity.id" :feed-version-id="entity.feed_version_id" :direction-id="0" />
+          </b-tab-item>
+
+          <b-tab-item label="Outbound">
+            <route-trips-viewer :service-date="serviceDate" :route-id="entity.id" :feed-version-id="entity.feed_version_id" :direction-id="1" />
+          </b-tab-item>
+
+          <b-tab-item :label="childLabel">
+            <nuxt-child :service-date="serviceDate" :entity="entity" :label.sync="childLabel" />
+          </b-tab-item>
+        </b-tabs>
       </div>
 
       <div class="column is-one-third" style="width:400px">
@@ -52,7 +65,9 @@
 </template>
 
 <script>
+import moment from 'moment'
 import HeadwayViewer from '~/components/headway-viewer'
+import RouteTripsViewer from '~/components/route-trips-viewer'
 const mapboxgl = require('mapbox-gl/dist/mapbox-gl.js')
 
 function dateSplit (value) {
@@ -61,12 +76,14 @@ function dateSplit (value) {
 }
 
 export default {
-  components: { HeadwayViewer },
+  components: { HeadwayViewer, RouteTripsViewer },
   data () {
     return {
       map: null,
       selectDate: null,
-      entities: []
+      entities: [],
+      activeTab: 0,
+      childLabel: null
     }
   },
   apollo: {
@@ -81,6 +98,9 @@ export default {
     }
   },
   computed: {
+    serviceDate () {
+      return this.$route.query.service_date ? this.$route.query.service_date : moment().format('YYYY-MM-DD')
+    },
     entity () {
       return this.entities.length > 0 ? this.entities[0] : null
     },
@@ -130,14 +150,14 @@ export default {
     }
   },
   watch: {
+    childLabel () {
+      this.activeTab = 3
+    },
     selectDate () {
       this.$router.push({
-        name: 'data-feed-versions-version-routes-route-index-trips-date',
-        params: {
-          feed: this.$route.params.feed,
-          version: this.$route.params.version,
-          route: this.$route.params.route,
-          date: this.selectDate.toISOString().substr(0, 10)
+        name: this.$router.name,
+        query: {
+          service_date: this.selectDate.toISOString().substr(0, 10)
         }
       })
     },
