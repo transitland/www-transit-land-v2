@@ -1,15 +1,14 @@
 <template>
-  <div v-if="feed_version">
+  <div v-if="entity">
     <h1 class="title">
       <nuxt-link :to="{name:'data'}">
         Data
       </nuxt-link> /
-      <nuxt-link :to="{name:'data-feed', params:{feed:feedId}}">
-        {{ feedId | shortenName }}
+      <nuxt-link :to="{name:'data-feed', params:{feed:$route.params.feed}}">
+        {{ $route.params.feed | shortenName }}
       </nuxt-link>  /
       {{ $route.params.version }}
     </h1>
-
     <nav class="level">
       <div class="level-item has-text-centered">
         <div>
@@ -17,7 +16,7 @@
             Agencies
           </p>
           <p class="title">
-            {{ feed_version.agencies_aggregate.aggregate.count }}
+            {{ entity.agencies_aggregate.aggregate.count }}
           </p>
         </div>
       </div>
@@ -27,7 +26,7 @@
             Routes
           </p>
           <p class="title">
-            {{ feed_version.routes_aggregate.aggregate.count }}
+            {{ entity.routes_aggregate.aggregate.count }}
           </p>
         </div>
       </div>
@@ -37,7 +36,7 @@
             Stops
           </p>
           <p class="title">
-            {{ feed_version.stops_aggregate.aggregate.count }}
+            {{ entity.stops_aggregate.aggregate.count }}
           </p>
         </div>
       </div>
@@ -47,7 +46,7 @@
             Earliest Date
           </p>
           <p class="title">
-            {{ feed_version.earliest_calendar_date }}
+            {{ entity.earliest_calendar_date }}
           </p>
         </div>
       </div>
@@ -57,7 +56,7 @@
             Latest Date
           </p>
           <p class="title">
-            {{ feed_version.latest_calendar_date }}
+            {{ entity.latest_calendar_date }}
           </p>
         </div>
       </div>
@@ -66,29 +65,30 @@
     <table class="property-list">
       <tr>
         <td>SHA1</td>
-        <td>{{ feed_version.sha1 }}</td>
+        <td>{{ entity.sha1 }}</td>
       </tr>
       <tr>
         <td>Fetched</td>
-        <td>{{ feed_version.fetched_at }}</td>
+        <td>{{ entity.fetched_at }}</td>
       </tr>
       <tr>
         <td>URL</td>
-        <td><a :href="feed_version.url">{{ feed_version.url }}</a></td>
+        <td><a :href="entity.url">{{ entity.url }}</a></td>
       </tr>
       <tr>
         <td>Status</td>
-        <td v-if="feed_version.feed_version_gtfs_import.success">
+        <td v-if="entity.feed_version_gtfs_import && entity.feed_version_gtfs_import.success">
           Success
         </td>
-        <td v-else-if="feed_version.feed_version_gtfs_import.in_progress">
+        <td v-else-if="entity.feed_version_gtfs_import && entity.feed_version_gtfs_import.in_progress">
           Import in progress
         </td>
-        <td v-else-if="!feed_version.feed_version_gtfs_import.success">
-          Failed: {{ feed_version.feed_version_gtfs_import.exception_log }}
+        <td v-else-if="!entity.feed_version_gtfs_import || !entity.feed_version_gtfs_import.success">
+          Failed
+          <span v-if="entity.feed_version_gtfs_import">{{ entity.feed_version_gtfs_import.exception_log }}</span>
         </td>
       </tr>
-      <tr v-if="feed_version.feed_version_gtfs_import.success">
+      <tr v-if="entity.feed_version_gtfs_import && entity.feed_version_gtfs_import.success">
         <td />
         <td>
           <button class="button" @click="showImportDetails = !showImportDetails">
@@ -108,7 +108,7 @@
         <th>Unmarked</th>
         <th>Warnings</th>
       </tr>
-      <tr v-for="(v,fn) of mergedCount(feed_version.feed_version_gtfs_import)" :key="fn">
+      <tr v-for="(v,fn) of mergedCount(entity.feed_version_gtfs_import)" :key="fn">
         <td>{{ fn }}</td>
         <td>{{ v.count }}</td>
         <td />
@@ -120,15 +120,36 @@
       </tr>
     </table>
 
-    <route-viewer :fvid="feed_version.sha1" :feed-id="feedId" />
+    <br>
+
+    <b-tabs v-model="activeTab" type="is-boxed">
+      <b-tab-item label="Map">
+        <feed-version-map-viewer :fvid="entity.id" :overlay="true" />
+      </b-tab-item>
+
+      <b-tab-item label="Agencies">
+        <agency-viewer v-if="activeTab === 1" :fvid="entity.sha1" />
+      </b-tab-item>
+
+      <b-tab-item label="Routes">
+        <route-viewer v-if="activeTab === 2" :fvid="entity.sha1" />
+      </b-tab-item>
+
+      <b-tab-item label="Stops">
+        <stop-viewer v-if="activeTab === 3" :fvid="entity.sha1" />
+      </b-tab-item>
+    </b-tabs>
   </div>
 </template>
 
 <script>
 import RouteViewer from '~/components/route-viewer'
+import StopViewer from '~/components/stop-viewer'
+import AgencyViewer from '~/components/agency-viewer'
+import FeedVersionMapViewer from '~/components/feed-version-map-viewer'
 
 export default {
-  components: { RouteViewer },
+  components: { RouteViewer, StopViewer, AgencyViewer, FeedVersionMapViewer },
   apollo: {
     feed_versions: {
       query: require('~/graphql/feed-version.gql'),
@@ -141,16 +162,15 @@ export default {
   },
   data () {
     return {
+      activeTab: 0,
       showImportDetails: false,
-      feed_versions: []
+      feed_versions: [],
+      features: []
     }
   },
   computed: {
-    feed_version () {
+    entity () {
       return this.feed_versions.length > 0 ? this.feed_versions[0] : null
-    },
-    feedId () {
-      return this.$route.params.feed
     }
   },
   methods: {

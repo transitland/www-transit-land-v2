@@ -6,6 +6,7 @@ query current_feeds($specs: [String!], $offset:Int, $limit:Int) {
     }
   }
   entities: current_feeds(offset:$offset, limit:$limit, order_by: {id: asc}, where: {spec: {_in: $specs}, deleted_at: {_is_null: true}}) {
+    id
     onestop_id
     spec
     feed_versions_aggregate {
@@ -14,7 +15,9 @@ query current_feeds($specs: [String!], $offset:Int, $limit:Int) {
       }
     }
     feed_state {
+      id
       feed_version {
+        id
         feed_version_gtfs_import {
           id
           created_at

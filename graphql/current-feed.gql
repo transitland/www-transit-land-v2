@@ -28,6 +28,7 @@ query current_feeds($feed_onestop_id: String) {
       }
     }
     feed_state {
+      id
       last_fetch_error
       last_fetched_at
       last_successful_fetch_at

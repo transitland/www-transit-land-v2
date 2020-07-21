@@ -1,0 +1,40 @@
+query($feed_onestop_id: String!, $feed_version_sha1: String!, $agency_id: String!) {
+  active_agencies(limit: 1, where: {agency_id: {_eq: $agency_id}, feed_version: {current_feed: {onestop_id: {_eq: $feed_onestop_id}}}}) {
+    feed_version_id
+    id
+    agency_id
+    agency_name
+    agency_phone
+    agency_url
+    feed_version {
+        id
+        sha1
+        agencies {
+          id
+        }
+        current_feed {
+            id
+            onestop_id
+        }
+    }
+  }
+  gtfs_agencies(limit: 1, where: {feed_version: {sha1: {_eq: $feed_version_sha1}}, agency_id: {_eq: $agency_id}}) {
+    feed_version_id
+    id
+    agency_id
+    agency_name
+    agency_phone
+    agency_url
+    feed_version {
+        id
+        sha1
+        agencies {
+          id
+        }
+        current_feed {
+            id
+            onestop_id
+        }
+    }
+  }
+}

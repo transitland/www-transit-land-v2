@@ -1,10 +1,20 @@
-query route_trips($feed_version_id: bigint!, $route_id: bigint!, $service_date: date!) {
+query route_trips($feed_version_id: bigint!, $route_id: bigint!, $service_date: date!, $at_stop_id: bigint!) {
   services_on_date(args: {fvid: $feed_version_id, service_date: $service_date}) {
     id
     trips(where: {route_id: {_eq: $route_id}}) {
       id
+      trip_id
       trip_headsign
       direction_id
+      at_stop_time: stop_times(limit: 1, where: {stop_id: {_eq: $at_stop_id}}) {
+        stop_sequence
+        arrival_time
+        departure_time
+        stop {
+          id
+          stop_name
+        }
+      }      
       first_stop_time: stop_times(limit: 1, order_by: {stop_sequence: asc}) {
         stop_sequence
         arrival_time
@@ -27,7 +37,7 @@ query route_trips($feed_version_id: bigint!, $route_id: bigint!, $service_date: 
         aggregate {
           count
         }
-      }      
+      }
     }
   }
 }

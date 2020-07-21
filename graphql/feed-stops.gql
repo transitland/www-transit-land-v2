@@ -13,5 +13,13 @@ query ($feed_version_sha1: String, $offset: Int!, $limit: Int!, $stop_id: String
     stop_url
     location_type
     wheelchair_boarding
+    feed_version {
+      id
+      sha1
+      current_feed {
+        id
+        onestop_id
+      }
+    }
   }
 }

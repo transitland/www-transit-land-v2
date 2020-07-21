@@ -1,10 +1,10 @@
 <template>
-  <iframe src="https://www-transit-land-v2.s3.amazonaws.com/graphiql/index.html"/>
+  <div>Coming soon!</div>
 </template>
 
 <script>
 export default {
-  layout: 'map',
+  // layout: 'map',
   head () {
     return {
       title: 'API Explorer'

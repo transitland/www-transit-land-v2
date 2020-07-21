@@ -12,7 +12,7 @@
     </span>
     <span v-if="routeLongName" class="route-icon-long-name">
       {{ routeLongName }}
-      <a v-if="routeLink" :href="routeLink"><b-icon icon="link" /></a>
+      <a v-if="routeLink" :href="routeLink" target="_blank"><b-icon icon="link" /></a>
     </span>
   </div>
 </template>

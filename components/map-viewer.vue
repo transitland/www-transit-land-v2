@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div id="map" ref="mapelem" class="map" />
+    <div id="mapelem" ref="mapelem" />
 
-    <div class="is-hidden-mobile">
+    <div v-if="overlay" class="is-hidden-mobile">
       <div class="map-agencies notification">
         <p v-show="Object.keys(agencyFeatures).length == 0">
           <strong>Use your mouse cursor</strong> to highlight routes and see their names here. <strong>Click</strong> to select for more details.
@@ -12,6 +12,7 @@
     </div>
 
     <b-modal
+      v-if="overlay"
       :active.sync="isComponentModalActive"
       :can-cancel="true"
       has-modal-card
@@ -32,50 +33,52 @@
 </template>
 
 <script>
-import routeSelect from '~/components/route-select'
+import RouteSelect from '~/components/route-select'
 import mapLayers from '~/plugins/map-layers.js'
 const mapboxgl = require('mapbox-gl/dist/mapbox-gl.js')
 
-/// ///////
-
 export default {
-  components: { routeSelect },
-  layout: 'map',
+  components: { RouteSelect },
+  props: {
+    overlay: { type: Boolean, default: false },
+    features: {
+      type: Array, default () { return [] }
+    }
+  },
   data () {
     return {
       map: null,
       hovering: [],
-      isComponentModalActive: false,
-      agencyFeatures: {}
+      agencyFeatures: {},
+      isComponentModalActive: false
     }
   },
   mounted () {
-    this.initMap()
+    if (this.features) {
+      this.initMap()
+    }
+  },
+  wach: {
+    features (v) {
+      if (v) {
+        this.$nextTick(() => {
+          this.initMap()
+        })
+      }
+    }
   },
   methods: {
     initMap () {
       this.map = new mapboxgl.Map({
         container: this.$refs.mapelem,
-        transformRequest: (url, resourceType) => {
-          if (resourceType === 'Tile' && url.startsWith('https://transit.land')) {
-            return {
-              url,
-              headers: { apikey: process.env.tileApikey }
-            }
-          }
-        },
         style: {
           version: 8,
           sources: {
             'raster-tiles': {
               type: 'raster',
-              tiles: [
-                'https://0.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{scale}.png'
-              ],
+              tiles: ['https://0.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{scale}.png'],
               tileSize: 256,
-              attribution:
-                        'Transitland | Interline | &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>'
-
+              attribution: 'Transitland | Interline | &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>'
             }
           },
           layers: [
@@ -87,34 +90,24 @@ export default {
               maxzoom: 22
             }
           ]
-        },
-        hash: true,
-        center: [-122.3, 37.8],
-        zoom: 8
+        }
       })
-      this.map.addControl(new mapboxgl.NavigationControl())
       this.map.on('mousemove', this.mapMouseMove)
-      // this.map.on('moveend', this.mapMoveEnd)
-      this.map.on('load', this.mapLoad)
       this.map.on('click', 'route-active', this.mapClick)
+      this.map.on('load', this.drawMap)
     },
-    mapLoad () {
-      const map = this.map
-      map.addSource('routes', {
-        type: 'vector',
-        tiles: [
-          `${process.env.tileEndpoint}/routes/tiles/{z}/{x}/{y}.pbf`
-        ],
-        minzoom: 0,
-        maxzoom: 14
-      }
-      )
+    drawMap () {
+      const points = this.features.filter((s) => { return s.geometry.type === 'Point' })
+      const lines = this.features.filter((s) => { return s.geometry.type === 'LineString' })
+      this.map.addSource('routes', {
+        type: 'geojson',
+        data: { type: 'FeatureCollection', features: lines }
+      })
       for (const v of mapLayers.routelayers) {
         const l = {
           id: v.name,
           type: 'line',
           source: 'routes',
-          'source-layer': 'routes',
           layout: {
             'line-cap': 'round',
             'line-join': 'round'
@@ -124,27 +117,22 @@ export default {
         if (v.filter != null) {
           l.filter = v.filter
         }
-        map.addLayer(l)
+        this.map.addLayer(l)
       }
-      map.addLayer(
-        {
-          id: 'stops',
-          source: {
-            type: 'vector',
-            tiles: [
-              `${process.env.tileEndpoint}/stops/tiles/{z}/{x}/{y}.pbf`
-            ],
-            minzoom: 14,
-            maxzoom: 14
-          },
-          'source-layer': 'stops',
-          type: 'circle',
-          paint: {
-            'circle-radius': 5,
-            'circle-color': mapLayers.colors.stop
-          }
+      const coordinates = points.map((s) => { return s.geometry.coordinates })
+      for (const line of lines) {
+        for (const c of line.geometry.coordinates) {
+          coordinates.push(c)
         }
-      )
+      }
+      this.map.resize()
+      const bounds = coordinates.reduce(function (bounds, coord) {
+        return bounds.extend(coord)
+      }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]))
+      this.map.fitBounds(bounds, {
+        duration: 0,
+        padding: 20
+      })
     },
     mapClick (e) {
       this.isComponentModalActive = true
@@ -155,14 +143,14 @@ export default {
       map.getCanvas().style.cursor = 'pointer'
       for (const k of this.hovering) {
         map.setFeatureState(
-          { source: 'routes', sourceLayer: 'routes', id: k },
+          { source: 'routes', id: k },
           { hover: false }
         )
       }
       this.hovering = []
       for (const v of features) {
         this.hovering.push(v.id)
-        map.setFeatureState({ source: 'routes', sourceLayer: 'routes', id: v.id }, { hover: true })
+        map.setFeatureState({ source: 'routes', id: v.id }, { hover: true })
       }
       const agencyFeatures = {}
       for (const v of features) {
@@ -187,24 +175,18 @@ export default {
         document.getElementById('summary').innerHTML = `features:, ${Object.keys(count).length} agencies: ${Object.keys(agencies).length}`
       })
     }
-  },
-  head () {
-    return {
-      title: 'Global Map of Transit Routes'
-    }
   }
 }
 </script>
 
 <style scoped>
-#map {
+#mapelem {
   width: 100%;
-  height: calc(100vh - 60px);
+  height: 600px;
 }
-
 .map-agencies {
   position:absolute;
-  top:80px;
+  top:10px;
   left:0px;
   background:#ffffff;
   width:400px;

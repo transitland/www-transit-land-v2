@@ -1,19 +1,15 @@
 <template>
-  <div class="hero is-medium">
-    <div class="hero-head">
-      <tlnav />
-    </div>
+  <div class="outer">
+    <tlnav />
 
-    <div class="main">
+    <div class="main" style="flex:1">
       <div class="container section">
         <nuxt />
       </div>
     </div>
     <simple-analytics />
 
-    <div class="hero-foot">
-      <tlfooter />
-    </div>
+    <tlfooter />
   </div>
 </template>
 
@@ -28,17 +24,13 @@ export default {
 </script>
 
 <style scoped>
-.hero-head {
-  background: #efefef;
-}
-.hero-foot {
-  background:#efefef;
-}
-.hero {
-  height:100vh
+.outer {
+  display:flex;
+  min-height:100vh;
+  flex-direction:column;
 }
 .main {
   background:white;
-  flex-grow:2;
+  flex:1;
 }
 </style>

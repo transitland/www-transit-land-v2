@@ -108,7 +108,7 @@
 export default {
   apollo: {
     q: {
-      query: require('~/graphql/current_feeds.gql'),
+      query: require('~/graphql/current-feeds.gql'),
       variables () {
         return {
           specs: this.feedSpecs,
