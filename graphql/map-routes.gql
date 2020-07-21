@@ -1,5 +1,5 @@
 query ($feed_version_id: bigint!, $offset: Int!, $limit: Int!, $agency_id: bigint, $route_id: bigint) {
-  features: gtfs_routes(limit: $limit, where: {feed_version_id: {_eq: $feed_version_id}, id: {_eq: $route_id}}, order_by: {id: asc}, offset: $offset) {
+  features: gtfs_routes(limit: $limit, where: {agency_id:{_eq:$agency_id}, feed_version_id: {_eq: $feed_version_id}, id: {_eq: $route_id}}, order_by: {id: asc}, offset: $offset) {
     id
     route_id
     route_type

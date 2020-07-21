@@ -1,11 +1,11 @@
 <template>
-  <div v-if="feed_version">
+  <div v-if="entity">
     <h1 class="title">
       <nuxt-link :to="{name:'data'}">
         Data
       </nuxt-link> /
-      <nuxt-link :to="{name:'data-feed', params:{feed:feedId}}">
-        {{ feedId | shortenName }}
+      <nuxt-link :to="{name:'data-feed', params:{feed:$route.params.feed}}">
+        {{ $route.params.feed | shortenName }}
       </nuxt-link>  /
       {{ $route.params.version }}
     </h1>
@@ -16,7 +16,7 @@
             Agencies
           </p>
           <p class="title">
-            {{ feed_version.agencies_aggregate.aggregate.count }}
+            {{ entity.agencies_aggregate.aggregate.count }}
           </p>
         </div>
       </div>
@@ -26,7 +26,7 @@
             Routes
           </p>
           <p class="title">
-            {{ feed_version.routes_aggregate.aggregate.count }}
+            {{ entity.routes_aggregate.aggregate.count }}
           </p>
         </div>
       </div>
@@ -36,7 +36,7 @@
             Stops
           </p>
           <p class="title">
-            {{ feed_version.stops_aggregate.aggregate.count }}
+            {{ entity.stops_aggregate.aggregate.count }}
           </p>
         </div>
       </div>
@@ -46,7 +46,7 @@
             Earliest Date
           </p>
           <p class="title">
-            {{ feed_version.earliest_calendar_date }}
+            {{ entity.earliest_calendar_date }}
           </p>
         </div>
       </div>
@@ -56,7 +56,7 @@
             Latest Date
           </p>
           <p class="title">
-            {{ feed_version.latest_calendar_date }}
+            {{ entity.latest_calendar_date }}
           </p>
         </div>
       </div>
@@ -65,29 +65,30 @@
     <table class="property-list">
       <tr>
         <td>SHA1</td>
-        <td>{{ feed_version.sha1 }}</td>
+        <td>{{ entity.sha1 }}</td>
       </tr>
       <tr>
         <td>Fetched</td>
-        <td>{{ feed_version.fetched_at }}</td>
+        <td>{{ entity.fetched_at }}</td>
       </tr>
       <tr>
         <td>URL</td>
-        <td><a :href="feed_version.url">{{ feed_version.url }}</a></td>
+        <td><a :href="entity.url">{{ entity.url }}</a></td>
       </tr>
       <tr>
         <td>Status</td>
-        <td v-if="feed_version.feed_version_gtfs_import.success">
+        <td v-if="entity.feed_version_gtfs_import && entity.feed_version_gtfs_import.success">
           Success
         </td>
-        <td v-else-if="feed_version.feed_version_gtfs_import.in_progress">
+        <td v-else-if="entity.feed_version_gtfs_import && entity.feed_version_gtfs_import.in_progress">
           Import in progress
         </td>
-        <td v-else-if="!feed_version.feed_version_gtfs_import.success">
-          Failed: {{ feed_version.feed_version_gtfs_import.exception_log }}
+        <td v-else-if="!entity.feed_version_gtfs_import || !entity.feed_version_gtfs_import.success">
+          Failed
+          <span v-if="entity.feed_version_gtfs_import">{{ entity.feed_version_gtfs_import.exception_log }}</span>
         </td>
       </tr>
-      <tr v-if="feed_version.feed_version_gtfs_import.success">
+      <tr v-if="entity.feed_version_gtfs_import && entity.feed_version_gtfs_import.success">
         <td />
         <td>
           <button class="button" @click="showImportDetails = !showImportDetails">
@@ -107,7 +108,7 @@
         <th>Unmarked</th>
         <th>Warnings</th>
       </tr>
-      <tr v-for="(v,fn) of mergedCount(feed_version.feed_version_gtfs_import)" :key="fn">
+      <tr v-for="(v,fn) of mergedCount(entity.feed_version_gtfs_import)" :key="fn">
         <td>{{ fn }}</td>
         <td>{{ v.count }}</td>
         <td />
@@ -121,24 +122,21 @@
 
     <br>
 
-    <b-tabs type="is-boxed">
+    <b-tabs v-model="activeTab" type="is-boxed">
       <b-tab-item label="Map">
-        <button v-if="mapFeatures.length === 0" class="button is-loading">
-          Loading
-        </button>
-        <map-viewer v-else :features="mapFeatures" />
+        <feed-version-map-viewer :fvid="entity.id" :overlay="true" />
       </b-tab-item>
 
       <b-tab-item label="Agencies">
-        <agency-viewer :fvid="feed_version.sha1" />
+        <agency-viewer v-if="activeTab === 1" :fvid="entity.sha1" />
       </b-tab-item>
 
       <b-tab-item label="Routes">
-        <route-viewer :fvid="feed_version.sha1" />
+        <route-viewer v-if="activeTab === 2" :fvid="entity.sha1" />
       </b-tab-item>
 
       <b-tab-item label="Stops">
-        <stop-viewer :fvid="feed_version.sha1" />
+        <stop-viewer v-if="activeTab === 3" :fvid="entity.sha1" />
       </b-tab-item>
     </b-tabs>
   </div>
@@ -148,10 +146,10 @@
 import RouteViewer from '~/components/route-viewer'
 import StopViewer from '~/components/stop-viewer'
 import AgencyViewer from '~/components/agency-viewer'
-import MapViewer from '~/components/map-viewer'
+import FeedVersionMapViewer from '~/components/feed-version-map-viewer'
 
 export default {
-  components: { RouteViewer, StopViewer, AgencyViewer, MapViewer },
+  components: { RouteViewer, StopViewer, AgencyViewer, FeedVersionMapViewer },
   apollo: {
     feed_versions: {
       query: require('~/graphql/feed-version.gql'),
@@ -160,64 +158,19 @@ export default {
           feed_version_sha1: this.$route.params.version
         }
       }
-    },
-    features: {
-      query: require('~/graphql/map-routes.gql'),
-      skip () { return !this.feed_version },
-      variables () {
-        return {
-          feed_version_id: this.feed_version.id,
-          offset: 0,
-          limit: 1000
-        }
-      }
     }
   },
   data () {
     return {
+      activeTab: 0,
       showImportDetails: false,
       feed_versions: [],
       features: []
     }
   },
   computed: {
-    feed_version () {
+    entity () {
       return this.feed_versions.length > 0 ? this.feed_versions[0] : null
-    },
-    feedId () {
-      return this.$route.params.feed
-    },
-    mapFeatures () {
-      const features = []
-      for (const feature of this.features) {
-        if (feature.geometries && feature.geometries.length > 0) {
-          let hw = 10000
-          if (feature.headways_weekday && feature.headways_weekday.headway_seconds_morning_mid) {
-            hw = feature.headways_weekday.headway_seconds_morning_mid
-          }
-          let routeColor = feature.route_color
-          if (routeColor && routeColor.substr(0, 1) !== '#') {
-            routeColor = '#' + routeColor
-          }
-          features.push({
-            id: feature.id,
-            properties: {
-              id: feature.id,
-              route_id: feature.route_id,
-              feed_version_sha1: this.feed_version.sha1,
-              onestop_id: this.$route.params.feed,
-              route_short_name: feature.route_short_name,
-              route_long_name: feature.route_long_name,
-              route_type: feature.route_type,
-              route_color: routeColor,
-              agency_name: feature.agency.agency_name,
-              headway_secs: hw
-            },
-            geometry: feature.geometries[0].geometry
-          })
-        }
-      }
-      return features
     }
   },
   methods: {

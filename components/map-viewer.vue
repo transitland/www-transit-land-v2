@@ -2,7 +2,7 @@
   <div>
     <div id="mapelem" ref="mapelem" />
 
-    <div class="is-hidden-mobile">
+    <div v-if="overlay" class="is-hidden-mobile">
       <div class="map-agencies notification">
         <p v-show="Object.keys(agencyFeatures).length == 0">
           <strong>Use your mouse cursor</strong> to highlight routes and see their names here. <strong>Click</strong> to select for more details.
@@ -12,6 +12,7 @@
     </div>
 
     <b-modal
+      v-if="overlay"
       :active.sync="isComponentModalActive"
       :can-cancel="true"
       has-modal-card
@@ -39,6 +40,7 @@ const mapboxgl = require('mapbox-gl/dist/mapbox-gl.js')
 export default {
   components: { RouteSelect },
   props: {
+    overlay: { type: Boolean, default: false },
     features: {
       type: Array, default () { return [] }
     }

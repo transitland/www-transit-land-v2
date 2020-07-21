@@ -38,30 +38,30 @@
 </template>
 
 <script>
-import gql from 'graphql-tag'
+// import gql from 'graphql-tag'
 
-const q = gql`
-query(
-  $feed_version_id:bigint!, $service_date:date!, $route_id:bigint!, $stop_id:bigint!, $direction_id:Int!){
-  services_on_date(args: {fvid: $feed_version_id, service_date: $service_date}) {
-    id
-    start_date
-    end_date
-    trips(where:{direction_id:{_eq:$direction_id}, route_id:{_eq:$route_id}}) {
-      trip_id
-      stop_times(limit: 1, where:{stop_id:{_eq:$stop_id}}) {
-        id
-        arrival_time
-        departure_time
-        stop {
-          id
-          stop_name
-        }
-      }
-    }
-  }
-}
-`
+// const q = gql`
+// query(
+//   $feed_version_id:bigint!, $service_date:date!, $route_id:bigint!, $stop_id:bigint!, $direction_id:Int!){
+//   services_on_date(args: {fvid: $feed_version_id, service_date: $service_date}) {
+//     id
+//     start_date
+//     end_date
+//     trips(where:{direction_id:{_eq:$direction_id}, route_id:{_eq:$route_id}}) {
+//       trip_id
+//       stop_times(limit: 1, where:{stop_id:{_eq:$stop_id}}) {
+//         id
+//         arrival_time
+//         departure_time
+//         stop {
+//           id
+//           stop_name
+//         }
+//       }
+//     }
+//   }
+// }
+// `
 
 export default {
   props: {
