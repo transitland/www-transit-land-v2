@@ -1,6 +1,9 @@
 <template>
   <div>
-    <span v-if="mapFeatures.length === 0">Loading</span>
+    <b-message v-if="error" class="is-danger">
+      {{ error }}
+    </b-message>
+    <span v-else-if="$apollo.loading" class="is-loading">Loading</span>
     <map-viewer v-else :features="mapFeatures" :overlay="overlay" />
   </div>
 </template>
@@ -12,11 +15,12 @@ export default {
   apollo: {
     features: {
       query: require('~/graphql/map-routes.gql'),
+      error (e) { this.error = e },
       variables () {
         return {
-          feed_version_id: this.fvid,
-          route_id: this.routeId,
-          agency_id: this.agencyId,
+          feed_version_ids: this.fvids,
+          route_ids: this.routeIds,
+          agency_ids: this.agencyIds,
           offset: 0,
           limit: 10000
         }
@@ -26,13 +30,14 @@ export default {
   components: { MapViewer },
   props: {
     overlay: { type: Boolean, default: false },
-    fvid: { type: Number, default: null },
-    routeId: { type: Number, default: null },
-    agencyId: { type: Number, default: null }
+    fvids: { type: Array, default: null },
+    routeIds: { type: Number, default: null },
+    agencyIds: { type: Array, default: null }
   },
   data () {
     return {
-      features: []
+      features: [],
+      error: null
     }
   },
   computed: {
@@ -53,8 +58,8 @@ export default {
             properties: {
               id: feature.id,
               route_id: feature.route_id,
-              feed_version_sha1: this.$route.params.version,
-              onestop_id: this.$route.params.feed,
+              feed_version_sha1: feature.feed_version.sha1,
+              onestop_id: feature.feed_version.current_feed.onestop_id,
               route_short_name: feature.route_short_name,
               route_long_name: feature.route_long_name,
               route_type: feature.route_type,

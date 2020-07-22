@@ -1,6 +1,11 @@
 <template>
   <div>
+    <b-message v-if="error" class="is-danger">
+      {{ error }}
+    </b-message>
+    <span v-else-if="$apollo.loading" class="is-loading">Loading</span>
     <b-table
+      v-else
       :data="routes"
       :striped="true"
       :paginated="true"
@@ -26,6 +31,7 @@
             {{ props.row.route_id }}
           </nuxt-link>
         </b-table-column>
+
         <b-table-column
           :sortable="true"
           field="route_short_name"
@@ -42,9 +48,13 @@
         </b-table-column>
 
         <b-table-column field="route_url" label=" ">
-          <a v-if="props.row.route_url" :href="props.row.route_url">
+          <a v-if="props.row.route_url" target="_blank" :href="props.row.route_url">
             <b-icon icon="link" />
           </a>
+        </b-table-column>
+
+        <b-table-column v-if="showAgency" field="agency" label="Agency">
+          {{ props.row.agency.agency_name }}
         </b-table-column>
 
         <b-table-column field="headways" label="Headway" :numeric="true" :sortable="true">
@@ -68,8 +78,10 @@
 
 export default {
   props: {
-    fvid: { type: String, default () { return '' } },
-    agencyId: { type: String, default: null }
+    fvids: { type: Array, default: null },
+    agencyIds: { type: Array, default: null },
+    routeIds: { type: Array, default: null },
+    showAgency: { type: Boolean, default: true }
   },
   data () {
     return {
@@ -78,7 +90,8 @@ export default {
       total: 0,
       routes: [],
       sortField: null,
-      sortOrder: null
+      sortOrder: null,
+      error: null
     }
   },
   methods: {
@@ -108,14 +121,6 @@ Weekday Late night: ${fmt(ret.weekday, 'latenight')} mins`
       this.sortOrder = order
     },
     onFilter (a) {
-      alert('ok')
-      this.filterRouteID = a.route_id ? `%${a.route_id}%` : null
-      this.filterRouteShortName = a.route_short_name
-        ? `%${a.route_short_name}%`
-        : null
-      this.filterRouteLongName = a.route_long_name
-        ? `%${a.route_long_name}%`
-        : null
     }
   },
   apollo: {
@@ -131,16 +136,15 @@ Weekday Late night: ${fmt(ret.weekday, 'latenight')} mins`
           orderby = { headways_weekday: { headway_seconds_morning_mid: 'asc' } }
         }
         return {
-          feed_version_sha1: this.fvid,
           offset: this.offset,
           limit: this.limit,
-          route_id: this.filterRouteID,
-          route_short_name: this.filterRouteShortName,
-          route_long_name: this.filterRouteLongName,
-          agency_id: this.agencyId,
+          agency_ids: this.agencyIds,
+          route_ids: this.routeIds,
+          feed_version_ids: this.fvids,
           order_by: orderby
         }
       },
+      error (e) { this.error = e },
       update (data) {
         this.total = data.total.aggregate.count
         this.routes = data.routes

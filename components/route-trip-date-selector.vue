@@ -1,6 +1,11 @@
 <template>
   <div>
+    <b-message v-if="error" class="is-danger">
+      {{ error }}
+    </b-message>
+    <span v-else-if="$apollo.loading" class="is-loading">Loadingzzz</span>
     <b-datepicker
+      v-else
       v-model="dateValue"
       :events="serviceDates"
       :nearby-month-days="false"
@@ -58,12 +63,14 @@ export default {
       query: q,
       variables () {
         return { route_id: this.routeId }
-      }
+      },
+      error (e) { this.error = e }
     }
   },
   data () {
     return {
-      entity: null
+      entity: null,
+      error: null
     }
   },
   computed: {

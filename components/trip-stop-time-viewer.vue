@@ -1,10 +1,11 @@
 <template>
   <div>
-    <h4 class="title is-4">
-      Date: {{ serviceDate }}
-    </h4>
-
+    <b-message v-if="error" class="is-danger">
+      {{ error }}
+    </b-message>
+    <span v-else-if="$apollo.loading" class="is-loading">Loading</span>
     <b-table
+      v-else
       :data="sts"
       :striped="true"
       sort-icon="menu-up"
@@ -60,7 +61,8 @@ export default {
   data () {
     return {
       trips: [],
-      defaultSort: ['departure_time', 'asc']
+      defaultSort: ['departure_time', 'asc'],
+      error: null
     }
   },
   computed: {
@@ -76,14 +78,9 @@ export default {
     }
   },
   apollo: {
-    // otherTrips: {
-    //   query: require('~/graphql/feed-version-route-trips.gql'),
-    //   variables () {
-    //     return {}
-    //   }
-    // },
     trips: {
       query: q,
+      error (e) { this.error = e },
       variables () {
         return {
           feed_version_id: this.fvid,

@@ -1,10 +1,11 @@
 <template>
   <div>
-    <div v-if="$apollo.loading">
-      Loading...
-    </div>
+    <b-message v-if="error" class="is-danger">
+      {{ error }}
+    </b-message>
+    <span v-else-if="$apollo.loading" class="is-loading">Loading</span>
     <div v-else-if="dirTrips.length === 0">
-      No trips
+      No trips on {{ serviceDate }}.
     </div>
     <div v-else>
       <div>
@@ -61,7 +62,8 @@ export default {
   },
   data () {
     return {
-      defaultSort: ['first_departure_time', 'asc']
+      defaultSort: ['first_departure_time', 'asc'],
+      error: null
     }
   },
   computed: {
@@ -99,6 +101,7 @@ export default {
   apollo: {
     services_on_date: {
       query: require('~/graphql/feed-version-route-trips.gql'),
+      error (e) { this.error = e },
       variables () {
         return {
           route_id: this.routeId,
