@@ -31,7 +31,7 @@ export default {
   props: {
     overlay: { type: Boolean, default: false },
     fvids: { type: Array, default: null },
-    routeIds: { type: Number, default: null },
+    routeIds: { type: Array, default: null },
     agencyIds: { type: Array, default: null }
   },
   data () {
