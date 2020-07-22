@@ -1,55 +1,61 @@
 <template>
-  <div v-if="entity">
-    <h1 class="title clearfix">
-      <nuxt-link :to="{name:'data'}">
-        Data
-      </nuxt-link> /
-      <nuxt-link :to="{name: 'data-feed', params:{feed:$route.params.feed}}">
-        {{ $route.params.feed | shortenName }}
-      </nuxt-link> /
-      <nuxt-link :to="{name: 'data-feed-versions-version', params:{feed:$route.params.feed, version:$route.params.version}}">
-        {{ entity.feed_version.sha1 | shortenName(6) }}
-      </nuxt-link> /
-      <nuxt-link :to="{name: 'data-feed-versions-version-agencies-agency', params:{feed:$route.params.feed, version:$route.params.version, agency: entity.agency.agency_id }}">
-        {{ entity.agency.agency_name }}
-      </nuxt-link>
-    </h1>
-    <h1 class="title">
-      <nuxt-link
-        :to="{name: 'data-feed-versions-version-routes-route', params:{feed:$route.params.feed,version:$route.params.version,route:$route.params.route}}"
-      >
-        <route-icon :route-link="entity.route_url" :route-type="entity.route_type" :route-short-name="entity.route_short_name" :route-long-name="entity.route_long_name" />
-      </nuxt-link>
-    </h1>
-    <div class="columns">
-      <div class="column is-two-thirds">
-        <b-tabs v-model="activeTab" type="is-boxed" :animated="false">
-          <b-tab-item label="Summary">
-            <headway-viewer :headways="entity.headways" />
-            <div class="clearfix">
-              {{ entity.entity_desc }}
-            </div>
-          </b-tab-item>
+  <div>
+    <b-message v-if="error" class="is-danger">
+      {{ error }}
+    </b-message>
+    <span v-else-if="$apollo.loading" class="is-loading" />
+    <div v-else-if="entity">
+      <h1 class="title clearfix">
+        <nuxt-link :to="{name:'data'}">
+          Data
+        </nuxt-link> /
+        <nuxt-link :to="{name: 'data-feed', params:{feed:$route.params.feed}}">
+          {{ $route.params.feed | shortenName }}
+        </nuxt-link> /
+        <nuxt-link :to="{name: 'data-feed-versions-version', params:{feed:$route.params.feed, version:$route.params.version}}">
+          {{ entity.feed_version.sha1 | shortenName(6) }}
+        </nuxt-link> /
+        <nuxt-link :to="{name: 'data-feed-versions-version-agencies-agency', params:{feed:$route.params.feed, version:$route.params.version, agency: entity.agency.agency_id }}">
+          {{ entity.agency.agency_name }}
+        </nuxt-link>
+      </h1>
+      <h1 class="title">
+        <nuxt-link
+          :to="{name: 'data-feed-versions-version-routes-route', params:{feed:$route.params.feed,version:$route.params.version,route:$route.params.route}}"
+        >
+          <route-icon :route-link="entity.route_url" :route-type="entity.route_type" :route-short-name="entity.route_short_name" :route-long-name="entity.route_long_name" />
+        </nuxt-link>
+      </h1>
+      <div class="columns">
+        <div class="column is-two-thirds">
+          <b-tabs v-model="activeTab" type="is-boxed" :animated="false">
+            <b-tab-item label="Summary">
+              <headway-viewer :headways="entity.headways" />
+              <div class="clearfix">
+                {{ entity.entity_desc }}
+              </div>
+            </b-tab-item>
 
-          <b-tab-item label="Inbound">
-            <route-trips-viewer v-if="activeTab === 1" :service-date="serviceDate" :route-id="entity.id" :feed-version-id="entity.feed_version_id" :direction-id="0" />
-          </b-tab-item>
+            <b-tab-item label="Inbound">
+              <route-trips-viewer v-if="activeTab === 1" :service-date="serviceDate" :route-id="entity.id" :feed-version-id="entity.feed_version_id" :direction-id="0" />
+            </b-tab-item>
 
-          <b-tab-item label="Outbound">
-            <route-trips-viewer v-if="activeTab === 2" :service-date="serviceDate" :route-id="entity.id" :feed-version-id="entity.feed_version_id" :direction-id="1" />
-          </b-tab-item>
+            <b-tab-item label="Outbound">
+              <route-trips-viewer v-if="activeTab === 2" :service-date="serviceDate" :route-id="entity.id" :feed-version-id="entity.feed_version_id" :direction-id="1" />
+            </b-tab-item>
 
-          <b-tab-item :label="childLabel">
-            <nuxt-child :service-date="serviceDate" :entity="entity" :label.sync="childLabel" />
-          </b-tab-item>
-        </b-tabs>
-      </div>
+            <b-tab-item :label="childLabel">
+              <nuxt-child :service-date="serviceDate" :entity="entity" :label.sync="childLabel" />
+            </b-tab-item>
+          </b-tabs>
+        </div>
 
-      <div class="column is-one-third" style="width:400px">
-        <feed-version-map-viewer :fvid="entity.feed_version.id" :route-id="entity.id" :overlay="false" />
+        <div class="column is-one-third" style="width:400px">
+          <feed-version-map-viewer :route-ids="[entity.id]" :overlay="false" />
 
-        <div style="margin-left:40px;margin-top:20px;">
-          <route-trip-date-selector v-model="serviceDate" :route-id="entity.id" />
+          <div style="margin-left:40px;margin-top:20px;">
+            <route-trip-date-selector v-model="serviceDate" :route-id="entity.id" />
+          </div>
         </div>
       </div>
     </div>
@@ -72,11 +78,13 @@ export default {
       activeEntity: null,
       versionEntity: null,
       activeTab: 0,
-      childLabel: null
+      childLabel: null,
+      error: null
     }
   },
   apollo: {
     q: {
+      error (e) { this.error = e },
       query: require('~/graphql/feed-version-route.gql'),
       variables () {
         return {

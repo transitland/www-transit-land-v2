@@ -1,57 +1,59 @@
 <template>
-  <div v-if="entity">
-    <h1 class="title clearfix">
-      <nuxt-link :to="{name:'data'}">
-        Data
-      </nuxt-link> /
-      <nuxt-link :to="{name: 'data-feed', params:{feed:$route.params.feed}}">
-        {{ $route.params.feed | shortenName }}
-      </nuxt-link> /
-      <nuxt-link :to="{name: 'data-feed-versions-version', params:{feed:$route.params.feed, version:$route.params.version}}">
-        {{ entity.feed_version.sha1 | shortenName(6) }}
-      </nuxt-link> /
-      <nuxt-link :to="{name: 'data-feed-versions-version-agencies-agency', params:{feed:$route.params.feed, version:$route.params.version, agency: entity.agency_id }}">
-        {{ entity.agency_name }}
-      </nuxt-link>
-    </h1>
+  <div>
+    <b-message v-if="error" class="is-danger">
+      {{ error }}
+    </b-message>
+    <span v-else-if="$apollo.loading" class="is-loading" />
+    <div v-else-if="entity">
+      <h1 class="title clearfix">
+        <nuxt-link :to="{name:'data'}">
+          Data
+        </nuxt-link> /
+        <nuxt-link :to="{name: 'data-feed', params:{feed:$route.params.feed}}">
+          {{ $route.params.feed | shortenName }}
+        </nuxt-link> /
+        <nuxt-link :to="{name: 'data-feed-versions-version', params:{feed:$route.params.feed, version:$route.params.version}}">
+          {{ entity.feed_version.sha1 | shortenName(6) }}
+        </nuxt-link> /
+        <nuxt-link :to="{name: 'data-feed-versions-version-agencies-agency', params:{feed:$route.params.feed, version:$route.params.version, agency: entity.agency_id }}">
+          {{ entity.agency_name }}
+        </nuxt-link>
+      </h1>
 
-    <b-notification v-if="hasMultipleAgencies" type="is-light" has-icon icon="information" :closable="false">
-      You are viewing the map, route, and stops for a single agency, {{ entity.agency_name }} (Agency ID: {{ entity.agency_id }})in a feed, {{ entity.feed_version.current_feed.onestop_id }}, which contains multiple agencies.
-      Click <nuxt-link :to="{name: 'data-feed-versions-version', params:{feed:$route.params.feed, version:$route.params.version}}">
-        here
-      </nuxt-link> to view all agencies in this feed.
-    </b-notification>
+      <b-notification v-if="hasMultipleAgencies" type="is-light" has-icon icon="information" :closable="false">
+        You are viewing the map, route, and stops for a single agency, {{ entity.agency_name }} (Agency ID: {{ entity.agency_id }})in a feed, {{ entity.feed_version.current_feed.onestop_id }}, which contains multiple agencies.
+        Click <nuxt-link :to="{name: 'data-feed-versions-version', params:{feed:$route.params.feed, version:$route.params.version}}">
+          here
+        </nuxt-link> to view all agencies in this feed.
+      </b-notification>
 
-    <table class="property-list">
-      <tr>
-        <td>Agency phone</td>
-        <td>{{ entity.agency_phone }}</td>
-      </tr>
-      <tr>
-        <td>Agency website</td>
-        <td>{{ entity.agency_url }}</td>
-      </tr>
-    </table>
+      <table class="property-list">
+        <tr>
+          <td>Agency phone</td>
+          <td>{{ entity.agency_phone }}</td>
+        </tr>
+        <tr>
+          <td>Agency website</td>
+          <td>{{ entity.agency_url }}</td>
+        </tr>
+      </table>
 
-    <br>
+      <br>
 
-    <b-tabs v-model="activeTab" type="is-boxed">
-      <b-tab-item label="Map">
-        <feed-version-map-viewer :fvid="entity.feed_version.id" :agency-id="entity.id" :overlay="true" />
-      </b-tab-item>
+      <b-tabs v-model="activeTab" type="is-boxed">
+        <b-tab-item label="Map">
+          <feed-version-map-viewer :agency-ids="[entity.id]" :overlay="true" />
+        </b-tab-item>
 
-      <b-tab-item label="Routes">
-        <route-viewer v-if="activeTab === 1" :fvid="entity.feed_version.sha1" :agency-id="entity.id" />
-      </b-tab-item>
+        <b-tab-item label="Routes">
+          <route-viewer v-if="activeTab === 1" :agency-ids="[entity.id]" :show-agency="false" />
+        </b-tab-item>
 
-      <b-tab-item label="Stops">
-        <b-notification v-if="hasMultipleAgencies" type="is-light" has-icon icon="information" :closable="false">
-          This list isn't filtered by agency just yet. Working on it :-)
-        </b-notification>
-
-        <stop-viewer v-if="activeTab === 2" :fvid="entity.feed_version.sha1" :agency-id="entity.id" />
-      </b-tab-item>
-    </b-tabs>
+        <b-tab-item label="Stops">
+          <stop-viewer v-if="activeTab === 2" :fvids="[entity.feed_version.id]" :agency-ids="[entity.id]" :show-agencies="false" />
+        </b-tab-item>
+      </b-tabs>
+    </div>
   </div>
 </template>
 
@@ -72,6 +74,7 @@ export default {
           agency_id: this.$route.params.agency
         }
       },
+      error (e) { this.error = e },
       update (data) {
         this.active_agencies = data.active_agencies
         this.gtfs_agencies = data.gtfs_agencies
@@ -82,7 +85,8 @@ export default {
     return {
       activeTab: 0,
       active_agencies: [],
-      gtfs_agencies: []
+      gtfs_agencies: [],
+      error: null
     }
   },
   computed: {

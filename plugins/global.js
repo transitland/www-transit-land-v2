@@ -63,3 +63,7 @@ Vue.filter('formatDate',
     const d = v.getDate().toString()
     return `${y}-${m}-${d}`
   })
+
+Vue.filter('joinUnique', function (values) {
+  return Array.from(new Set(values)).sort().join(', ')
+})

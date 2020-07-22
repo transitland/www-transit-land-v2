@@ -1,51 +1,95 @@
 <template>
   <div>
-    <h1 class="title">
-      <nuxt-link :to="{name:'operators'}">
-        Operators
-      </nuxt-link> / {{ operator.operator_onestop_id }}
-    </h1>
-    <span v-for="feedOnestopId in feedOnestopIds" :key="feedOnestopId">
-      <nuxt-link :to="{name: 'data-feed', params: {feed: feedOnestopId}}">
-        {{ feedOnestopId }}
-      </nuxt-link>
-    </span>
+    <b-message v-if="error" class="is-danger">
+      {{ error }}
+    </b-message>
+    <span v-else-if="$apollo.loading" class="is-loading" />
+    <div v-else>
+      <h1 class="title">
+        <nuxt-link :to="{name:'operators'}">
+          Operators
+        </nuxt-link> /
+        <nuxt-link :to="{name:'operators', params:{operator:$route.params.operator}}">
+          {{ $route.params.operator }}
+        </nuxt-link>
+      </h1>
+      <b-tabs v-model="activeTab" type="is-boxed">
+        <b-tab-item label="Map">
+          <!-- need fvids for good index search -->
+          <feed-version-map-viewer :fvids="fvids" :agency-ids="agencyIds" :overlay="true" />
+        </b-tab-item>
+        <b-tab-item label="Data sources">
+          <b-table
+            :data="agencies"
+            :striped="true"
+            sort-icon="menu-up"
+          >
+            <template slot-scope="props">
+              <b-table-column field="agency" label="Source feed">
+                {{ props.row.feed_version.current_feed.onestop_id }}
+              </b-table-column>
+              <b-table-column field="agency" label="Source agency">
+                {{ props.row.agency_name }}
+              </b-table-column>
+            </template>
+          </b-table>
+        </b-tab-item>
+        <b-tab-item label="Routes">
+          <route-viewer v-if="activeTab === 2" :agency-ids="agencyIds" :fvids="fvids" :show-agency="true" />
+        </b-tab-item>
+        <b-tab-item label="Stops">
+          <stop-viewer v-if="activeTab === 3" :agency-ids="agencyIds" :fvids="fvids" />
+        </b-tab-item>
+      </b-tabs>
+    </div>
   </div>
 </template>
 
 <script>
+import RouteViewer from '~/components/route-viewer'
+import FeedVersionMapViewer from '~/components/feed-version-map-viewer'
+import StopViewer from '~/components/stop-viewer'
+
 export default {
+  components: { FeedVersionMapViewer, RouteViewer, StopViewer },
   apollo: {
-    q: {
+    entities: {
+      error (e) { this.error = e },
       query: require('~/graphql/current-operator.gql'),
       variables () {
         return {
           operator_onestop_id: this.$route.params.operator
         }
-      },
-      update (data) {
-        this.operator = data.tl_agency_operator_merge[0]
       }
     }
   },
   data () {
     return {
-      operator: {}
+      activeTab: 0,
+      entities: [],
+      error: null
     }
   },
   computed: {
-    feedOnestopIds () {
-      try {
-        // TODO: make sure this can handle multiple associated feeds
-        return [this.operator.agency.feed_version.current_feed.onestop_id]
-      } catch {
-        return []
+    agencies () {
+      const ret = []
+      for (const ent of this.entities) {
+        if (ent.agency) {
+          ret.push(ent.agency)
+        }
       }
+      return ret
+    },
+    agencyIds () {
+      return this.agencies.map((s) => { return s.id }).filter((s) => { return s })
+    },
+    fvids () {
+      return this.agencies.map((s) => { return s.feed_version.id })
     }
   },
   head () {
     return {
-      title: `${this.operator.operator_name} • operator details`
+      title: ' • operator details'
     }
   }
 }

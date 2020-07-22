@@ -1,15 +1,24 @@
 query current_operators($operator_onestop_id: String) {
-  tl_agency_operator_merge(where: {operator_onestop_id: {_eq: $operator_onestop_id}}, limit: 1) {
+  entities: tl_agency_operator_associations(where: {operator_onestop_id: {_eq: $operator_onestop_id}}) {
     operator_id
     operator_name
-    operator_short_name
-    operator_onestop_id
+    agency_id
     agency {
+      id
+      agency_name
       feed_version {
+        id
         current_feed {
+          id
           onestop_id
         }
       }
     }
+    city_name
+    country_name
+    group_id
+    operator_onestop_id
+    operator_short_name
+    state_name
   }
 }
