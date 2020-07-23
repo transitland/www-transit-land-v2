@@ -40,10 +40,10 @@
           <feed-version-map-viewer :fvids="fvids" :agency-ids="agencyIds" :overlay="true" />
         </b-tab-item>
         <b-tab-item label="Routes">
-          <route-viewer v-if="activeTab === 2" :agency-ids="agencyIds" :fvids="fvids" :show-agency="true" />
+          <route-viewer v-if="activeTab === 1" :agency-ids="agencyIds" :fvids="fvids" :show-agency="true" />
         </b-tab-item>
         <b-tab-item label="Stops">
-          <stop-viewer v-if="activeTab === 3" :agency-ids="agencyIds" :fvids="fvids" />
+          <stop-viewer v-if="activeTab === 2" :agency-ids="agencyIds" :fvids="fvids" />
         </b-tab-item>
       </b-tabs>
     </div>
@@ -99,7 +99,7 @@ export default {
       return this.agencies.map((s) => { return s.id }).filter((s) => { return s })
     },
     fvids () {
-      return this.agencies.map((s) => { return s.feed_version.id })
+      return this.agencies.map((s) => { return s.feed_version.id }).filter((s) => { return s })
     }
   },
   methods: {
