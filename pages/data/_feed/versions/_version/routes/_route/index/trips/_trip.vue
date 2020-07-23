@@ -25,6 +25,13 @@ export default {
   },
   mounted () {
     this.$emit('update:label', 'Trip Viewer')
+  },
+  head () {
+    if (this.entity) {
+      return {
+        title: `trip viewer • ${this.entity.route_long_name} (route) • ${this.entity.agency.agency_name}`
+      }
+    }
   }
 }
 </script>
