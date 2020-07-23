@@ -40,7 +40,7 @@
     </div>
     <section class="section">
       <p class="is-medium content">
-        <strong>Welcome to Transitland v2.</strong> Transitland is an open data platform that collects <abbr title="General Transit Feed Specification">GTFS</abbr>, GTFS Realtime, and other open data feeds from transit providers around the world. Transitland aggregates feeds from <strong>over 2,500 operators</strong> across <strong>over 55 countries</strong>. Use the Transitland website to browse this world of data. Or use Transitland's APIs to power your own maps, data visualizations, analyses, trip planners, or routing algorithms.
+        <strong>Welcome to Transitland v2.</strong> Transitland is an open data platform that collects <abbr title="General Transit Feed Specification">GTFS</abbr>, GTFS Realtime, and other open data feeds from transit providers around the world. Transitland aggregates feeds from <nuxt-link :to="{ name: 'operators' }">over 2,500 operators in over 55 countries</nuxt-link>. Use the Transitland website to browse this world of data. Or use Transitland's APIs to power your own maps, data visualizations, analyses, trip planners, or routing algorithms.
       </p>
       <p class="is-medium content">
         This website and the APIs that power it are gradually replacing Transitland v1. For the time being, the two versions will run in parallel. For Transitland v1, see <code><a href="https://transit.land">https://transit.land</a></code> and use its API at <code><a href="https://transit.land/api/v1">https://transit.land/api/v1</a></code>. For an overview of Transitland v2, see <a href="https://transit.land/news/2019/10/17/tlv2.html">this blog post</a> and <a href="http://localhost:3000/documentation">the new documentation on this website</a>.
