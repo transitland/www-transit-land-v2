@@ -1,1779 +1,2881 @@
 {
-    "functions": [],
-    "remote_schemas": [],
-    "query_collections": [],
-    "allowlist": [],
+    "version": 2,
     "tables": [
-        {
-            "table": "active_agencies",
-            "is_enum": false,
-            "configuration": {
-                "custom_root_fields": {
-                    "select": null,
-                    "select_by_pk": null,
-                    "select_aggregate": null,
-                    "insert": null,
-                    "update": null,
-                    "delete": null
-                },
-                "custom_column_names": {}
-            },
-            "object_relationships": [
-                {
-                    "using": {
-                        "manual_configuration": {
-                            "remote_table": "agency_geometries",
-                            "column_mapping": {
-                                "id": "agency_id"
-                            }
-                        }
-                    },
-                    "name": "agency_geometry",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "manual_configuration": {
-                            "remote_table": "feed_versions",
-                            "column_mapping": {
-                                "feed_version_id": "id"
-                            }
-                        }
-                    },
-                    "name": "feed_version",
-                    "comment": null
-                }
-            ],
-            "array_relationships": [
-                {
-                    "using": {
-                        "manual_configuration": {
-                            "remote_table": "gtfs_routes",
-                            "column_mapping": {
-                                "id": "agency_id"
-                            }
-                        }
-                    },
-                    "name": "routes",
-                    "comment": null
-                }
-            ],
-            "insert_permissions": [],
-            "select_permissions": [
-                {
-                    "role": "anonymous",
-                    "comment": null,
-                    "permission": {
-                        "allow_aggregations": true,
-                        "computed_fields": [],
-                        "columns": [
-                            "id",
-                            "agency_id",
-                            "agency_name",
-                            "agency_url",
-                            "agency_timezone",
-                            "agency_lang",
-                            "agency_phone",
-                            "agency_fare_url",
-                            "agency_email",
-                            "created_at",
-                            "updated_at",
-                            "feed_version_id"
-                        ],
-                        "limit": 1000,
-                        "filter": {}
-                    }
-                }
-            ],
-            "update_permissions": [],
-            "delete_permissions": [],
-            "event_triggers": [],
-            "computed_fields": []
+      {
+        "table": {
+          "schema": "public",
+          "name": "active_agencies"
         },
-        {
-            "table": "active_routes",
-            "is_enum": false,
-            "configuration": {
-                "custom_root_fields": {
-                    "select": null,
-                    "select_by_pk": null,
-                    "select_aggregate": null,
-                    "insert": null,
-                    "update": null,
-                    "delete": null
+        "object_relationships": [
+          {
+            "name": "feed_version",
+            "using": {
+              "manual_configuration": {
+                "remote_table": {
+                  "schema": "public",
+                  "name": "feed_versions"
                 },
-                "custom_column_names": {}
-            },
-            "object_relationships": [
-                {
-                    "using": {
-                        "manual_configuration": {
-                            "remote_table": "gtfs_agencies",
-                            "column_mapping": {
-                                "agency_id": "id"
-                            }
-                        }
-                    },
-                    "name": "agency",
-                    "comment": null
+                "column_mapping": {
+                  "feed_version_id": "id"
+                }
+              }
+            }
+          }
+        ],
+        "array_relationships": [
+          {
+            "name": "routes",
+            "using": {
+              "manual_configuration": {
+                "remote_table": {
+                  "schema": "public",
+                  "name": "gtfs_routes"
                 },
-                {
-                    "using": {
-                        "manual_configuration": {
-                            "remote_table": "feed_versions",
-                            "column_mapping": {
-                                "feed_version_id": "id"
-                            }
-                        }
-                    },
-                    "name": "feed_version",
-                    "comment": null
+                "column_mapping": {
+                  "id": "agency_id"
                 }
-            ],
-            "array_relationships": [
-                {
-                    "using": {
-                        "manual_configuration": {
-                            "remote_table": "gtfs_trips",
-                            "column_mapping": {
-                                "id": "route_id"
-                            }
-                        }
-                    },
-                    "name": "trips",
-                    "comment": null
+              }
+            }
+          },
+          {
+            "name": "route_stops",
+            "using": {
+              "manual_configuration": {
+                "remote_table": {
+                  "schema": "public",
+                  "name": "tl_route_stops"
+                },
+                "column_mapping": {
+                  "id": "agency_id"
                 }
-            ],
-            "insert_permissions": [],
-            "select_permissions": [
-                {
-                    "role": "anonymous",
-                    "comment": null,
-                    "permission": {
-                        "allow_aggregations": false,
-                        "computed_fields": [],
-                        "columns": [
-                            "id",
-                            "route_id",
-                            "route_short_name",
-                            "route_long_name",
-                            "route_desc",
-                            "route_type",
-                            "route_url",
-                            "route_color",
-                            "route_text_color",
-                            "route_sort_order",
-                            "created_at",
-                            "updated_at",
-                            "feed_version_id",
-                            "agency_id"
-                        ],
-                        "limit": 1000,
-                        "filter": {}
-                    }
-                }
-            ],
-            "update_permissions": [],
-            "delete_permissions": [],
-            "event_triggers": [],
-            "computed_fields": []
+              }
+            }
+          }
+        ],
+        "select_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "id",
+                "agency_id",
+                "agency_name",
+                "agency_url",
+                "agency_timezone",
+                "agency_lang",
+                "agency_phone",
+                "agency_fare_url",
+                "agency_email",
+                "created_at",
+                "updated_at",
+                "feed_version_id",
+                "geometry",
+                "centroid"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          },
+          {
+            "role": "user",
+            "permission": {
+              "columns": [
+                "feed_onestop_id",
+                "id",
+                "agency_id",
+                "agency_name",
+                "agency_url",
+                "agency_timezone",
+                "agency_lang",
+                "agency_phone",
+                "agency_fare_url",
+                "agency_email",
+                "created_at",
+                "updated_at",
+                "feed_version_id",
+                "geometry",
+                "centroid"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "public",
+          "name": "active_routes"
         },
-        {
-            "table": "active_stops",
-            "is_enum": false,
-            "configuration": {
-                "custom_root_fields": {
-                    "select": null,
-                    "select_by_pk": null,
-                    "select_aggregate": null,
-                    "insert": null,
-                    "update": null,
-                    "delete": null
+        "object_relationships": [
+          {
+            "name": "agency",
+            "using": {
+              "manual_configuration": {
+                "remote_table": {
+                  "schema": "public",
+                  "name": "gtfs_agencies"
                 },
-                "custom_column_names": {}
-            },
-            "object_relationships": [
-                {
-                    "using": {
-                        "manual_configuration": {
-                            "remote_table": "feed_versions",
-                            "column_mapping": {
-                                "feed_version_id": "id"
-                            }
-                        }
-                    },
-                    "name": "feed_version",
-                    "comment": null
+                "column_mapping": {
+                  "agency_id": "id"
                 }
-            ],
-            "array_relationships": [
-                {
-                    "using": {
-                        "manual_configuration": {
-                            "remote_table": "gtfs_stop_times",
-                            "column_mapping": {
-                                "id": "stop_id"
-                            }
-                        }
-                    },
-                    "name": "stop_times",
-                    "comment": null
+              }
+            }
+          },
+          {
+            "name": "feed_version",
+            "using": {
+              "manual_configuration": {
+                "remote_table": {
+                  "schema": "public",
+                  "name": "feed_versions"
                 },
-                {
-                    "using": {
-                        "manual_configuration": {
-                            "remote_table": "gtfs_transfers",
-                            "column_mapping": {
-                                "id": "from_stop_id"
-                            }
-                        }
-                    },
-                    "name": "transfers_from_stop",
-                    "comment": null
+                "column_mapping": {
+                  "feed_version_id": "id"
+                }
+              }
+            }
+          },
+          {
+            "name": "headways_weekday",
+            "using": {
+              "manual_configuration": {
+                "remote_table": {
+                  "schema": "public",
+                  "name": "tl_route_headways_weekday"
                 },
-                {
-                    "using": {
-                        "manual_configuration": {
-                            "remote_table": "gtfs_transfers",
-                            "column_mapping": {
-                                "id": "to_stop_id"
-                            }
-                        }
-                    },
-                    "name": "transfers_to_stop",
-                    "comment": null
+                "column_mapping": {
+                  "id": "route_id"
                 }
-            ],
-            "insert_permissions": [],
-            "select_permissions": [
-                {
-                    "role": "anonymous",
-                    "comment": null,
-                    "permission": {
-                        "allow_aggregations": false,
-                        "computed_fields": [],
-                        "columns": [
-                            "id",
-                            "stop_id",
-                            "stop_code",
-                            "stop_name",
-                            "stop_desc",
-                            "zone_id",
-                            "stop_url",
-                            "location_type",
-                            "stop_timezone",
-                            "wheelchair_boarding",
-                            "geometry",
-                            "created_at",
-                            "updated_at",
-                            "feed_version_id",
-                            "parent_station",
-                            "level_id"
-                        ],
-                        "limit": 1000,
-                        "filter": {}
-                    }
+              }
+            }
+          }
+        ],
+        "array_relationships": [
+          {
+            "name": "fare_rules",
+            "using": {
+              "manual_configuration": {
+                "remote_table": {
+                  "schema": "public",
+                  "name": "active_routes"
+                },
+                "column_mapping": {
+                  "id": "route_id"
                 }
-            ],
-            "update_permissions": [],
-            "delete_permissions": [],
-            "event_triggers": [],
-            "computed_fields": []
+              }
+            }
+          },
+          {
+            "name": "geometries",
+            "using": {
+              "manual_configuration": {
+                "remote_table": {
+                  "schema": "public",
+                  "name": "tl_route_geometries"
+                },
+                "column_mapping": {
+                  "id": "route_id"
+                }
+              }
+            }
+          },
+          {
+            "name": "headways",
+            "using": {
+              "manual_configuration": {
+                "remote_table": {
+                  "schema": "public",
+                  "name": "tl_route_headways"
+                },
+                "column_mapping": {
+                  "id": "route_id"
+                }
+              }
+            }
+          },
+          {
+            "name": "route_stops",
+            "using": {
+              "manual_configuration": {
+                "remote_table": {
+                  "schema": "public",
+                  "name": "tl_route_stops"
+                },
+                "column_mapping": {
+                  "id": "route_id"
+                }
+              }
+            }
+          },
+          {
+            "name": "trips",
+            "using": {
+              "manual_configuration": {
+                "remote_table": {
+                  "schema": "public",
+                  "name": "gtfs_trips"
+                },
+                "column_mapping": {
+                  "id": "route_id"
+                }
+              }
+            }
+          }
+        ],
+        "select_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "feed_onestop_id",
+                "id",
+                "route_id",
+                "route_short_name",
+                "route_long_name",
+                "route_desc",
+                "route_type",
+                "route_url",
+                "route_color",
+                "route_text_color",
+                "route_sort_order",
+                "created_at",
+                "updated_at",
+                "feed_version_id",
+                "agency_id",
+                "geometry",
+                "centroid",
+                "generated"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          },
+          {
+            "role": "user",
+            "permission": {
+              "columns": [
+                "feed_onestop_id",
+                "id",
+                "route_id",
+                "route_short_name",
+                "route_long_name",
+                "route_desc",
+                "route_type",
+                "route_url",
+                "route_color",
+                "route_text_color",
+                "route_sort_order",
+                "created_at",
+                "updated_at",
+                "feed_version_id",
+                "agency_id",
+                "geometry",
+                "centroid",
+                "generated"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "public",
+          "name": "active_stops"
         },
-        {
-            "table": "agency_geometries",
-            "is_enum": false,
-            "configuration": {
-                "custom_root_fields": {
-                    "select": null,
-                    "select_by_pk": null,
-                    "select_aggregate": null,
-                    "insert": null,
-                    "update": null,
-                    "delete": null
+        "object_relationships": [
+          {
+            "name": "feed_version",
+            "using": {
+              "manual_configuration": {
+                "remote_table": {
+                  "schema": "public",
+                  "name": "feed_versions"
                 },
-                "custom_column_names": {}
-            },
-            "object_relationships": [],
-            "array_relationships": [],
-            "insert_permissions": [],
-            "select_permissions": [
-                {
-                    "role": "anonymous",
-                    "comment": null,
-                    "permission": {
-                        "allow_aggregations": true,
-                        "computed_fields": [],
-                        "columns": [
-                            "agency_id",
-                            "geometry",
-                            "centroid"
-                        ],
-                        "limit": 1000,
-                        "filter": {}
-                    }
+                "column_mapping": {
+                  "feed_version_id": "id"
                 }
-            ],
-            "update_permissions": [],
-            "delete_permissions": [],
-            "event_triggers": [],
-            "computed_fields": []
+              }
+            }
+          },
+          {
+            "name": "level",
+            "using": {
+              "manual_configuration": {
+                "remote_table": {
+                  "schema": "public",
+                  "name": "gtfs_levels"
+                },
+                "column_mapping": {
+                  "level_id": "id"
+                }
+              }
+            }
+          },
+          {
+            "name": "parent",
+            "using": {
+              "manual_configuration": {
+                "remote_table": {
+                  "schema": "public",
+                  "name": "gtfs_stops"
+                },
+                "column_mapping": {
+                  "parent_station": "id"
+                }
+              }
+            }
+          }
+        ],
+        "array_relationships": [
+          {
+            "name": "pathways_from_stop",
+            "using": {
+              "manual_configuration": {
+                "remote_table": {
+                  "schema": "public",
+                  "name": "gtfs_pathways"
+                },
+                "column_mapping": {
+                  "id": "from_stop_id"
+                }
+              }
+            }
+          },
+          {
+            "name": "pathways_to_stop",
+            "using": {
+              "manual_configuration": {
+                "remote_table": {
+                  "schema": "public",
+                  "name": "gtfs_pathways"
+                },
+                "column_mapping": {
+                  "id": "to_stop_id"
+                }
+              }
+            }
+          },
+          {
+            "name": "route_stops",
+            "using": {
+              "manual_configuration": {
+                "remote_table": {
+                  "schema": "public",
+                  "name": "tl_route_stops"
+                },
+                "column_mapping": {
+                  "id": "stop_id"
+                }
+              }
+            }
+          },
+          {
+            "name": "stop_times",
+            "using": {
+              "manual_configuration": {
+                "remote_table": {
+                  "schema": "public",
+                  "name": "gtfs_stop_times"
+                },
+                "column_mapping": {
+                  "id": "stop_id"
+                }
+              }
+            }
+          },
+          {
+            "name": "transfers_from_stop",
+            "using": {
+              "manual_configuration": {
+                "remote_table": {
+                  "schema": "public",
+                  "name": "gtfs_transfers"
+                },
+                "column_mapping": {
+                  "id": "from_stop_id"
+                }
+              }
+            }
+          },
+          {
+            "name": "transfers_to_stop",
+            "using": {
+              "manual_configuration": {
+                "remote_table": {
+                  "schema": "public",
+                  "name": "gtfs_transfers"
+                },
+                "column_mapping": {
+                  "id": "to_stop_id"
+                }
+              }
+            }
+          }
+        ],
+        "select_permissions": [
+          {
+            "role": "user",
+            "permission": {
+              "columns": [
+                "feed_onestop_id",
+                "id",
+                "stop_id",
+                "stop_code",
+                "stop_name",
+                "stop_desc",
+                "zone_id",
+                "stop_url",
+                "location_type",
+                "stop_timezone",
+                "wheelchair_boarding",
+                "geometry",
+                "created_at",
+                "updated_at",
+                "feed_version_id",
+                "parent_station",
+                "level_id"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "public",
+          "name": "current_feeds"
         },
-        {
-            "table": "current_feeds",
-            "is_enum": false,
-            "configuration": {
-                "custom_root_fields": {
-                    "select": null,
-                    "select_by_pk": null,
-                    "select_aggregate": null,
-                    "insert": null,
-                    "update": null,
-                    "delete": null
+        "object_relationships": [
+          {
+            "name": "feed_state",
+            "using": {
+              "manual_configuration": {
+                "remote_table": {
+                  "schema": "public",
+                  "name": "feed_states"
                 },
-                "custom_column_names": {}
-            },
-            "object_relationships": [
-                {
-                    "using": {
-                        "manual_configuration": {
-                            "remote_table": "feed_states",
-                            "column_mapping": {
-                                "id": "feed_id"
-                            }
-                        }
-                    },
-                    "name": "feed_state",
-                    "comment": null
+                "column_mapping": {
+                  "id": "feed_id"
                 }
-            ],
-            "array_relationships": [
-                {
-                    "using": {
-                        "foreign_key_constraint_on": {
-                            "column": "feed_id",
-                            "table": "feed_states"
-                        }
-                    },
-                    "name": "feed_states",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": {
-                            "column": "feed_id",
-                            "table": "feed_versions"
-                        }
-                    },
-                    "name": "feed_versions",
-                    "comment": null
+              }
+            }
+          }
+        ],
+        "array_relationships": [
+          {
+            "name": "feed_versions",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "feed_id",
+                "table": {
+                  "schema": "public",
+                  "name": "feed_versions"
                 }
-            ],
-            "insert_permissions": [],
-            "select_permissions": [
-                {
-                    "role": "anonymous",
-                    "comment": null,
-                    "permission": {
-                        "allow_aggregations": true,
-                        "computed_fields": [],
-                        "columns": [
-                            "associated_feeds",
-                            "auth",
-                            "created_at",
-                            "deleted_at",
-                            "feed_namespace_id",
-                            "file",
-                            "id",
-                            "languages",
-                            "license",
-                            "onestop_id",
-                            "other_ids",
-                            "spec",
-                            "type",
-                            "updated_at",
-                            "urls"
-                        ],
-                        "filter": {}
-                    }
-                }
-            ],
-            "update_permissions": [],
-            "delete_permissions": [],
-            "event_triggers": [],
-            "computed_fields": []
+              }
+            }
+          }
+        ],
+        "select_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "associated_feeds",
+                "auth",
+                "created_at",
+                "deleted_at",
+                "feed_namespace_id",
+                "file",
+                "id",
+                "languages",
+                "license",
+                "onestop_id",
+                "other_ids",
+                "spec",
+                "type",
+                "updated_at",
+                "urls"
+              ],
+              "filter": {},
+              "limit": 1000,
+              "allow_aggregations": true
+            }
+          },
+          {
+            "role": "user",
+            "permission": {
+              "columns": [
+                "associated_feeds",
+                "auth",
+                "created_at",
+                "deleted_at",
+                "feed_namespace_id",
+                "file",
+                "id",
+                "languages",
+                "license",
+                "onestop_id",
+                "other_ids",
+                "spec",
+                "type",
+                "updated_at",
+                "urls"
+              ],
+              "filter": {},
+              "limit": 1000,
+              "allow_aggregations": true
+            }
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "public",
+          "name": "feed_states"
         },
-        {
-            "table": "feed_states",
-            "is_enum": false,
-            "configuration": {
-                "custom_root_fields": {
-                    "select": null,
-                    "select_by_pk": null,
-                    "select_aggregate": null,
-                    "insert": null,
-                    "update": null,
-                    "delete": null
-                },
-                "custom_column_names": {}
-            },
-            "object_relationships": [
-                {
-                    "using": {
-                        "foreign_key_constraint_on": "feed_id"
-                    },
-                    "name": "current_feed",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": "feed_version_id"
-                    },
-                    "name": "feed_version",
-                    "comment": null
-                }
-            ],
-            "array_relationships": [],
-            "insert_permissions": [],
-            "select_permissions": [
-                {
-                    "role": "anonymous",
-                    "comment": null,
-                    "permission": {
-                        "allow_aggregations": false,
-                        "computed_fields": [],
-                        "columns": [
-                            "id",
-                            "feed_id",
-                            "feed_version_id",
-                            "last_fetched_at",
-                            "last_successful_fetch_at",
-                            "last_fetch_error",
-                            "feed_realtime_enabled",
-                            "feed_priority",
-                            "geometry",
-                            "tags",
-                            "created_at",
-                            "updated_at"
-                        ],
-                        "filter": {}
-                    }
-                }
-            ],
-            "update_permissions": [],
-            "delete_permissions": [],
-            "event_triggers": [],
-            "computed_fields": []
+        "object_relationships": [
+          {
+            "name": "current_feed",
+            "using": {
+              "foreign_key_constraint_on": "feed_id"
+            }
+          },
+          {
+            "name": "feed_version",
+            "using": {
+              "foreign_key_constraint_on": "feed_version_id"
+            }
+          }
+        ],
+        "select_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "id",
+                "feed_id",
+                "feed_version_id",
+                "last_fetched_at",
+                "last_successful_fetch_at",
+                "last_fetch_error",
+                "feed_realtime_enabled",
+                "feed_priority",
+                "tags",
+                "created_at",
+                "updated_at"
+              ],
+              "filter": {}
+            }
+          },
+          {
+            "role": "user",
+            "permission": {
+              "columns": [
+                "id",
+                "feed_id",
+                "feed_version_id",
+                "last_fetched_at",
+                "last_successful_fetch_at",
+                "last_fetch_error",
+                "feed_realtime_enabled",
+                "feed_priority",
+                "tags",
+                "created_at",
+                "updated_at"
+              ],
+              "filter": {}
+            }
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "public",
+          "name": "feed_version_gtfs_imports"
         },
-        {
-            "table": "feed_version_geometries",
-            "is_enum": false,
-            "configuration": {
-                "custom_root_fields": {
-                    "select": null,
-                    "select_by_pk": null,
-                    "select_aggregate": null,
-                    "insert": null,
-                    "update": null,
-                    "delete": null
-                },
-                "custom_column_names": {}
-            },
-            "object_relationships": [
-                {
-                    "using": {
-                        "foreign_key_constraint_on": "feed_version_id"
-                    },
-                    "name": "feed_version",
-                    "comment": null
-                }
-            ],
-            "array_relationships": [],
-            "insert_permissions": [],
-            "select_permissions": [
-                {
-                    "role": "anonymous",
-                    "comment": null,
-                    "permission": {
-                        "allow_aggregations": false,
-                        "computed_fields": [],
-                        "columns": [
-                            "feed_version_id",
-                            "geometry",
-                            "centroid"
-                        ],
-                        "limit": 985,
-                        "filter": {}
-                    }
-                }
-            ],
-            "update_permissions": [],
-            "delete_permissions": [],
-            "event_triggers": [],
-            "computed_fields": []
+        "object_relationships": [
+          {
+            "name": "feed_version",
+            "using": {
+              "foreign_key_constraint_on": "feed_version_id"
+            }
+          }
+        ],
+        "select_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "id",
+                "success",
+                "import_log",
+                "exception_log",
+                "import_level",
+                "created_at",
+                "updated_at",
+                "feed_version_id",
+                "in_progress",
+                "skip_entity_error_count",
+                "warning_count",
+                "entity_count",
+                "generated_count",
+                "skip_entity_reference_count",
+                "skip_entity_filter_count",
+                "skip_entity_marked_count",
+                "interpolated_stop_time_count"
+              ],
+              "filter": {}
+            }
+          },
+          {
+            "role": "user",
+            "permission": {
+              "columns": [
+                "id",
+                "success",
+                "import_log",
+                "exception_log",
+                "import_level",
+                "created_at",
+                "updated_at",
+                "feed_version_id",
+                "in_progress",
+                "skip_entity_error_count",
+                "warning_count",
+                "entity_count",
+                "generated_count",
+                "skip_entity_reference_count",
+                "skip_entity_filter_count",
+                "skip_entity_marked_count",
+                "interpolated_stop_time_count"
+              ],
+              "filter": {}
+            }
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "public",
+          "name": "feed_versions"
         },
-        {
-            "table": "feed_version_gtfs_imports",
-            "is_enum": false,
-            "configuration": {
-                "custom_root_fields": {
-                    "select": null,
-                    "select_by_pk": null,
-                    "select_aggregate": null,
-                    "insert": null,
-                    "update": null,
-                    "delete": null
+        "object_relationships": [
+          {
+            "name": "current_feed",
+            "using": {
+              "foreign_key_constraint_on": "feed_id"
+            }
+          },
+          {
+            "name": "feed_version_gtfs_import",
+            "using": {
+              "manual_configuration": {
+                "remote_table": {
+                  "schema": "public",
+                  "name": "feed_version_gtfs_imports"
                 },
-                "custom_column_names": {}
-            },
-            "object_relationships": [
-                {
-                    "using": {
-                        "foreign_key_constraint_on": "feed_version_id"
-                    },
-                    "name": "feed_version",
-                    "comment": null
+                "column_mapping": {
+                  "id": "feed_version_id"
                 }
-            ],
-            "array_relationships": [],
-            "insert_permissions": [],
-            "select_permissions": [
-                {
-                    "role": "anonymous",
-                    "comment": null,
-                    "permission": {
-                        "allow_aggregations": false,
-                        "computed_fields": [],
-                        "columns": [
-                            "id",
-                            "success",
-                            "import_log",
-                            "exception_log",
-                            "import_level",
-                            "created_at",
-                            "updated_at",
-                            "feed_version_id",
-                            "in_progress",
-                            "error_count",
-                            "warning_count",
-                            "entity_count"
-                        ],
-                        "filter": {}
-                    }
+              }
+            }
+          },
+          {
+            "name": "geometry",
+            "using": {
+              "manual_configuration": {
+                "remote_table": {
+                  "schema": "public",
+                  "name": "tl_feed_version_geometries"
+                },
+                "column_mapping": {
+                  "id": "feed_version_id"
                 }
-            ],
-            "update_permissions": [],
-            "delete_permissions": [],
-            "event_triggers": [],
-            "computed_fields": []
+              }
+            }
+          }
+        ],
+        "array_relationships": [
+          {
+            "name": "agencies",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "feed_version_id",
+                "table": {
+                  "schema": "public",
+                  "name": "gtfs_agencies"
+                }
+              }
+            }
+          },
+          {
+            "name": "calendar_dates",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "feed_version_id",
+                "table": {
+                  "schema": "public",
+                  "name": "gtfs_calendar_dates"
+                }
+              }
+            }
+          },
+          {
+            "name": "calendars",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "feed_version_id",
+                "table": {
+                  "schema": "public",
+                  "name": "gtfs_calendars"
+                }
+              }
+            }
+          },
+          {
+            "name": "fare_attributes",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "feed_version_id",
+                "table": {
+                  "schema": "public",
+                  "name": "gtfs_fare_attributes"
+                }
+              }
+            }
+          },
+          {
+            "name": "fare_rules",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "feed_version_id",
+                "table": {
+                  "schema": "public",
+                  "name": "gtfs_fare_rules"
+                }
+              }
+            }
+          },
+          {
+            "name": "feed_infos",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "feed_version_id",
+                "table": {
+                  "schema": "public",
+                  "name": "gtfs_feed_infos"
+                }
+              }
+            }
+          },
+          {
+            "name": "feed_states",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "feed_version_id",
+                "table": {
+                  "schema": "public",
+                  "name": "feed_states"
+                }
+              }
+            }
+          },
+          {
+            "name": "frequencies",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "feed_version_id",
+                "table": {
+                  "schema": "public",
+                  "name": "gtfs_frequencies"
+                }
+              }
+            }
+          },
+          {
+            "name": "levels",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "feed_version_id",
+                "table": {
+                  "schema": "public",
+                  "name": "gtfs_levels"
+                }
+              }
+            }
+          },
+          {
+            "name": "pathways",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "feed_version_id",
+                "table": {
+                  "schema": "public",
+                  "name": "gtfs_pathways"
+                }
+              }
+            }
+          },
+          {
+            "name": "routes",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "feed_version_id",
+                "table": {
+                  "schema": "public",
+                  "name": "gtfs_routes"
+                }
+              }
+            }
+          },
+          {
+            "name": "route_stops",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "feed_version_id",
+                "table": {
+                  "schema": "public",
+                  "name": "tl_route_stops"
+                }
+              }
+            }
+          },
+          {
+            "name": "stops",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "feed_version_id",
+                "table": {
+                  "schema": "public",
+                  "name": "gtfs_stops"
+                }
+              }
+            }
+          },
+          {
+            "name": "stop_times",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "feed_version_id",
+                "table": {
+                  "schema": "public",
+                  "name": "gtfs_stop_times"
+                }
+              }
+            }
+          },
+          {
+            "name": "transfers",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "feed_version_id",
+                "table": {
+                  "schema": "public",
+                  "name": "gtfs_transfers"
+                }
+              }
+            }
+          },
+          {
+            "name": "trips",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "feed_version_id",
+                "table": {
+                  "schema": "public",
+                  "name": "gtfs_trips"
+                }
+              }
+            }
+          }
+        ],
+        "select_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "created_at",
+                "deleted_at",
+                "earliest_calendar_date",
+                "feed_id",
+                "feed_type",
+                "fetched_at",
+                "file",
+                "id",
+                "latest_calendar_date",
+                "sha1",
+                "sha1_dir",
+                "updated_at",
+                "url"
+              ],
+              "filter": {},
+              "limit": 1000,
+              "allow_aggregations": true
+            }
+          },
+          {
+            "role": "user",
+            "permission": {
+              "columns": [
+                "created_at",
+                "deleted_at",
+                "earliest_calendar_date",
+                "feed_id",
+                "feed_type",
+                "fetched_at",
+                "file",
+                "id",
+                "latest_calendar_date",
+                "sha1",
+                "sha1_dir",
+                "updated_at",
+                "url"
+              ],
+              "filter": {},
+              "limit": 1000,
+              "allow_aggregations": true
+            }
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "public",
+          "name": "gtfs_agencies"
         },
-        {
-            "table": "feed_versions",
-            "is_enum": false,
-            "configuration": {
-                "custom_root_fields": {
-                    "select": null,
-                    "select_by_pk": null,
-                    "select_aggregate": null,
-                    "insert": null,
-                    "update": null,
-                    "delete": null
-                },
-                "custom_column_names": {}
-            },
-            "object_relationships": [
-                {
-                    "using": {
-                        "foreign_key_constraint_on": "feed_id"
-                    },
-                    "name": "current_feed",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "manual_configuration": {
-                            "remote_table": "feed_version_gtfs_imports",
-                            "column_mapping": {
-                                "id": "feed_version_id"
-                            }
-                        }
-                    },
-                    "name": "feed_version_gtfs_import",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "manual_configuration": {
-                            "remote_table": "feed_version_geometries",
-                            "column_mapping": {
-                                "id": "feed_version_id"
-                            }
-                        }
-                    },
-                    "name": "geometry",
-                    "comment": null
+        "object_relationships": [
+          {
+            "name": "feed_version",
+            "using": {
+              "foreign_key_constraint_on": "feed_version_id"
+            }
+          }
+        ],
+        "array_relationships": [
+          {
+            "name": "agency_geometries",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "agency_id",
+                "table": {
+                  "schema": "public",
+                  "name": "tl_agency_geometries"
                 }
-            ],
-            "array_relationships": [
-                {
-                    "using": {
-                        "foreign_key_constraint_on": {
-                            "column": "feed_version_id",
-                            "table": "gtfs_agencies"
-                        }
-                    },
-                    "name": "agencies",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": {
-                            "column": "feed_version_id",
-                            "table": "gtfs_calendar_dates"
-                        }
-                    },
-                    "name": "calendar_dates",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": {
-                            "column": "feed_version_id",
-                            "table": "gtfs_calendars"
-                        }
-                    },
-                    "name": "calendars",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": {
-                            "column": "feed_version_id",
-                            "table": "gtfs_fare_attributes"
-                        }
-                    },
-                    "name": "fare_attributes",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": {
-                            "column": "feed_version_id",
-                            "table": "gtfs_fare_rules"
-                        }
-                    },
-                    "name": "fare_rules",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": {
-                            "column": "feed_version_id",
-                            "table": "gtfs_feed_infos"
-                        }
-                    },
-                    "name": "feed_infos",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": {
-                            "column": "feed_version_id",
-                            "table": "feed_states"
-                        }
-                    },
-                    "name": "feed_states",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": {
-                            "column": "feed_version_id",
-                            "table": "gtfs_frequencies"
-                        }
-                    },
-                    "name": "frequencies",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": {
-                            "column": "feed_version_id",
-                            "table": "gtfs_routes"
-                        }
-                    },
-                    "name": "routes",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": {
-                            "column": "feed_version_id",
-                            "table": "route_stops"
-                        }
-                    },
-                    "name": "route_stops",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": {
-                            "column": "feed_version_id",
-                            "table": "gtfs_stops"
-                        }
-                    },
-                    "name": "stops",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": {
-                            "column": "feed_version_id",
-                            "table": "gtfs_stop_times"
-                        }
-                    },
-                    "name": "stop_times",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": {
-                            "column": "feed_version_id",
-                            "table": "gtfs_transfers"
-                        }
-                    },
-                    "name": "transfers",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": {
-                            "column": "feed_version_id",
-                            "table": "gtfs_trips"
-                        }
-                    },
-                    "name": "trips",
-                    "comment": null
+              }
+            }
+          },
+          {
+            "name": "routes",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "agency_id",
+                "table": {
+                  "schema": "public",
+                  "name": "gtfs_routes"
                 }
-            ],
-            "insert_permissions": [],
-            "select_permissions": [
-                {
-                    "role": "anonymous",
-                    "comment": null,
-                    "permission": {
-                        "allow_aggregations": true,
-                        "computed_fields": [],
-                        "columns": [
-                            "created_at",
-                            "deleted_at",
-                            "earliest_calendar_date",
-                            "feed_id",
-                            "fetched_at",
-                            "file",
-                            "id",
-                            "latest_calendar_date",
-                            "sha1",
-                            "sha1_dir",
-                            "updated_at",
-                            "url"
-                        ],
-                        "limit": 1000,
-                        "filter": {}
-                    }
+              }
+            }
+          },
+          {
+            "name": "route_stops",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "agency_id",
+                "table": {
+                  "schema": "public",
+                  "name": "tl_route_stops"
                 }
-            ],
-            "update_permissions": [],
-            "delete_permissions": [],
-            "event_triggers": [],
-            "computed_fields": []
+              }
+            }
+          }
+        ],
+        "select_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "id",
+                "agency_id",
+                "agency_name",
+                "agency_url",
+                "agency_timezone",
+                "agency_lang",
+                "agency_phone",
+                "agency_fare_url",
+                "agency_email",
+                "created_at",
+                "updated_at",
+                "feed_version_id"
+              ],
+              "filter": {},
+              "limit": 1000,
+              "allow_aggregations": true
+            }
+          },
+          {
+            "role": "user",
+            "permission": {
+              "columns": [
+                "id",
+                "agency_id",
+                "agency_name",
+                "agency_url",
+                "agency_timezone",
+                "agency_lang",
+                "agency_phone",
+                "agency_fare_url",
+                "agency_email",
+                "created_at",
+                "updated_at",
+                "feed_version_id"
+              ],
+              "filter": {},
+              "limit": 1000,
+              "allow_aggregations": true
+            }
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "public",
+          "name": "gtfs_calendar_dates"
         },
-        {
-            "table": "gtfs_agencies",
-            "is_enum": false,
-            "configuration": {
-                "custom_root_fields": {
-                    "select": null,
-                    "select_by_pk": null,
-                    "select_aggregate": null,
-                    "insert": null,
-                    "update": null,
-                    "delete": null
-                },
-                "custom_column_names": {}
-            },
-            "object_relationships": [
-                {
-                    "using": {
-                        "foreign_key_constraint_on": "feed_version_id"
-                    },
-                    "name": "feed_version",
-                    "comment": null
-                }
-            ],
-            "array_relationships": [
-                {
-                    "using": {
-                        "foreign_key_constraint_on": {
-                            "column": "agency_id",
-                            "table": "gtfs_routes"
-                        }
-                    },
-                    "name": "routes",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": {
-                            "column": "agency_id",
-                            "table": "route_stops"
-                        }
-                    },
-                    "name": "route_stops",
-                    "comment": null
-                }
-            ],
-            "insert_permissions": [],
-            "select_permissions": [
-                {
-                    "role": "anonymous",
-                    "comment": null,
-                    "permission": {
-                        "allow_aggregations": true,
-                        "computed_fields": [],
-                        "columns": [
-                            "id",
-                            "agency_id",
-                            "agency_name",
-                            "agency_url",
-                            "agency_timezone",
-                            "agency_lang",
-                            "agency_phone",
-                            "agency_fare_url",
-                            "agency_email",
-                            "created_at",
-                            "updated_at",
-                            "feed_version_id"
-                        ],
-                        "limit": 1000,
-                        "filter": {}
-                    }
-                }
-            ],
-            "update_permissions": [],
-            "delete_permissions": [],
-            "event_triggers": [],
-            "computed_fields": []
+        "object_relationships": [
+          {
+            "name": "calendar",
+            "using": {
+              "foreign_key_constraint_on": "service_id"
+            }
+          },
+          {
+            "name": "feed_version",
+            "using": {
+              "foreign_key_constraint_on": "feed_version_id"
+            }
+          }
+        ],
+        "select_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "id",
+                "date",
+                "exception_type",
+                "created_at",
+                "updated_at",
+                "feed_version_id",
+                "service_id"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          },
+          {
+            "role": "user",
+            "permission": {
+              "columns": [
+                "id",
+                "date",
+                "exception_type",
+                "created_at",
+                "updated_at",
+                "feed_version_id",
+                "service_id"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "public",
+          "name": "gtfs_calendars"
         },
-        {
-            "table": "gtfs_calendar_dates",
-            "is_enum": false,
-            "configuration": {
-                "custom_root_fields": {
-                    "select": null,
-                    "select_by_pk": null,
-                    "select_aggregate": null,
-                    "insert": null,
-                    "update": null,
-                    "delete": null
-                },
-                "custom_column_names": {}
-            },
-            "object_relationships": [
-                {
-                    "using": {
-                        "foreign_key_constraint_on": "service_id"
-                    },
-                    "name": "calendar",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": "feed_version_id"
-                    },
-                    "name": "feed_version",
-                    "comment": null
+        "object_relationships": [
+          {
+            "name": "feed_version",
+            "using": {
+              "foreign_key_constraint_on": "feed_version_id"
+            }
+          }
+        ],
+        "array_relationships": [
+          {
+            "name": "calendar_dates",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "service_id",
+                "table": {
+                  "schema": "public",
+                  "name": "gtfs_calendar_dates"
                 }
-            ],
-            "array_relationships": [],
-            "insert_permissions": [],
-            "select_permissions": [
-                {
-                    "role": "anonymous",
-                    "comment": null,
-                    "permission": {
-                        "allow_aggregations": false,
-                        "computed_fields": [],
-                        "columns": [
-                            "id",
-                            "date",
-                            "exception_type",
-                            "created_at",
-                            "updated_at",
-                            "feed_version_id",
-                            "service_id"
-                        ],
-                        "limit": 1000,
-                        "filter": {}
-                    }
+              }
+            }
+          },
+          {
+            "name": "trips",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "service_id",
+                "table": {
+                  "schema": "public",
+                  "name": "gtfs_trips"
                 }
-            ],
-            "update_permissions": [],
-            "delete_permissions": [],
-            "event_triggers": [],
-            "computed_fields": []
+              }
+            }
+          }
+        ],
+        "select_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "id",
+                "service_id",
+                "monday",
+                "tuesday",
+                "wednesday",
+                "thursday",
+                "friday",
+                "saturday",
+                "sunday",
+                "start_date",
+                "end_date",
+                "created_at",
+                "updated_at",
+                "feed_version_id",
+                "generated"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          },
+          {
+            "role": "user",
+            "permission": {
+              "columns": [
+                "id",
+                "service_id",
+                "monday",
+                "tuesday",
+                "wednesday",
+                "thursday",
+                "friday",
+                "saturday",
+                "sunday",
+                "start_date",
+                "end_date",
+                "created_at",
+                "updated_at",
+                "feed_version_id",
+                "generated"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "public",
+          "name": "gtfs_fare_attributes"
         },
-        {
-            "table": "gtfs_calendars",
-            "is_enum": false,
-            "configuration": {
-                "custom_root_fields": {
-                    "select": null,
-                    "select_by_pk": null,
-                    "select_aggregate": null,
-                    "insert": null,
-                    "update": null,
-                    "delete": null
-                },
-                "custom_column_names": {}
-            },
-            "object_relationships": [
-                {
-                    "using": {
-                        "foreign_key_constraint_on": "feed_version_id"
-                    },
-                    "name": "feed_version",
-                    "comment": null
+        "object_relationships": [
+          {
+            "name": "agency",
+            "using": {
+              "foreign_key_constraint_on": "agency_id"
+            }
+          },
+          {
+            "name": "feed_version",
+            "using": {
+              "foreign_key_constraint_on": "feed_version_id"
+            }
+          }
+        ],
+        "array_relationships": [
+          {
+            "name": "fare_rules",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "fare_id",
+                "table": {
+                  "schema": "public",
+                  "name": "gtfs_fare_rules"
                 }
-            ],
-            "array_relationships": [
-                {
-                    "using": {
-                        "foreign_key_constraint_on": {
-                            "column": "service_id",
-                            "table": "gtfs_calendar_dates"
-                        }
-                    },
-                    "name": "calendar_dates",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": {
-                            "column": "service_id",
-                            "table": "gtfs_trips"
-                        }
-                    },
-                    "name": "trips",
-                    "comment": null
-                }
-            ],
-            "insert_permissions": [],
-            "select_permissions": [
-                {
-                    "role": "anonymous",
-                    "comment": null,
-                    "permission": {
-                        "allow_aggregations": false,
-                        "computed_fields": [],
-                        "columns": [
-                            "id",
-                            "service_id",
-                            "monday",
-                            "tuesday",
-                            "wednesday",
-                            "thursday",
-                            "friday",
-                            "saturday",
-                            "sunday",
-                            "start_date",
-                            "end_date",
-                            "created_at",
-                            "updated_at",
-                            "feed_version_id",
-                            "generated"
-                        ],
-                        "limit": 1000,
-                        "filter": {}
-                    }
-                }
-            ],
-            "update_permissions": [],
-            "delete_permissions": [],
-            "event_triggers": [],
-            "computed_fields": []
+              }
+            }
+          }
+        ],
+        "select_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "id",
+                "fare_id",
+                "price",
+                "currency_type",
+                "payment_method",
+                "transfer_duration",
+                "created_at",
+                "updated_at",
+                "feed_version_id",
+                "agency_id",
+                "transfers"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          },
+          {
+            "role": "user",
+            "permission": {
+              "columns": [
+                "id",
+                "fare_id",
+                "price",
+                "currency_type",
+                "payment_method",
+                "transfer_duration",
+                "created_at",
+                "updated_at",
+                "feed_version_id",
+                "agency_id",
+                "transfers"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "public",
+          "name": "gtfs_fare_rules"
         },
-        {
-            "table": "gtfs_fare_attributes",
-            "is_enum": false,
-            "configuration": {
-                "custom_root_fields": {
-                    "select": null,
-                    "select_by_pk": null,
-                    "select_aggregate": null,
-                    "insert": null,
-                    "update": null,
-                    "delete": null
-                },
-                "custom_column_names": {}
-            },
-            "object_relationships": [
-                {
-                    "using": {
-                        "foreign_key_constraint_on": "feed_version_id"
-                    },
-                    "name": "feed_version",
-                    "comment": null
-                }
-            ],
-            "array_relationships": [
-                {
-                    "using": {
-                        "foreign_key_constraint_on": {
-                            "column": "fare_id",
-                            "table": "gtfs_fare_rules"
-                        }
-                    },
-                    "name": "fare_rules",
-                    "comment": null
-                }
-            ],
-            "insert_permissions": [],
-            "select_permissions": [
-                {
-                    "role": "anonymous",
-                    "comment": null,
-                    "permission": {
-                        "allow_aggregations": false,
-                        "computed_fields": [],
-                        "columns": [
-                            "id",
-                            "fare_id",
-                            "price",
-                            "currency_type",
-                            "payment_method",
-                            "transfer_duration",
-                            "created_at",
-                            "updated_at",
-                            "feed_version_id",
-                            "agency_id",
-                            "transfers"
-                        ],
-                        "limit": 1000,
-                        "filter": {}
-                    }
-                }
-            ],
-            "update_permissions": [],
-            "delete_permissions": [],
-            "event_triggers": [],
-            "computed_fields": []
+        "object_relationships": [
+          {
+            "name": "fare_attribute",
+            "using": {
+              "foreign_key_constraint_on": "fare_id"
+            }
+          },
+          {
+            "name": "feed_version",
+            "using": {
+              "foreign_key_constraint_on": "feed_version_id"
+            }
+          },
+          {
+            "name": "route",
+            "using": {
+              "foreign_key_constraint_on": "route_id"
+            }
+          }
+        ],
+        "select_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "id",
+                "origin_id",
+                "destination_id",
+                "contains_id",
+                "created_at",
+                "updated_at",
+                "feed_version_id",
+                "route_id",
+                "fare_id"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          },
+          {
+            "role": "user",
+            "permission": {
+              "columns": [
+                "id",
+                "origin_id",
+                "destination_id",
+                "contains_id",
+                "created_at",
+                "updated_at",
+                "feed_version_id",
+                "route_id",
+                "fare_id"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "public",
+          "name": "gtfs_feed_infos"
         },
-        {
-            "table": "gtfs_fare_rules",
-            "is_enum": false,
-            "configuration": {
-                "custom_root_fields": {
-                    "select": null,
-                    "select_by_pk": null,
-                    "select_aggregate": null,
-                    "insert": null,
-                    "update": null,
-                    "delete": null
-                },
-                "custom_column_names": {}
-            },
-            "object_relationships": [
-                {
-                    "using": {
-                        "foreign_key_constraint_on": "fare_id"
-                    },
-                    "name": "fare_attribute",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": "feed_version_id"
-                    },
-                    "name": "feed_version",
-                    "comment": null
-                }
-            ],
-            "array_relationships": [],
-            "insert_permissions": [],
-            "select_permissions": [
-                {
-                    "role": "anonymous",
-                    "comment": null,
-                    "permission": {
-                        "allow_aggregations": false,
-                        "computed_fields": [],
-                        "columns": [
-                            "id",
-                            "origin_id",
-                            "destination_id",
-                            "contains_id",
-                            "created_at",
-                            "updated_at",
-                            "feed_version_id",
-                            "route_id",
-                            "fare_id"
-                        ],
-                        "limit": 1000,
-                        "filter": {}
-                    }
-                }
-            ],
-            "update_permissions": [],
-            "delete_permissions": [],
-            "event_triggers": [],
-            "computed_fields": []
+        "object_relationships": [
+          {
+            "name": "feed_version",
+            "using": {
+              "foreign_key_constraint_on": "feed_version_id"
+            }
+          }
+        ],
+        "select_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "id",
+                "feed_publisher_name",
+                "feed_publisher_url",
+                "feed_lang",
+                "feed_start_date",
+                "feed_end_date",
+                "feed_version_name",
+                "created_at",
+                "updated_at",
+                "feed_version_id"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          },
+          {
+            "role": "user",
+            "permission": {
+              "columns": [
+                "id",
+                "feed_publisher_name",
+                "feed_publisher_url",
+                "feed_lang",
+                "feed_start_date",
+                "feed_end_date",
+                "feed_version_name",
+                "created_at",
+                "updated_at",
+                "feed_version_id"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "public",
+          "name": "gtfs_frequencies"
         },
-        {
-            "table": "gtfs_feed_infos",
-            "is_enum": false,
-            "configuration": {
-                "custom_root_fields": {
-                    "select": null,
-                    "select_by_pk": null,
-                    "select_aggregate": null,
-                    "insert": null,
-                    "update": null,
-                    "delete": null
-                },
-                "custom_column_names": {}
-            },
-            "object_relationships": [
-                {
-                    "using": {
-                        "foreign_key_constraint_on": "feed_version_id"
-                    },
-                    "name": "feed_version",
-                    "comment": null
-                }
-            ],
-            "array_relationships": [],
-            "insert_permissions": [],
-            "select_permissions": [
-                {
-                    "role": "anonymous",
-                    "comment": null,
-                    "permission": {
-                        "allow_aggregations": false,
-                        "computed_fields": [],
-                        "columns": [
-                            "id",
-                            "feed_publisher_name",
-                            "feed_publisher_url",
-                            "feed_lang",
-                            "feed_start_date",
-                            "feed_end_date",
-                            "feed_version_name",
-                            "created_at",
-                            "updated_at",
-                            "feed_version_id"
-                        ],
-                        "limit": 1000,
-                        "filter": {}
-                    }
-                }
-            ],
-            "update_permissions": [],
-            "delete_permissions": [],
-            "event_triggers": [],
-            "computed_fields": []
+        "object_relationships": [
+          {
+            "name": "feed_version",
+            "using": {
+              "foreign_key_constraint_on": "feed_version_id"
+            }
+          },
+          {
+            "name": "trip",
+            "using": {
+              "foreign_key_constraint_on": "trip_id"
+            }
+          }
+        ],
+        "select_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "id",
+                "start_time",
+                "end_time",
+                "headway_secs",
+                "exact_times",
+                "created_at",
+                "updated_at",
+                "feed_version_id",
+                "trip_id"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          },
+          {
+            "role": "user",
+            "permission": {
+              "columns": [
+                "id",
+                "start_time",
+                "end_time",
+                "headway_secs",
+                "exact_times",
+                "created_at",
+                "updated_at",
+                "feed_version_id",
+                "trip_id"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "public",
+          "name": "gtfs_levels"
         },
-        {
-            "table": "gtfs_frequencies",
-            "is_enum": false,
-            "configuration": {
-                "custom_root_fields": {
-                    "select": null,
-                    "select_by_pk": null,
-                    "select_aggregate": null,
-                    "insert": null,
-                    "update": null,
-                    "delete": null
-                },
-                "custom_column_names": {}
-            },
-            "object_relationships": [
-                {
-                    "using": {
-                        "foreign_key_constraint_on": "feed_version_id"
-                    },
-                    "name": "feed_version",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": "trip_id"
-                    },
-                    "name": "trip",
-                    "comment": null
+        "object_relationships": [
+          {
+            "name": "feed_version",
+            "using": {
+              "foreign_key_constraint_on": "feed_version_id"
+            }
+          }
+        ],
+        "array_relationships": [
+          {
+            "name": "stops",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "level_id",
+                "table": {
+                  "schema": "public",
+                  "name": "gtfs_stops"
                 }
-            ],
-            "array_relationships": [],
-            "insert_permissions": [],
-            "select_permissions": [
-                {
-                    "role": "anonymous",
-                    "comment": null,
-                    "permission": {
-                        "allow_aggregations": false,
-                        "computed_fields": [],
-                        "columns": [
-                            "id",
-                            "start_time",
-                            "end_time",
-                            "headway_secs",
-                            "exact_times",
-                            "created_at",
-                            "updated_at",
-                            "feed_version_id",
-                            "trip_id"
-                        ],
-                        "limit": 1000,
-                        "filter": {}
-                    }
-                }
-            ],
-            "update_permissions": [],
-            "delete_permissions": [],
-            "event_triggers": [],
-            "computed_fields": []
+              }
+            }
+          }
+        ],
+        "select_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "id",
+                "feed_version_id",
+                "level_id",
+                "level_index",
+                "level_name",
+                "created_at",
+                "updated_at"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          },
+          {
+            "role": "user",
+            "permission": {
+              "columns": [
+                "id",
+                "feed_version_id",
+                "level_id",
+                "level_index",
+                "level_name",
+                "created_at",
+                "updated_at"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "public",
+          "name": "gtfs_pathways"
         },
-        {
-            "table": "gtfs_routes",
-            "is_enum": false,
-            "configuration": {
-                "custom_root_fields": {
-                    "select": null,
-                    "select_by_pk": null,
-                    "select_aggregate": null,
-                    "insert": null,
-                    "update": null,
-                    "delete": null
-                },
-                "custom_column_names": {}
-            },
-            "object_relationships": [
-                {
-                    "using": {
-                        "foreign_key_constraint_on": "agency_id"
-                    },
-                    "name": "agency",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": "feed_version_id"
-                    },
-                    "name": "feed_version",
-                    "comment": null
+        "object_relationships": [
+          {
+            "name": "feed_version",
+            "using": {
+              "foreign_key_constraint_on": "feed_version_id"
+            }
+          },
+          {
+            "name": "from_stop",
+            "using": {
+              "foreign_key_constraint_on": "from_stop_id"
+            }
+          },
+          {
+            "name": "to_stop",
+            "using": {
+              "foreign_key_constraint_on": "to_stop_id"
+            }
+          }
+        ],
+        "insert_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "check": {
+                "feed_version_id": {
+                  "_eq": 44204
                 }
-            ],
-            "array_relationships": [
-                {
-                    "using": {
-                        "foreign_key_constraint_on": {
-                            "column": "route_id",
-                            "table": "route_stops"
-                        }
-                    },
-                    "name": "route_stops",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": {
-                            "column": "route_id",
-                            "table": "gtfs_trips"
-                        }
-                    },
-                    "name": "trips",
-                    "comment": null
+              },
+              "columns": [
+                "id",
+                "feed_version_id",
+                "pathway_id",
+                "from_stop_id",
+                "to_stop_id",
+                "pathway_mode",
+                "is_bidirectional",
+                "length",
+                "traversal_time",
+                "stair_count",
+                "max_slope",
+                "min_width",
+                "signposted_as",
+                "reverse_signposted_as",
+                "created_at",
+                "updated_at"
+              ]
+            }
+          }
+        ],
+        "select_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "id",
+                "feed_version_id",
+                "pathway_id",
+                "from_stop_id",
+                "to_stop_id",
+                "pathway_mode",
+                "is_bidirectional",
+                "length",
+                "traversal_time",
+                "stair_count",
+                "max_slope",
+                "min_width",
+                "signposted_as",
+                "reverse_signposted_as",
+                "created_at",
+                "updated_at"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          },
+          {
+            "role": "user",
+            "permission": {
+              "columns": [
+                "id",
+                "feed_version_id",
+                "pathway_id",
+                "from_stop_id",
+                "to_stop_id",
+                "pathway_mode",
+                "is_bidirectional",
+                "length",
+                "traversal_time",
+                "stair_count",
+                "max_slope",
+                "min_width",
+                "signposted_as",
+                "reverse_signposted_as",
+                "created_at",
+                "updated_at"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          }
+        ],
+        "update_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "length",
+                "max_slope",
+                "min_width",
+                "is_bidirectional",
+                "pathway_mode",
+                "stair_count",
+                "traversal_time",
+                "feed_version_id",
+                "from_stop_id",
+                "id",
+                "to_stop_id",
+                "created_at",
+                "updated_at",
+                "pathway_id",
+                "reverse_signposted_as",
+                "signposted_as"
+              ],
+              "filter": {
+                "feed_version_id": {
+                  "_eq": 44204
                 }
-            ],
-            "insert_permissions": [],
-            "select_permissions": [
-                {
-                    "role": "anonymous",
-                    "comment": null,
-                    "permission": {
-                        "allow_aggregations": true,
-                        "computed_fields": [],
-                        "columns": [
-                            "id",
-                            "route_id",
-                            "route_short_name",
-                            "route_long_name",
-                            "route_desc",
-                            "route_type",
-                            "route_url",
-                            "route_color",
-                            "route_text_color",
-                            "route_sort_order",
-                            "created_at",
-                            "updated_at",
-                            "feed_version_id",
-                            "agency_id"
-                        ],
-                        "limit": 1000,
-                        "filter": {}
-                    }
+              },
+              "check": null
+            }
+          }
+        ],
+        "delete_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "filter": {
+                "feed_version_id": {
+                  "_eq": 44204
                 }
-            ],
-            "update_permissions": [],
-            "delete_permissions": [],
-            "event_triggers": [],
-            "computed_fields": []
+              }
+            }
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "public",
+          "name": "gtfs_routes"
         },
-        {
-            "table": "gtfs_shapes",
-            "is_enum": false,
-            "configuration": {
-                "custom_root_fields": {
-                    "select": null,
-                    "select_by_pk": null,
-                    "select_aggregate": null,
-                    "insert": null,
-                    "update": null,
-                    "delete": null
+        "object_relationships": [
+          {
+            "name": "agency",
+            "using": {
+              "foreign_key_constraint_on": "agency_id"
+            }
+          },
+          {
+            "name": "feed_version",
+            "using": {
+              "foreign_key_constraint_on": "feed_version_id"
+            }
+          },
+          {
+            "name": "headways_weekday",
+            "using": {
+              "manual_configuration": {
+                "remote_table": {
+                  "schema": "public",
+                  "name": "tl_route_headways_weekday"
                 },
-                "custom_column_names": {}
-            },
-            "object_relationships": [],
-            "array_relationships": [],
-            "insert_permissions": [],
-            "select_permissions": [
-                {
-                    "role": "anonymous",
-                    "comment": null,
-                    "permission": {
-                        "allow_aggregations": false,
-                        "computed_fields": [],
-                        "columns": [
-                            "id",
-                            "shape_id",
-                            "generated",
-                            "geometry",
-                            "created_at",
-                            "updated_at",
-                            "feed_version_id"
-                        ],
-                        "limit": 1000,
-                        "filter": {}
-                    }
+                "column_mapping": {
+                  "id": "route_id"
                 }
-            ],
-            "update_permissions": [],
-            "delete_permissions": [],
-            "event_triggers": [],
-            "computed_fields": []
+              }
+            }
+          }
+        ],
+        "array_relationships": [
+          {
+            "name": "fare_rules",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "route_id",
+                "table": {
+                  "schema": "public",
+                  "name": "gtfs_fare_rules"
+                }
+              }
+            }
+          },
+          {
+            "name": "geometries",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "route_id",
+                "table": {
+                  "schema": "public",
+                  "name": "tl_route_geometries"
+                }
+              }
+            }
+          },
+          {
+            "name": "headways",
+            "using": {
+              "manual_configuration": {
+                "remote_table": {
+                  "schema": "public",
+                  "name": "tl_route_headways"
+                },
+                "column_mapping": {
+                  "id": "route_id"
+                }
+              }
+            }
+          },
+          {
+            "name": "route_stops",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "route_id",
+                "table": {
+                  "schema": "public",
+                  "name": "tl_route_stops"
+                }
+              }
+            }
+          },
+          {
+            "name": "trips",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "route_id",
+                "table": {
+                  "schema": "public",
+                  "name": "gtfs_trips"
+                }
+              }
+            }
+          }
+        ],
+        "select_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "id",
+                "route_id",
+                "route_short_name",
+                "route_long_name",
+                "route_desc",
+                "route_type",
+                "route_url",
+                "route_color",
+                "route_text_color",
+                "route_sort_order",
+                "created_at",
+                "updated_at",
+                "feed_version_id",
+                "agency_id"
+              ],
+              "filter": {},
+              "limit": 10000,
+              "allow_aggregations": true
+            }
+          },
+          {
+            "role": "user",
+            "permission": {
+              "columns": [
+                "id",
+                "route_id",
+                "route_short_name",
+                "route_long_name",
+                "route_desc",
+                "route_type",
+                "route_url",
+                "route_color",
+                "route_text_color",
+                "route_sort_order",
+                "created_at",
+                "updated_at",
+                "feed_version_id",
+                "agency_id"
+              ],
+              "filter": {},
+              "limit": 10000,
+              "allow_aggregations": true
+            }
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "public",
+          "name": "gtfs_shapes"
         },
-        {
-            "table": "gtfs_stops",
-            "is_enum": false,
-            "configuration": {
-                "custom_root_fields": {
-                    "select": null,
-                    "select_by_pk": null,
-                    "select_aggregate": null,
-                    "insert": null,
-                    "update": null,
-                    "delete": null
-                },
-                "custom_column_names": {}
-            },
-            "object_relationships": [
-                {
-                    "using": {
-                        "foreign_key_constraint_on": "feed_version_id"
-                    },
-                    "name": "feed_version",
-                    "comment": null
+        "array_relationships": [
+          {
+            "name": "trips",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "shape_id",
+                "table": {
+                  "schema": "public",
+                  "name": "gtfs_trips"
                 }
-            ],
-            "array_relationships": [
-                {
-                    "using": {
-                        "foreign_key_constraint_on": {
-                            "column": "stop_id",
-                            "table": "route_stops"
-                        }
-                    },
-                    "name": "route_stops",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": {
-                            "column": "stop_id",
-                            "table": "gtfs_stop_times"
-                        }
-                    },
-                    "name": "stop_times",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": {
-                            "column": "from_stop_id",
-                            "table": "gtfs_transfers"
-                        }
-                    },
-                    "name": "transfers_from_stop",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": {
-                            "column": "to_stop_id",
-                            "table": "gtfs_transfers"
-                        }
-                    },
-                    "name": "transfers_to_stop",
-                    "comment": null
-                }
-            ],
-            "insert_permissions": [],
-            "select_permissions": [
-                {
-                    "role": "anonymous",
-                    "comment": null,
-                    "permission": {
-                        "allow_aggregations": true,
-                        "computed_fields": [],
-                        "columns": [
-                            "id",
-                            "stop_id",
-                            "stop_code",
-                            "stop_name",
-                            "stop_desc",
-                            "zone_id",
-                            "stop_url",
-                            "location_type",
-                            "stop_timezone",
-                            "wheelchair_boarding",
-                            "geometry",
-                            "created_at",
-                            "updated_at",
-                            "feed_version_id",
-                            "parent_station",
-                            "level_id"
-                        ],
-                        "limit": 1000,
-                        "filter": {}
-                    }
-                }
-            ],
-            "update_permissions": [],
-            "delete_permissions": [],
-            "event_triggers": [],
-            "computed_fields": []
+              }
+            }
+          }
+        ],
+        "select_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "id",
+                "shape_id",
+                "generated",
+                "geometry",
+                "created_at",
+                "updated_at",
+                "feed_version_id"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          },
+          {
+            "role": "user",
+            "permission": {
+              "columns": [
+                "id",
+                "shape_id",
+                "generated",
+                "geometry",
+                "created_at",
+                "updated_at",
+                "feed_version_id"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "public",
+          "name": "gtfs_stop_times"
         },
-        {
-            "table": "gtfs_stop_times",
-            "is_enum": false,
-            "configuration": {
-                "custom_root_fields": {
-                    "select": null,
-                    "select_by_pk": null,
-                    "select_aggregate": null,
-                    "insert": null,
-                    "update": null,
-                    "delete": null
-                },
-                "custom_column_names": {}
-            },
-            "object_relationships": [
-                {
-                    "using": {
-                        "foreign_key_constraint_on": "feed_version_id"
-                    },
-                    "name": "feed_version",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": "stop_id"
-                    },
-                    "name": "stop",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": "trip_id"
-                    },
-                    "name": "trip",
-                    "comment": null
-                }
-            ],
-            "array_relationships": [],
-            "insert_permissions": [],
-            "select_permissions": [
-                {
-                    "role": "anonymous",
-                    "comment": null,
-                    "permission": {
-                        "allow_aggregations": false,
-                        "computed_fields": [],
-                        "columns": [
-                            "id",
-                            "arrival_time",
-                            "departure_time",
-                            "stop_sequence",
-                            "stop_headsign",
-                            "pickup_type",
-                            "drop_off_type",
-                            "shape_dist_traveled",
-                            "timepoint",
-                            "interpolated",
-                            "created_at",
-                            "updated_at",
-                            "feed_version_id",
-                            "trip_id",
-                            "stop_id"
-                        ],
-                        "limit": 1000,
-                        "filter": {}
-                    }
-                }
-            ],
-            "update_permissions": [],
-            "delete_permissions": [],
-            "event_triggers": [],
-            "computed_fields": []
+        "object_relationships": [
+          {
+            "name": "feed_version",
+            "using": {
+              "foreign_key_constraint_on": "feed_version_id"
+            }
+          },
+          {
+            "name": "stop",
+            "using": {
+              "foreign_key_constraint_on": "stop_id"
+            }
+          },
+          {
+            "name": "trip",
+            "using": {
+              "foreign_key_constraint_on": "trip_id"
+            }
+          }
+        ],
+        "select_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "id",
+                "arrival_time",
+                "departure_time",
+                "stop_sequence",
+                "stop_headsign",
+                "pickup_type",
+                "drop_off_type",
+                "shape_dist_traveled",
+                "timepoint",
+                "interpolated",
+                "created_at",
+                "updated_at",
+                "feed_version_id",
+                "trip_id",
+                "stop_id"
+              ],
+              "filter": {},
+              "limit": 1000,
+              "allow_aggregations": true
+            }
+          },
+          {
+            "role": "user",
+            "permission": {
+              "columns": [
+                "id",
+                "arrival_time",
+                "departure_time",
+                "stop_sequence",
+                "stop_headsign",
+                "pickup_type",
+                "drop_off_type",
+                "shape_dist_traveled",
+                "timepoint",
+                "interpolated",
+                "created_at",
+                "updated_at",
+                "feed_version_id",
+                "trip_id",
+                "stop_id"
+              ],
+              "filter": {},
+              "limit": 1000,
+              "allow_aggregations": true
+            }
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "public",
+          "name": "gtfs_stops"
         },
-        {
-            "table": "gtfs_transfers",
-            "is_enum": false,
-            "configuration": {
-                "custom_root_fields": {
-                    "select": null,
-                    "select_by_pk": null,
-                    "select_aggregate": null,
-                    "insert": null,
-                    "update": null,
-                    "delete": null
-                },
-                "custom_column_names": {}
-            },
-            "object_relationships": [
-                {
-                    "using": {
-                        "foreign_key_constraint_on": "feed_version_id"
-                    },
-                    "name": "feed_version",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": "from_stop_id"
-                    },
-                    "name": "from_stop",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": "to_stop_id"
-                    },
-                    "name": "to_stop",
-                    "comment": null
+        "object_relationships": [
+          {
+            "name": "feed_version",
+            "using": {
+              "foreign_key_constraint_on": "feed_version_id"
+            }
+          },
+          {
+            "name": "level",
+            "using": {
+              "foreign_key_constraint_on": "level_id"
+            }
+          }
+        ],
+        "array_relationships": [
+          {
+            "name": "pathways_from_stop",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "from_stop_id",
+                "table": {
+                  "schema": "public",
+                  "name": "gtfs_pathways"
                 }
-            ],
-            "array_relationships": [],
-            "insert_permissions": [],
-            "select_permissions": [
-                {
-                    "role": "anonymous",
-                    "comment": null,
-                    "permission": {
-                        "allow_aggregations": false,
-                        "computed_fields": [],
-                        "columns": [
-                            "id",
-                            "transfer_type",
-                            "min_transfer_time",
-                            "created_at",
-                            "updated_at",
-                            "feed_version_id",
-                            "from_stop_id",
-                            "to_stop_id"
-                        ],
-                        "limit": 1000,
-                        "filter": {}
-                    }
+              }
+            }
+          },
+          {
+            "name": "pathways_to_stop",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "to_stop_id",
+                "table": {
+                  "schema": "public",
+                  "name": "gtfs_pathways"
                 }
-            ],
-            "update_permissions": [],
-            "delete_permissions": [],
-            "event_triggers": [],
-            "computed_fields": []
+              }
+            }
+          },
+          {
+            "name": "route_stops",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "stop_id",
+                "table": {
+                  "schema": "public",
+                  "name": "tl_route_stops"
+                }
+              }
+            }
+          },
+          {
+            "name": "stop_times",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "stop_id",
+                "table": {
+                  "schema": "public",
+                  "name": "gtfs_stop_times"
+                }
+              }
+            }
+          },
+          {
+            "name": "transfers_from_stop",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "from_stop_id",
+                "table": {
+                  "schema": "public",
+                  "name": "gtfs_transfers"
+                }
+              }
+            }
+          },
+          {
+            "name": "transfers_to_stop",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "to_stop_id",
+                "table": {
+                  "schema": "public",
+                  "name": "gtfs_transfers"
+                }
+              }
+            }
+          }
+        ],
+        "insert_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "check": {
+                "feed_version_id": {
+                  "_eq": 44204
+                }
+              },
+              "columns": [
+                "id",
+                "stop_id",
+                "stop_code",
+                "stop_name",
+                "stop_desc",
+                "zone_id",
+                "stop_url",
+                "location_type",
+                "stop_timezone",
+                "wheelchair_boarding",
+                "geometry",
+                "created_at",
+                "updated_at",
+                "feed_version_id",
+                "parent_station",
+                "level_id"
+              ]
+            }
+          }
+        ],
+        "select_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "id",
+                "stop_id",
+                "stop_code",
+                "stop_name",
+                "stop_desc",
+                "zone_id",
+                "stop_url",
+                "location_type",
+                "stop_timezone",
+                "wheelchair_boarding",
+                "geometry",
+                "created_at",
+                "updated_at",
+                "feed_version_id",
+                "parent_station",
+                "level_id"
+              ],
+              "filter": {},
+              "limit": 1000,
+              "allow_aggregations": true
+            }
+          },
+          {
+            "role": "user",
+            "permission": {
+              "columns": [
+                "id",
+                "stop_id",
+                "stop_code",
+                "stop_name",
+                "stop_desc",
+                "zone_id",
+                "stop_url",
+                "location_type",
+                "stop_timezone",
+                "wheelchair_boarding",
+                "geometry",
+                "created_at",
+                "updated_at",
+                "feed_version_id",
+                "parent_station",
+                "level_id"
+              ],
+              "filter": {},
+              "limit": 1000,
+              "allow_aggregations": true
+            }
+          }
+        ],
+        "update_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "geometry",
+                "location_type",
+                "wheelchair_boarding",
+                "feed_version_id",
+                "id",
+                "level_id",
+                "parent_station",
+                "created_at",
+                "updated_at",
+                "stop_code",
+                "stop_desc",
+                "stop_id",
+                "stop_name",
+                "stop_timezone",
+                "stop_url",
+                "zone_id"
+              ],
+              "filter": {
+                "feed_version_id": {
+                  "_eq": 44204
+                }
+              },
+              "check": null
+            }
+          }
+        ],
+        "delete_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "filter": {
+                "feed_version_id": {
+                  "_eq": 44204
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "public",
+          "name": "gtfs_transfers"
         },
-        {
-            "table": "gtfs_trips",
-            "is_enum": false,
-            "configuration": {
-                "custom_root_fields": {
-                    "select": null,
-                    "select_by_pk": null,
-                    "select_aggregate": null,
-                    "insert": null,
-                    "update": null,
-                    "delete": null
-                },
-                "custom_column_names": {}
-            },
-            "object_relationships": [
-                {
-                    "using": {
-                        "foreign_key_constraint_on": "service_id"
-                    },
-                    "name": "calendar",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": "feed_version_id"
-                    },
-                    "name": "feed_version",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": "route_id"
-                    },
-                    "name": "route",
-                    "comment": null
-                }
-            ],
-            "array_relationships": [
-                {
-                    "using": {
-                        "foreign_key_constraint_on": {
-                            "column": "trip_id",
-                            "table": "gtfs_frequencies"
-                        }
-                    },
-                    "name": "frequencies",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": {
-                            "column": "trip_id",
-                            "table": "gtfs_stop_times"
-                        }
-                    },
-                    "name": "stop_times",
-                    "comment": null
-                }
-            ],
-            "insert_permissions": [],
-            "select_permissions": [
-                {
-                    "role": "anonymous",
-                    "comment": null,
-                    "permission": {
-                        "allow_aggregations": false,
-                        "computed_fields": [],
-                        "columns": [
-                            "id",
-                            "trip_id",
-                            "trip_headsign",
-                            "trip_short_name",
-                            "direction_id",
-                            "block_id",
-                            "wheelchair_accessible",
-                            "bikes_allowed",
-                            "created_at",
-                            "updated_at",
-                            "feed_version_id",
-                            "route_id",
-                            "shape_id",
-                            "stop_pattern_id",
-                            "service_id"
-                        ],
-                        "limit": 1000,
-                        "filter": {}
-                    }
-                }
-            ],
-            "update_permissions": [],
-            "delete_permissions": [],
-            "event_triggers": [],
-            "computed_fields": []
+        "object_relationships": [
+          {
+            "name": "feed_version",
+            "using": {
+              "foreign_key_constraint_on": "feed_version_id"
+            }
+          },
+          {
+            "name": "from_stop",
+            "using": {
+              "foreign_key_constraint_on": "from_stop_id"
+            }
+          },
+          {
+            "name": "to_stop",
+            "using": {
+              "foreign_key_constraint_on": "to_stop_id"
+            }
+          }
+        ],
+        "select_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "id",
+                "transfer_type",
+                "min_transfer_time",
+                "created_at",
+                "updated_at",
+                "feed_version_id",
+                "from_stop_id",
+                "to_stop_id"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          },
+          {
+            "role": "user",
+            "permission": {
+              "columns": [
+                "id",
+                "transfer_type",
+                "min_transfer_time",
+                "created_at",
+                "updated_at",
+                "feed_version_id",
+                "from_stop_id",
+                "to_stop_id"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "public",
+          "name": "gtfs_trips"
         },
-        {
-            "table": "route_stops",
-            "is_enum": false,
-            "configuration": {
-                "custom_root_fields": {
-                    "select": null,
-                    "select_by_pk": null,
-                    "select_aggregate": null,
-                    "insert": null,
-                    "update": null,
-                    "delete": null
-                },
-                "custom_column_names": {}
-            },
-            "object_relationships": [
-                {
-                    "using": {
-                        "foreign_key_constraint_on": "feed_version_id"
-                    },
-                    "name": "feed_version",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": "agency_id"
-                    },
-                    "name": "gtfs_agency",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": "route_id"
-                    },
-                    "name": "gtfs_route",
-                    "comment": null
-                },
-                {
-                    "using": {
-                        "foreign_key_constraint_on": "stop_id"
-                    },
-                    "name": "gtfs_stop",
-                    "comment": null
+        "object_relationships": [
+          {
+            "name": "calendar",
+            "using": {
+              "foreign_key_constraint_on": "service_id"
+            }
+          },
+          {
+            "name": "feed_version",
+            "using": {
+              "foreign_key_constraint_on": "feed_version_id"
+            }
+          },
+          {
+            "name": "route",
+            "using": {
+              "foreign_key_constraint_on": "route_id"
+            }
+          },
+          {
+            "name": "shape",
+            "using": {
+              "foreign_key_constraint_on": "shape_id"
+            }
+          }
+        ],
+        "array_relationships": [
+          {
+            "name": "frequencies",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "trip_id",
+                "table": {
+                  "schema": "public",
+                  "name": "gtfs_frequencies"
                 }
-            ],
-            "array_relationships": [],
-            "insert_permissions": [],
-            "select_permissions": [
-                {
-                    "role": "anonymous",
-                    "comment": null,
-                    "permission": {
-                        "allow_aggregations": true,
-                        "computed_fields": [],
-                        "columns": [
-                            "feed_version_id",
-                            "agency_id",
-                            "route_id",
-                            "stop_id"
-                        ],
-                        "limit": 1000,
-                        "filter": {}
-                    }
+              }
+            }
+          },
+          {
+            "name": "stop_times",
+            "using": {
+              "foreign_key_constraint_on": {
+                "column": "trip_id",
+                "table": {
+                  "schema": "public",
+                  "name": "gtfs_stop_times"
                 }
-            ],
-            "update_permissions": [],
-            "delete_permissions": [],
-            "event_triggers": [],
-            "computed_fields": []
+              }
+            }
+          }
+        ],
+        "select_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "id",
+                "trip_id",
+                "trip_headsign",
+                "trip_short_name",
+                "direction_id",
+                "block_id",
+                "wheelchair_accessible",
+                "bikes_allowed",
+                "created_at",
+                "updated_at",
+                "feed_version_id",
+                "route_id",
+                "shape_id",
+                "stop_pattern_id",
+                "service_id"
+              ],
+              "filter": {},
+              "limit": 1000,
+              "allow_aggregations": true
+            }
+          },
+          {
+            "role": "user",
+            "permission": {
+              "columns": [
+                "id",
+                "trip_id",
+                "trip_headsign",
+                "trip_short_name",
+                "direction_id",
+                "block_id",
+                "wheelchair_accessible",
+                "bikes_allowed",
+                "created_at",
+                "updated_at",
+                "feed_version_id",
+                "route_id",
+                "shape_id",
+                "stop_pattern_id",
+                "service_id"
+              ],
+              "filter": {},
+              "limit": 1000,
+              "allow_aggregations": true
+            }
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "public",
+          "name": "service_scheduled_on_date_return"
+        },
+        "object_relationships": [
+          {
+            "name": "route",
+            "using": {
+              "manual_configuration": {
+                "remote_table": {
+                  "schema": "public",
+                  "name": "gtfs_routes"
+                },
+                "column_mapping": {
+                  "route_id": "id"
+                }
+              }
+            }
+          }
+        ],
+        "select_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "route_id",
+                "service_seconds"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          },
+          {
+            "role": "user",
+            "permission": {
+              "columns": [
+                "route_id",
+                "service_seconds"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "public",
+          "name": "tl_agency_geometries"
+        },
+        "object_relationships": [
+          {
+            "name": "agency",
+            "using": {
+              "foreign_key_constraint_on": "agency_id"
+            }
+          },
+          {
+            "name": "feed_version",
+            "using": {
+              "foreign_key_constraint_on": "feed_version_id"
+            }
+          }
+        ],
+        "select_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "agency_id",
+                "centroid",
+                "feed_version_id",
+                "geometry"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          },
+          {
+            "role": "user",
+            "permission": {
+              "columns": [
+                "agency_id",
+                "centroid",
+                "feed_version_id",
+                "geometry"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "public",
+          "name": "tl_agency_operator_associations"
+        },
+        "object_relationships": [
+          {
+            "name": "agency",
+            "using": {
+              "manual_configuration": {
+                "remote_table": {
+                  "schema": "public",
+                  "name": "gtfs_agencies"
+                },
+                "column_mapping": {
+                  "agency_id": "id"
+                }
+              }
+            }
+          }
+        ],
+        "select_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "agency_id",
+                "agency_name",
+                "associated_feeds",
+                "city_name",
+                "country_name",
+                "group_id",
+                "operator_id",
+                "operator_name",
+                "operator_onestop_id",
+                "operator_short_name",
+                "state_name"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          },
+          {
+            "role": "user",
+            "permission": {
+              "columns": [
+                "agency_id",
+                "agency_name",
+                "associated_feeds",
+                "city_name",
+                "country_name",
+                "group_id",
+                "operator_id",
+                "operator_name",
+                "operator_onestop_id",
+                "operator_short_name",
+                "state_name"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "public",
+          "name": "tl_agency_operator_merge"
+        },
+        "select_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "agency_id",
+                "agency_name",
+                "associated_feeds",
+                "city_name",
+                "country_name",
+                "group_id",
+                "operator_id",
+                "operator_name",
+                "operator_onestop_id",
+                "operator_short_name",
+                "state_name"
+              ],
+              "filter": {},
+              "limit": 1000,
+              "allow_aggregations": true
+            }
+          },
+          {
+            "role": "user",
+            "permission": {
+              "columns": [
+                "agency_id",
+                "agency_name",
+                "associated_feeds",
+                "city_name",
+                "country_name",
+                "group_id",
+                "operator_id",
+                "operator_name",
+                "operator_onestop_id",
+                "operator_short_name",
+                "state_name"
+              ],
+              "filter": {},
+              "allow_aggregations": true
+            }
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "public",
+          "name": "tl_agency_places"
+        },
+        "select_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "id",
+                "feed_version_id",
+                "agency_id",
+                "count",
+                "rank",
+                "name",
+                "adm1name",
+                "adm0name",
+                "best_match",
+                "best_match_type"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          },
+          {
+            "role": "user",
+            "permission": {
+              "columns": [
+                "feed_version_id",
+                "agency_id",
+                "count",
+                "rank",
+                "name",
+                "adm1name",
+                "adm0name",
+                "best_match",
+                "best_match_type"
+              ],
+              "filter": {}
+            }
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "public",
+          "name": "tl_feed_version_geometries"
+        },
+        "object_relationships": [
+          {
+            "name": "feed_version",
+            "using": {
+              "foreign_key_constraint_on": "feed_version_id"
+            }
+          }
+        ],
+        "select_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "feed_version_id",
+                "geometry",
+                "centroid"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          },
+          {
+            "role": "user",
+            "permission": {
+              "columns": [
+                "feed_version_id",
+                "geometry",
+                "centroid"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "public",
+          "name": "tl_route_geometries"
+        },
+        "select_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "centroid",
+                "direction_id",
+                "feed_version_id",
+                "generated",
+                "geometry",
+                "route_id",
+                "shape_id"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          },
+          {
+            "role": "user",
+            "permission": {
+              "columns": [
+                "centroid",
+                "direction_id",
+                "feed_version_id",
+                "generated",
+                "geometry",
+                "route_id",
+                "shape_id"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "public",
+          "name": "tl_route_headways"
+        },
+        "select_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "id",
+                "feed_version_id",
+                "route_id",
+                "selected_stop_id",
+                "service_id",
+                "direction_id",
+                "headway_secs",
+                "dow_category",
+                "service_date",
+                "service_seconds",
+                "stop_trip_count",
+                "headway_seconds_morning_min",
+                "headway_seconds_morning_mid",
+                "headway_seconds_morning_max",
+                "headway_seconds_midday_min",
+                "headway_seconds_midday_mid",
+                "headway_seconds_midday_max",
+                "headway_seconds_evening_min",
+                "headway_seconds_evening_mid",
+                "headway_seconds_evening_max",
+                "headway_seconds_latenight_min",
+                "headway_seconds_latenight_mid",
+                "headway_seconds_latenight_max"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          },
+          {
+            "role": "user",
+            "permission": {
+              "columns": [
+                "service_date",
+                "direction_id",
+                "dow_category",
+                "headway_seconds_evening_min",
+                "headway_seconds_evening_mid",
+                "headway_seconds_evening_max",
+                "headway_seconds_latenight_min",
+                "headway_seconds_latenight_mid",
+                "headway_seconds_latenight_max",
+                "headway_seconds_midday_min",
+                "headway_seconds_midday_mid",
+                "headway_seconds_midday_max",
+                "headway_seconds_morning_min",
+                "headway_seconds_morning_mid",
+                "headway_seconds_morning_max",
+                "headway_secs",
+                "service_seconds",
+                "stop_trip_count",
+                "feed_version_id",
+                "id",
+                "route_id",
+                "selected_stop_id",
+                "service_id"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "public",
+          "name": "tl_route_headways_weekday"
+        },
+        "select_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "id",
+                "feed_version_id",
+                "route_id",
+                "selected_stop_id",
+                "service_id",
+                "direction_id",
+                "headway_secs",
+                "dow_category",
+                "service_date",
+                "service_seconds",
+                "stop_trip_count",
+                "headway_seconds_morning_min",
+                "headway_seconds_morning_mid",
+                "headway_seconds_morning_max",
+                "headway_seconds_midday_min",
+                "headway_seconds_midday_mid",
+                "headway_seconds_midday_max",
+                "headway_seconds_evening_min",
+                "headway_seconds_evening_mid",
+                "headway_seconds_evening_max",
+                "headway_seconds_latenight_min",
+                "headway_seconds_latenight_mid",
+                "headway_seconds_latenight_max"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          },
+          {
+            "role": "user",
+            "permission": {
+              "columns": [
+                "service_date",
+                "direction_id",
+                "dow_category",
+                "headway_seconds_evening_min",
+                "headway_seconds_evening_mid",
+                "headway_seconds_evening_max",
+                "headway_seconds_latenight_min",
+                "headway_seconds_latenight_mid",
+                "headway_seconds_latenight_max",
+                "headway_seconds_midday_min",
+                "headway_seconds_midday_mid",
+                "headway_seconds_midday_max",
+                "headway_seconds_morning_min",
+                "headway_seconds_morning_mid",
+                "headway_seconds_morning_max",
+                "headway_secs",
+                "service_seconds",
+                "stop_trip_count",
+                "feed_version_id",
+                "id",
+                "route_id",
+                "selected_stop_id",
+                "service_id"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          }
+        ]
+      },
+      {
+        "table": {
+          "schema": "public",
+          "name": "tl_route_stops"
+        },
+        "object_relationships": [
+          {
+            "name": "agency",
+            "using": {
+              "foreign_key_constraint_on": "agency_id"
+            }
+          },
+          {
+            "name": "feed_version",
+            "using": {
+              "foreign_key_constraint_on": "feed_version_id"
+            }
+          },
+          {
+            "name": "route",
+            "using": {
+              "foreign_key_constraint_on": "route_id"
+            }
+          },
+          {
+            "name": "stop",
+            "using": {
+              "foreign_key_constraint_on": "stop_id"
+            }
+          }
+        ],
+        "select_permissions": [
+          {
+            "role": "anonymous",
+            "permission": {
+              "columns": [
+                "feed_version_id",
+                "agency_id",
+                "route_id",
+                "stop_id"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          },
+          {
+            "role": "user",
+            "permission": {
+              "columns": [
+                "feed_version_id",
+                "agency_id",
+                "route_id",
+                "stop_id"
+              ],
+              "filter": {},
+              "limit": 1000
+            }
+          }
+        ]
+      }
+    ],
+    "functions": [
+      {
+        "function": {
+          "schema": "public",
+          "name": "feed_versions_for_date"
         }
+      },
+      {
+        "function": {
+          "schema": "public",
+          "name": "service_scheduled_on_date"
+        }
+      },
+      {
+        "function": {
+          "schema": "public",
+          "name": "services_on_date"
+        }
+      }
     ]
-}
+  }
