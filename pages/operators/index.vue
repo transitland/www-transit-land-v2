@@ -17,7 +17,7 @@
     <div style="margin-top:40px">
       <b-message type="is-info">
         <div>
-          Know an operator that's missing? <a href="https://github.com/transitland/transitland-atlas#readme" class="button" style="float:right">Add an operator to Transitland Atlas</a>
+          Know an operator that's missing? <a href="https://github.com/transitland/transitland-atlas/blob/master/README.md#how-to-add-a-new-feed" class="button" style="float:right">Add an operator to Transitland Atlas</a>
         </div>
       </b-message>
     </div>
