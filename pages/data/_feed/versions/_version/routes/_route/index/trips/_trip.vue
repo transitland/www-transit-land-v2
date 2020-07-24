@@ -10,12 +10,7 @@
 </template>
 
 <script>
-import TripStopTimeViewer from '~/components/trip-stop-time-viewer'
-
 export default {
-  components: {
-    TripStopTimeViewer
-  },
   props: {
     entity: { type: Object, default () { return {} } },
     label: { type: String, default: 'Trip Viewer' },

@@ -1,6 +1,8 @@
 
 export default {
   mode: 'spa',
+  // https://github.com/nuxt/components
+  components: true,
   /*
   ** Headers of the page
   */

@@ -64,13 +64,8 @@
 
 <script>
 import moment from 'moment'
-import HeadwayViewer from '~/components/headway-viewer'
-import RouteTripsViewer from '~/components/route-trips-viewer'
-import RouteTripDateSelector from '~/components/route-trip-date-selector'
-import FeedVersionMapViewer from '~/components/feed-version-map-viewer'
 
 export default {
-  components: { HeadwayViewer, RouteTripsViewer, RouteTripDateSelector, FeedVersionMapViewer },
   data () {
     return {
       map: null,
