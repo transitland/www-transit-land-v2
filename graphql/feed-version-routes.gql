@@ -43,6 +43,7 @@ query ($feed_version_ids: [bigint!], $offset: Int!, $limit: Int!, $agency_ids:[b
       headway_seconds_latenight_max
     }
     headways_weekday {
+      headway_secs
       headway_seconds_morning_min
       headway_seconds_morning_mid
       headway_seconds_morning_max

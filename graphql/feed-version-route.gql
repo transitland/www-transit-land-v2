@@ -3,6 +3,7 @@ fragment hw on tl_route_headways {
   dow_category
   service_date
   direction_id
+  headway_secs
   headway_seconds_morning_min
   headway_seconds_midday_min
   headway_seconds_evening_min

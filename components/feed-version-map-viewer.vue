@@ -46,8 +46,8 @@ export default {
       for (const feature of this.features) {
         if (feature.geometries && feature.geometries.length > 0) {
           let hw = 10000
-          if (feature.headways_weekday && feature.headways_weekday.headway_seconds_morning_mid) {
-            hw = feature.headways_weekday.headway_seconds_morning_mid
+          if (feature.headways_weekday && feature.headways_weekday.headway_secs) {
+            hw = feature.headways_weekday.headway_secs
           }
           let routeColor = feature.route_color
           if (routeColor && routeColor.substr(0, 1) !== '#') {

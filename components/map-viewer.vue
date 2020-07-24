@@ -2,6 +2,10 @@
   <div>
     <div id="mapelem" ref="mapelem" />
 
+    <button @click="saveImage">
+      Save
+    </button>
+
     <div v-if="overlay" class="is-hidden-mobile">
       <div class="map-agencies notification">
         <p v-show="Object.keys(agencyFeatures).length == 0">
@@ -68,8 +72,20 @@ export default {
     }
   },
   methods: {
+    saveImage () {
+      const canvas = this.map.getCanvas() // .toDataURL('image/png')
+      const fileName = 'image'
+      const link = document.createElement('a')
+      link.download = fileName + '.png'
+      canvas.toBlob(function (blob) {
+        console.log(blob)
+        link.href = URL.createObjectURL(blob)
+        link.click()
+      })
+    },
     initMap () {
       this.map = new mapboxgl.Map({
+        preserveDrawingBuffer: true,
         container: this.$refs.mapelem,
         style: {
           version: 8,
@@ -92,6 +108,8 @@ export default {
           ]
         }
       })
+      this.map.addControl(new mapboxgl.FullscreenControl())
+
       this.map.on('mousemove', this.mapMouseMove)
       this.map.on('click', 'route-active', this.mapClick)
       this.map.on('load', this.drawMap)
@@ -103,7 +121,7 @@ export default {
         type: 'geojson',
         data: { type: 'FeatureCollection', features: lines }
       })
-      for (const v of mapLayers.routelayers) {
+      for (const v of mapLayers.headwayLayers) {
         const l = {
           id: v.name,
           type: 'line',
@@ -132,6 +150,10 @@ export default {
       this.map.fitBounds(bounds, {
         duration: 0,
         padding: 20
+      })
+      this.map.flyTo({
+        center: [-122.1387, 37.7416],
+        zoom: 9
       })
     },
     mapClick (e) {
@@ -182,7 +204,7 @@ export default {
 <style scoped>
 #mapelem {
   width: 100%;
-  height: 600px;
+  height: 1000px;
 }
 .map-agencies {
   position:absolute;
