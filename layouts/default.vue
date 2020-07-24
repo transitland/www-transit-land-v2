@@ -13,16 +13,6 @@
   </div>
 </template>
 
-<script>
-import tlnav from '~/components/tlnav'
-import tlfooter from '~/components/tlfooter'
-import simpleAnalytics from '~/components/simple-analytics'
-
-export default {
-  components: { tlnav, tlfooter, simpleAnalytics }
-}
-</script>
-
 <style scoped>
 .outer {
   display:flex;

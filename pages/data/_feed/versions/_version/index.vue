@@ -149,13 +149,7 @@
 </template>
 
 <script>
-import RouteViewer from '~/components/route-viewer'
-import StopViewer from '~/components/stop-viewer'
-import AgencyViewer from '~/components/agency-viewer'
-import FeedVersionMapViewer from '~/components/feed-version-map-viewer'
-
 export default {
-  components: { RouteViewer, StopViewer, AgencyViewer, FeedVersionMapViewer },
   apollo: {
     feed_versions: {
       error (e) { this.error = e },
