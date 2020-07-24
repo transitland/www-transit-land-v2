@@ -58,10 +58,7 @@
 </template>
 
 <script>
-import AgencyAutocomplete from '~/components/agency-autocomplete'
-
 export default {
-  components: { AgencyAutocomplete },
   data () {
     return {
       blockEntities: new Map(),

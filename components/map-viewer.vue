@@ -33,12 +33,10 @@
 </template>
 
 <script>
-import RouteSelect from '~/components/route-select'
 import mapLayers from '~/plugins/map-layers.js'
 const mapboxgl = require('mapbox-gl/dist/mapbox-gl.js')
 
 export default {
-  components: { RouteSelect },
   props: {
     overlay: { type: Boolean, default: false },
     features: {

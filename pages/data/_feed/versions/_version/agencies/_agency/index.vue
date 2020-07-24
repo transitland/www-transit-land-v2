@@ -58,12 +58,7 @@
 </template>
 
 <script>
-import RouteViewer from '~/components/route-viewer'
-import StopViewer from '~/components/stop-viewer'
-import FeedVersionMapViewer from '~/components/feed-version-map-viewer'
-
 export default {
-  components: { RouteViewer, StopViewer, FeedVersionMapViewer },
   apollo: {
     q: {
       query: require('~/graphql/feed-version-agency.gql'),

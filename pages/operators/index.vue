@@ -25,10 +25,7 @@
 </template>
 
 <script>
-import OperatorViewer from '~/components/operator-viewer'
-
 export default {
-  components: { OperatorViewer },
   head () {
     return {
       title: 'Browse all Operators'

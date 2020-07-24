@@ -46,12 +46,7 @@
 </template>
 
 <script>
-import RouteViewer from '~/components/route-viewer'
-import FeedVersionMapViewer from '~/components/feed-version-map-viewer'
-import StopViewer from '~/components/stop-viewer'
-
 export default {
-  components: { FeedVersionMapViewer, RouteViewer, StopViewer },
   apollo: {
     entities: {
       error (e) { this.error = e },

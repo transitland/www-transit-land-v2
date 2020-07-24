@@ -9,15 +9,6 @@
   </div>
 </template>
 
-<script>
-import tlnav from '~/components/tlnav'
-import simpleAnalytics from '~/components/simple-analytics'
-
-export default {
-  components: { tlnav, simpleAnalytics }
-}
-</script>
-
 <style scoped>
 .hero-head {
   background: #efefef;

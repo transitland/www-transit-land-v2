@@ -9,8 +9,6 @@
 </template>
 
 <script>
-import MapViewer from '~/components/map-viewer'
-
 export default {
   apollo: {
     features: {
@@ -27,7 +25,6 @@ export default {
       }
     }
   },
-  components: { MapViewer },
   props: {
     overlay: { type: Boolean, default: false },
     fvids: { type: Array, default: null },

@@ -29,10 +29,7 @@
 </template>
 
 <script>
-import FeedViewer from '~/components/feed-viewer'
-
 export default {
-  components: { FeedViewer },
   head () {
     return {
       title: 'Browse all GTFS and GTFS-RT Feeds'

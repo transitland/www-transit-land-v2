@@ -32,14 +32,12 @@
 </template>
 
 <script>
-import routeSelect from '~/components/route-select'
 import mapLayers from '~/plugins/map-layers.js'
 const mapboxgl = require('mapbox-gl/dist/mapbox-gl.js')
 
 /// ///////
 
 export default {
-  components: { routeSelect },
   layout: 'map',
   data () {
     return {
