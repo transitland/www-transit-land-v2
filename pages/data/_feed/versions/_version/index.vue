@@ -206,6 +206,12 @@ export default {
       }
       return m
     }
+  },
+  head () {
+    return {
+      title: `${this.$route.params.feed} • feed version • ${this.$route.params.version}`
+    }
   }
+
 }
 </script>

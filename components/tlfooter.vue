@@ -1,10 +1,9 @@
 <template>
   <footer class="footer">
-    <a href="/">Transitland</a>
-    Map Data:
-    <a href="https://transit.land">Transitland</a>
-    <a href="http://openstreetmap.org/copyright">&copy; OpenStreetMap</a>
-    <a href="https://carto.com/attributions">&copy; CARTO</a>
+    Transitland source code is ©
+    <a href="https://mapzen.com">Mapzen Foundation</a>, a project of
+    <a href="https://www.linuxfoundation.org/">The Linux Foundation</a>. Transitland website and platform are operated by
+    <a href="https://www.interline.io">Interline Technologies</a>.
   </footer>
 </template>
 
@@ -17,6 +16,10 @@
 }
 a {
   color: #666;
+  text-decoration: underline;
+  text-decoration-style: dotted;
 }
-.fa { padding-right:5px; }
+.fa {
+  padding-right: 5px;
+}
 </style>

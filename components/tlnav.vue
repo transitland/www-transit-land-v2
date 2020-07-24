@@ -6,7 +6,7 @@
       </nuxt-link>
     </div>
     <div class="navbar-menu">
-      <div v-for="(item,key) in items" :key="key" class="navbar-item" :active="$route.path.startsWith(item.to)">
+      <div v-for="(item,key) in items" :key="key" class="navbar-item" :class="$route.name.startsWith(item.to.name) ? 'is-active is-tab': ''">
         <nuxt-link :to="item.to">
           {{ item.title }}
         </nuxt-link>
@@ -17,14 +17,14 @@
             Welcome to <strong>Transitland v2</strong>! We're in the process of migrating content from <a href="https://transit.land">Transitland v1</a>.
           </div>
         </div>
-        <div class="navbar-item">
+        <!-- <div class="navbar-item">
           <a href="#TODO" class="button">
             <span class="icon">
               <b-icon icon="help-box" />
             </span>
             <span>Help</span>
           </a>
-        </div>
+        </div> -->
       </div>
     </div>
   </nav>
@@ -53,22 +53,22 @@ export default {
           to: { name: 'operators' }
         },
         {
-          title: 'Data',
+          title: 'Source Feeds',
           icon: 'lightbulb',
           to: { name: 'data' }
         },
+        // {
+        //   title: 'API',
+        //   icon: 'lightbulb',
+        //   to: { name: 'api-console' }
+        // },
         {
-          title: 'API',
-          icon: 'lightbulb',
-          to: { name: 'api-console' }
-        },
-        {
-          title: 'Docs',
+          title: 'Documentation',
           icon: 'lightbulb',
           to: { name: 'documentation' }
         },
         {
-          title: 'News',
+          title: 'News & Updates',
           icon: 'lightbulb',
           to: { name: 'news' }
         }

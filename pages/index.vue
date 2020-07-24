@@ -1,41 +1,54 @@
 <template>
-  <div class="columns is-centered">
-    <div class="column is-three-quarters rows-wrapper">
-      <div data-item="bus" class="row">
-        <h2>
-          A COMMUNITY-EDITED DATA SERVICE
-        </h2>
-        <div id="bus" class="animation bus moveToRight">
-          <div class="figure bus" />
+  <div>
+    <div class="columns is-centered">
+      <div class="column is-three-quarters rows-wrapper">
+        <div data-item="bus" class="row">
+          <h2>
+            A COMMUNITY-EDITED DATA SERVICE
+          </h2>
+          <div id="bus" class="animation bus moveToRight">
+            <div class="figure bus" />
+          </div>
         </div>
-      </div>
-      <div data-item="ferry" class="row">
-        <h2>
-          AGGREGATING
-        </h2>
-        <div id="ferry" class="animation ferry moveToRight">
-          <div class="figure ferry" />
+        <div data-item="ferry" class="row">
+          <h2>
+            AGGREGATING
+          </h2>
+          <div id="ferry" class="animation ferry moveToRight">
+            <div class="figure ferry" />
+          </div>
+          <h2> TRANSIT NETWORKS </h2>
         </div>
-        <h2> TRANSIT NETWORKS </h2>
-      </div>
-      <div data-item="bike" class="row">
-        <h2>
-          ACROSS METROPOLITAN
-        </h2>
-        <div id="bike" class="animation bike moveToLeft">
-          <div class="figure bike" />
+        <div data-item="bike" class="row">
+          <h2>
+            ACROSS METROPOLITAN
+          </h2>
+          <div id="bike" class="animation bike moveToLeft">
+            <div class="figure bike" />
+          </div>
+          <h2>AND RURAL </h2>
         </div>
-        <h2>AND RURAL </h2>
-      </div>
-      <div data-item="train" class="row">
-        <h2>
-          AREAS AROUND THE WORLD.
-        </h2>
-        <div id="train" class="animation train moveToLeft">
-          <div class="figure train" />
+        <div data-item="train" class="row">
+          <h2>
+            AREAS AROUND THE WORLD.
+          </h2>
+          <div id="train" class="animation train moveToLeft">
+            <div class="figure train" />
+          </div>
         </div>
       </div>
     </div>
+    <section class="section">
+      <p class="is-medium content">
+        <strong>Welcome to Transitland v2.</strong> Transitland is an open data platform that collects <abbr title="General Transit Feed Specification">GTFS</abbr>, GTFS Realtime, and other open data feeds from transit providers around the world. Transitland aggregates feeds from <nuxt-link :to="{ name: 'operators' }">over 2,500 operators in over 55 countries</nuxt-link>. Use the Transitland website to browse this world of data. Or use Transitland's APIs to power your own maps, data visualizations, analyses, trip planners, or routing algorithms.
+      </p>
+      <p class="is-medium content">
+        This website and the APIs that power it are gradually replacing Transitland v1. For the time being, the two versions will run in parallel. For Transitland v1, see <code><a href="https://transit.land">https://transit.land</a></code> and use its API at <code><a href="https://transit.land/api/v1">https://transit.land/api/v1</a></code>. For an overview of Transitland v2, see <a href="https://transit.land/news/2019/10/17/tlv2.html">this blog post</a> and <a href="http://localhost:3000/documentation">the new documentation on this website</a>.
+      </p>
+      <p class="is-medium content">
+        Thank you to the many contributors and users who have been a part of Transitland since 2014!
+      </p>
+    </section>
   </div>
 </template>
 

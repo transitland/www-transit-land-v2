@@ -133,6 +133,13 @@ export default {
     childLabel () {
       this.activeTab = 3
     }
+  },
+  head () {
+    if (this.entity) {
+      return {
+        title: `${this.entity.route_long_name} (route) • ${this.entity.agency.agency_name}`
+      }
+    }
   }
 }
 </script>

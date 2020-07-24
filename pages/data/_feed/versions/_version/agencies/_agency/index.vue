@@ -96,6 +96,13 @@ export default {
     entity () {
       return this.gtfs_agencies.length > 0 ? this.gtfs_agencies[0] : null
     }
+  },
+  head () {
+    if (this.entity) {
+      return {
+        title: `${this.entity.agency_name} • agency`
+      }
+    }
   }
 }
 </script>
