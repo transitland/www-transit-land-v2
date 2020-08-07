@@ -10,9 +10,27 @@
           Operators
         </nuxt-link> /
         <nuxt-link :to="{name:'operators', params:{operator:$route.params.operator}}">
-          {{ $route.params.operator }}
+          {{ operatorName }}
         </nuxt-link>
       </h1>
+      <section class="content">
+        <dl>
+          <dt>Onestop ID</dt>
+          <dd>{{ $route.params.operator }}</dd>
+          <template v-if="operator.country_name">
+            <dt>Country</dt>
+            <dd>{{ operator.country_name }}</dd>
+          </template>
+          <template v-if="operator.state_name">
+            <dt>State/Province</dt>
+            <dd>{{ operator.state_name }}</dd>
+          </template>
+          <template v-if="operator.city_name">
+            <dt>City</dt>
+            <dd>{{ operator.city_name }}</dd>
+          </template>
+        </dl>
+      </section>
       <b-tabs v-model="activeTab" type="is-boxed">
         <b-tab-item label="Map">
           <!-- need fvids for good index search -->
@@ -80,11 +98,27 @@ export default {
     },
     fvids () {
       return this.agencies.map((s) => { return s.feed_version.id })
+    },
+    operator () {
+      if (this.entities && this.entities.length > 0 && this.entities[0]) {
+        return this.entities[0]
+      } else {
+        return null
+      }
+    },
+    operatorName () {
+      if (this.operator > 0 && this.operator.operator_name) {
+        return this.operator.operator_name
+      } else if (this.agencies && this.agencies.length > 0) {
+        return this.agencies[0].agency_name
+      } else {
+        return ''
+      }
     }
   },
   head () {
     return {
-      title: ' • operator details'
+      title: `${this.operatorName} • operator details`
     }
   }
 }
