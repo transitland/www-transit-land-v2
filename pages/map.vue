@@ -120,7 +120,8 @@ export default {
           paint: v.paint
         }
         if (v.filter != null) {
-          l.filter = v.filter
+          l.filter = v.filter.slice()
+          l.filter.push(['==', 'generated', false])
         }
         map.addLayer(l)
       }

@@ -92,18 +92,18 @@ export default {
       const ret = {
         morning: [],
         midday: [],
-        evening: [],
-        latenight: []
+        afternoon: [],
+        night: []
       }
       for (const st of this.sts) {
-        if (st.departure_time >= (6 * 3600) && st.departure_time < (9 * 3600)) {
+        if (st.departure_time >= (6 * 3600) && st.departure_time < (10 * 3600)) {
           ret.morning.push(st)
-        } else if (st.departure_time >= (9 * 3600) && st.departure_time < (16 * 3600)) {
+        } else if (st.departure_time >= (10 * 3600) && st.departure_time < (16 * 3600)) {
           ret.midday.push(st)
-        } else if (st.departure_time >= (16 * 3600) && st.departure_time < (19 * 3600)) {
-          ret.evening.push(st)
+        } else if (st.departure_time >= (16 * 3600) && st.departure_time < (20 * 3600)) {
+          ret.afternoon.push(st)
         } else {
-          ret.latenight.push(st)
+          ret.night.push(st)
         }
       }
       const ret2 = {}

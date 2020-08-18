@@ -31,16 +31,16 @@ query ($feed_version_ids: [bigint!], $offset: Int!, $limit: Int!, $agency_ids:[b
       dow_category
       headway_seconds_morning_min
       headway_seconds_midday_min
-      headway_seconds_evening_min
-      headway_seconds_latenight_min
+      headway_seconds_afternoon_min
+      headway_seconds_night_min
       headway_seconds_morning_mid
       headway_seconds_midday_mid
-      headway_seconds_evening_mid
-      headway_seconds_latenight_mid
+      headway_seconds_afternoon_mid
+      headway_seconds_night_mid
       headway_seconds_morning_max
       headway_seconds_midday_max
-      headway_seconds_evening_max
-      headway_seconds_latenight_max
+      headway_seconds_afternoon_max
+      headway_seconds_night_max
     }
     headways_weekday {
       headway_secs

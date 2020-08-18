@@ -1,11 +1,6 @@
 <template>
   <div>
     <div id="mapelem" ref="mapelem" />
-
-    <button @click="saveImage">
-      Save
-    </button>
-
     <div v-if="overlay" class="is-hidden-mobile">
       <div class="map-agencies notification">
         <p v-show="Object.keys(agencyFeatures).length == 0">
@@ -76,7 +71,6 @@ export default {
       const link = document.createElement('a')
       link.download = fileName + '.png'
       canvas.toBlob(function (blob) {
-        console.log(blob)
         link.href = URL.createObjectURL(blob)
         link.click()
       })
@@ -113,13 +107,40 @@ export default {
       this.map.on('load', this.drawMap)
     },
     drawMap () {
+      const buffers = this.features.filter((s) => { return s.geometry.type === 'MultiPolygon' })
       const points = this.features.filter((s) => { return s.geometry.type === 'Point' })
       const lines = this.features.filter((s) => { return s.geometry.type === 'LineString' })
+      this.map.addSource('buffers', {
+        type: 'geojson',
+        data: { type: 'FeatureCollection', features: buffers }
+      })
       this.map.addSource('routes', {
         type: 'geojson',
         data: { type: 'FeatureCollection', features: lines }
       })
-      for (const v of mapLayers.headwayLayers) {
+      this.map.addLayer({
+        id: 'buffers',
+        type: 'fill',
+        source: 'buffers',
+        layout: {},
+        paint: {
+          'fill-color': '#ccc',
+          'fill-opacity': 0.4
+        }
+      })
+      this.map.addLayer({
+        id: 'buffers-outline',
+        type: 'line',
+        source: 'buffers',
+        layout: {},
+        paint: {
+          'line-width': 2,
+          'line-color': '#000',
+          'line-opacity': 1.0
+        }
+      })
+
+      for (const v of mapLayers.mapLayers) {
         const l = {
           id: v.name,
           type: 'line',
@@ -148,10 +169,6 @@ export default {
       this.map.fitBounds(bounds, {
         duration: 0,
         padding: 20
-      })
-      this.map.flyTo({
-        center: [-122.1387, 37.7416],
-        zoom: 9
       })
     },
     mapClick (e) {

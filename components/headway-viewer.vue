@@ -4,10 +4,10 @@
       <thead>
         <tr>
           <th />
-          <th>Morning<br><span class="tag is-small is-centered">6-9am</span></th>
-          <th>Midday<br><span class="tag is-small is-centered">9am-4pm</span></th>
-          <th>Evening<br><span class="tag is-small is-centered">4-7pm</span></th>
-          <th>Late night<br><span class="tag is-small is-centered">7pm-6am</span></th>
+          <th>Morning<br><span class="tag is-small is-centered">6-10am</span></th>
+          <th>Midday<br><span class="tag is-small is-centered">10am-4pm</span></th>
+          <th>Afternoon<br><span class="tag is-small is-centered">4-8pm</span></th>
+          <th>Night<br><span class="tag is-small is-centered">8pm-6am</span></th>
         </tr>
       </thead>
       <tbody>
@@ -17,8 +17,8 @@
           </td>
           <td>{{ hws.weekday | formatHeadway('morning') }}</td>
           <td>{{ hws.weekday | formatHeadway('midday') }}</td>
-          <td>{{ hws.weekday | formatHeadway('evening') }}</td>
-          <td>{{ hws.weekday | formatHeadway('latenight') }}</td>
+          <td>{{ hws.weekday | formatHeadway('afternoon') }}</td>
+          <td>{{ hws.weekday | formatHeadway('night') }}</td>
         </tr>
         <tr>
           <td>
@@ -26,8 +26,8 @@
           </td>
           <td>{{ hws.saturday | formatHeadway('morning') }}</td>
           <td>{{ hws.saturday | formatHeadway('midday') }}</td>
-          <td>{{ hws.saturday | formatHeadway('evening') }}</td>
-          <td>{{ hws.saturday | formatHeadway('latenight') }}</td>
+          <td>{{ hws.saturday | formatHeadway('afternoon') }}</td>
+          <td>{{ hws.saturday | formatHeadway('night') }}</td>
         </tr>
         <tr>
           <td>
@@ -35,8 +35,8 @@
           </td>
           <td>{{ hws.sunday | formatHeadway('morning') }}</td>
           <td>{{ hws.sunday | formatHeadway('midday') }}</td>
-          <td>{{ hws.sunday | formatHeadway('evening') }}</td>
-          <td>{{ hws.sunday | formatHeadway('latenight') }}</td>
+          <td>{{ hws.sunday | formatHeadway('afternoon') }}</td>
+          <td>{{ hws.sunday | formatHeadway('night') }}</td>
         </tr>
       </tbody>
     </table>

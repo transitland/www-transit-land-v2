@@ -61,7 +61,6 @@ const headwayLayers = [
     filter: ['all', ['<=', 'headway_secs', headways.high], ['>', 'headway_secs', 0]],
     paint: { 'line-opacity': 0.75, 'line-width': 3.0, 'line-color': hwcolors.high }
   }
-
 ]
 
 const routelayers = [
@@ -88,7 +87,7 @@ const routelayers = [
   {
     name: 'rail',
     filter: ['all', ['<', 'route_type', 3]],
-    paint: { 'line-width': 3.0, 'line-color': colors.rail }
+    paint: { 'line-width': 3.0, 'line-color': '#ff0000' }
   },
 
   // BUS LOW AND UNKNOWN
@@ -134,24 +133,24 @@ const routelayers = [
     name: 'metro',
     filter: ['all', ['==', 'route_type', 1]],
     paint: { 'line-width': 3.0, 'line-color': ['coalesce', ['get', 'route_color'], colors.metro] }
-  },
-  // OTHER
-  {
-    name: 'other',
-    filter: ['all', ['>', 'route_type', 3]],
-    paint: {
-      'line-opacity': 1.0,
-      'line-width': [
-        'step',
-        ['get', 'headway_secs'],
-        1, 1,
-        2, 600,
-        1, 1200,
-        1
-      ],
-      'line-color': colors.other
-    }
   }
+  // OTHER
+  // {
+  //   name: 'other',
+  //   filter: ['all', ['>', 'route_type', 3]],
+  //   paint: {
+  //     'line-opacity': 1.0,
+  //     'line-width': [
+  //       'step',
+  //       ['get', 'headway_secs'],
+  //       1, 1,
+  //       2, 600,
+  //       1, 1200,
+  //       1
+  //     ],
+  //     'line-color': colors.other
+  //   }
+  // }
 ]
 
 export default { headways, colors, routelayers, headwayLayers }

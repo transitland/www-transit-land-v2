@@ -109,8 +109,8 @@ export default {
       return `
 Weekday Morning: ${fmt(ret.weekday, 'morning')} mins
 Weekday Midday: ${fmt(ret.weekday, 'midday')} mins
-Weekday Evening: ${fmt(ret.weekday, 'evening')} mins
-Weekday Late night: ${fmt(ret.weekday, 'latenight')} mins`
+Weekday Afternoon: ${fmt(ret.weekday, 'afternoon')} mins
+Weekday Night: ${fmt(ret.weekday, 'night')} mins`
     },
     onPageChange (page) {
       this.offset = this.limit * (page - 1)
