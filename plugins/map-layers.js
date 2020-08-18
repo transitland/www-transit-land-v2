@@ -63,7 +63,7 @@ const headwayLayers = [
   }
 ]
 
-const routelayers = [
+const routeLayers = [
   // hitbox / active
   {
     name: 'route-active',
@@ -153,4 +153,4 @@ const routelayers = [
   // }
 ]
 
-export default { headways, colors, routelayers, headwayLayers }
+export default { headways, colors, routeLayers, headwayLayers }

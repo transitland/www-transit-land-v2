@@ -64,7 +64,7 @@
               :dashed="true"
               multilined
             >
-              {{ props.row.headways_weekday.headway_secs }}
+              {{ Math.ceil(props.row.headways_weekday.headway_secs / 60) }}
             </b-tooltip>
           </span>
         </b-table-column>

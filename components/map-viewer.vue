@@ -101,9 +101,6 @@ export default {
         }
       })
       this.map.addControl(new mapboxgl.FullscreenControl())
-
-      this.map.on('mousemove', this.mapMouseMove)
-      this.map.on('click', 'route-active', this.mapClick)
       this.map.on('load', this.drawMap)
     },
     drawMap () {
@@ -139,8 +136,7 @@ export default {
           'line-opacity': 1.0
         }
       })
-
-      for (const v of mapLayers.mapLayers) {
+      for (const v of mapLayers.routeLayers) {
         const l = {
           id: v.name,
           type: 'line',
@@ -170,6 +166,9 @@ export default {
         duration: 0,
         padding: 20
       })
+      // Click handler
+      this.map.on('mousemove', this.mapMouseMove)
+      this.map.on('click', 'route-active', this.mapClick)
     },
     mapClick (e) {
       this.isComponentModalActive = true
