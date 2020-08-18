@@ -1,7 +1,6 @@
 <template>
   <div>
     <div id="mapelem" ref="mapelem" />
-
     <div v-if="overlay" class="is-hidden-mobile">
       <div class="map-agencies notification">
         <p v-show="Object.keys(agencyFeatures).length == 0">
@@ -51,30 +50,43 @@ export default {
       isComponentModalActive: false
     }
   },
+  watch: {
+    features (v) {
+      if (v) {
+        this.$nextTick(() => {
+          // this.initMap()
+          // this.drawMap()
+          this.redraw()
+        })
+      }
+    }
+  },
   mounted () {
     if (this.features) {
       this.initMap()
     }
   },
-  wach: {
-    features (v) {
-      if (v) {
-        this.$nextTick(() => {
-          this.initMap()
-        })
-      }
-    }
-  },
   methods: {
+    saveImage () {
+      const canvas = this.map.getCanvas() // .toDataURL('image/png')
+      const fileName = 'image'
+      const link = document.createElement('a')
+      link.download = fileName + '.png'
+      canvas.toBlob(function (blob) {
+        link.href = URL.createObjectURL(blob)
+        link.click()
+      })
+    },
     initMap () {
       this.map = new mapboxgl.Map({
+        preserveDrawingBuffer: true,
         container: this.$refs.mapelem,
         style: {
           version: 8,
           sources: {
             'raster-tiles': {
               type: 'raster',
-              tiles: ['https://0.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{scale}.png'],
+              tiles: ['https://0.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{scale}.png'],
               tileSize: 256,
               attribution: 'Transitland | Interline | &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>'
             }
@@ -90,22 +102,59 @@ export default {
           ]
         }
       })
-      this.map.on('mousemove', this.mapMouseMove)
-      this.map.on('click', 'route-active', this.mapClick)
+      this.map.addControl(new mapboxgl.FullscreenControl())
       this.map.on('load', this.drawMap)
     },
-    drawMap () {
+    redraw () {
+      const polygons = this.features.filter((s) => { return s.geometry.type === 'MultiPolygon' || s.geometry.type === 'Polygon' })
       const points = this.features.filter((s) => { return s.geometry.type === 'Point' })
       const lines = this.features.filter((s) => { return s.geometry.type === 'LineString' })
-      this.map.addSource('routes', {
+      this.map.getSource('polygons').setData({ type: 'FeatureCollection', features: polygons })
+      this.map.getSource('lines').setData({ type: 'FeatureCollection', features: lines })
+      this.map.getSource('points').setData({ type: 'FeatureCollection', features: points })
+    },
+    drawMap () {
+      const polygons = this.features.filter((s) => { return s.geometry.type === 'MultiPolygon' || s.geometry.type === 'Polygon' })
+      const points = this.features.filter((s) => { return s.geometry.type === 'Point' })
+      const lines = this.features.filter((s) => { return s.geometry.type === 'LineString' })
+      this.map.addSource('polygons', {
+        type: 'geojson',
+        data: { type: 'FeatureCollection', features: polygons }
+      })
+      this.map.addSource('lines', {
         type: 'geojson',
         data: { type: 'FeatureCollection', features: lines }
       })
-      for (const v of mapLayers.routelayers) {
+      this.map.addSource('points', {
+        type: 'geojson',
+        data: { type: 'FeatureCollection', features: points }
+      })
+      this.map.addLayer({
+        id: 'polygons',
+        type: 'fill',
+        source: 'polygons',
+        layout: {},
+        paint: {
+          'fill-color': '#ccc',
+          'fill-opacity': 0.4
+        }
+      })
+      this.map.addLayer({
+        id: 'polygons-outline',
+        type: 'line',
+        source: 'polygons',
+        layout: {},
+        paint: {
+          'line-width': 2,
+          'line-color': '#000',
+          'line-opacity': 1.0
+        }
+      })
+      for (const v of mapLayers.routeLayers) {
         const l = {
           id: v.name,
           type: 'line',
-          source: 'routes',
+          source: 'lines',
           layout: {
             'line-cap': 'round',
             'line-join': 'round'
@@ -123,6 +172,13 @@ export default {
           coordinates.push(c)
         }
       }
+      for (const polygon of polygons) {
+        for (const a of polygon.geometry.coordinates) {
+          for (const b of a) {
+            coordinates.push(b)
+          }
+        }
+      }
       this.map.resize()
       const bounds = coordinates.reduce(function (bounds, coord) {
         return bounds.extend(coord)
@@ -131,6 +187,9 @@ export default {
         duration: 0,
         padding: 20
       })
+      // Click handler
+      this.map.on('mousemove', this.mapMouseMove)
+      this.map.on('click', 'route-active', this.mapClick)
     },
     mapClick (e) {
       this.isComponentModalActive = true
@@ -141,14 +200,14 @@ export default {
       map.getCanvas().style.cursor = 'pointer'
       for (const k of this.hovering) {
         map.setFeatureState(
-          { source: 'routes', id: k },
+          { source: 'lines', id: k },
           { hover: false }
         )
       }
       this.hovering = []
       for (const v of features) {
         this.hovering.push(v.id)
-        map.setFeatureState({ source: 'routes', id: v.id }, { hover: true })
+        map.setFeatureState({ source: 'lines', id: v.id }, { hover: true })
       }
       const agencyFeatures = {}
       for (const v of features) {

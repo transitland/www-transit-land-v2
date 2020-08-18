@@ -58,15 +58,14 @@
         </b-table-column>
 
         <b-table-column field="headways" label="Headway" :numeric="true" :sortable="true">
-          <span v-if="props.row.headways_weekday && props.row.headways_weekday.headway_seconds_morning_mid">
+          <span v-if="props.row.headways_weekday && props.row.headways_weekday.headway_secs">
             <b-tooltip
               :label="headwayTooltip(props.row.headways)"
               :dashed="true"
               multilined
             >
-              {{ props.row.headways_weekday | formatHeadway('morning') }} mins
+              {{ Math.ceil(props.row.headways_weekday.headway_secs / 60) }}
             </b-tooltip>
-
           </span>
         </b-table-column>
       </template>
@@ -110,8 +109,8 @@ export default {
       return `
 Weekday Morning: ${fmt(ret.weekday, 'morning')} mins
 Weekday Midday: ${fmt(ret.weekday, 'midday')} mins
-Weekday Evening: ${fmt(ret.weekday, 'evening')} mins
-Weekday Late night: ${fmt(ret.weekday, 'latenight')} mins`
+Weekday Afternoon: ${fmt(ret.weekday, 'afternoon')} mins
+Weekday Night: ${fmt(ret.weekday, 'night')} mins`
     },
     onPageChange (page) {
       this.offset = this.limit * (page - 1)
@@ -129,11 +128,11 @@ Weekday Late night: ${fmt(ret.weekday, 'latenight')} mins`
       variables () {
         let orderby = {}
         if (this.sortField === 'headways') {
-          orderby = { headways_weekday: { headway_seconds_morning_mid: this.sortOrder } }
+          orderby = { headways_weekday: { headway_secs: this.sortOrder } }
         } else if (this.sortField) {
           orderby[this.sortField] = this.sortOrder
         } else {
-          orderby = { headways_weekday: { headway_seconds_morning_mid: 'asc' } }
+          orderby = { headways_weekday: { headway_secs: 'asc' }, route_id: 'asc' }
         }
         return {
           offset: this.offset,

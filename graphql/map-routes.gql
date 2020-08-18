@@ -7,7 +7,7 @@ query ($feed_version_ids: [bigint!], $offset: Int!, $limit: Int!, $agency_ids: [
     route_short_name
     route_long_name
     headways_weekday {
-      headway_seconds_morning_mid
+      headway_secs
     }
     feed_version {
       id

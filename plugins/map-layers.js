@@ -1,8 +1,8 @@
 
 const headways = {
-  high: 300,
-  medium: 900,
-  low: 1800
+  high: 660,
+  medium: 1260,
+  low: 2700
 }
 
 const colors = {
@@ -10,6 +10,7 @@ const colors = {
   busoutline: '#ffffff',
   buslow: '#8acaeb',
   busmedium: '#1c96d6',
+  bushigh: '#ff0000',
   rail: '#aaaaaa',
   railoutline: '#ffffff',
   tram: '#ff9966',
@@ -20,7 +21,49 @@ const colors = {
   stop: '#007cbf'
 }
 
-const routelayers = [
+const hwcolors = {
+  low: '#fee8c8',
+  medium: '#feb24c',
+  high: '#f03b20'
+}
+
+const headwayLayers = [
+  {
+    name: 'route-active',
+    paint: {
+      'line-color': colors.active,
+      'line-width': 12,
+      'line-opacity': [
+        'case',
+        ['boolean', ['feature-state', 'hover'], false],
+        1.0,
+        0.0
+      ]
+    }
+  },
+  {
+    name: 'headway-unknown',
+    filter: ['all', ['==', 'headway_secs', 0]],
+    paint: { 'line-opacity': 0.75, 'line-width': 3.0, 'line-color': hwcolors.low }
+  },
+  {
+    name: 'headway-low',
+    filter: ['all', ['>', 'headway_secs', headways.medium]],
+    paint: { 'line-opacity': 0.75, 'line-width': 3.0, 'line-color': hwcolors.low }
+  },
+  {
+    name: 'headway-medium',
+    filter: ['all', ['<=', 'headway_secs', headways.medium], ['>', 'headway_secs', headways.high]],
+    paint: { 'line-opacity': 0.75, 'line-width': 3.0, 'line-color': hwcolors.medium }
+  },
+  {
+    name: 'headway-high',
+    filter: ['all', ['<=', 'headway_secs', headways.high], ['>', 'headway_secs', 0]],
+    paint: { 'line-opacity': 0.75, 'line-width': 3.0, 'line-color': hwcolors.high }
+  }
+]
+
+const routeLayers = [
   // hitbox / active
   {
     name: 'route-active',
@@ -44,7 +87,7 @@ const routelayers = [
   {
     name: 'rail',
     filter: ['all', ['<', 'route_type', 3]],
-    paint: { 'line-width': 3.0, 'line-color': colors.rail }
+    paint: { 'line-width': 3.0, 'line-color': '#ff0000' }
   },
 
   // BUS LOW AND UNKNOWN
@@ -90,24 +133,24 @@ const routelayers = [
     name: 'metro',
     filter: ['all', ['==', 'route_type', 1]],
     paint: { 'line-width': 3.0, 'line-color': ['coalesce', ['get', 'route_color'], colors.metro] }
-  },
-  // OTHER
-  {
-    name: 'other',
-    filter: ['all', ['>', 'route_type', 3]],
-    paint: {
-      'line-opacity': 1.0,
-      'line-width': [
-        'step',
-        ['get', 'headway_secs'],
-        1, 1,
-        2, 600,
-        1, 1200,
-        1
-      ],
-      'line-color': colors.other
-    }
   }
+  // OTHER
+  // {
+  //   name: 'other',
+  //   filter: ['all', ['>', 'route_type', 3]],
+  //   paint: {
+  //     'line-opacity': 1.0,
+  //     'line-width': [
+  //       'step',
+  //       ['get', 'headway_secs'],
+  //       1, 1,
+  //       2, 600,
+  //       1, 1200,
+  //       1
+  //     ],
+  //     'line-color': colors.other
+  //   }
+  // }
 ]
 
-export default { headways, colors, routelayers }
+export default { headways, colors, routeLayers, headwayLayers }
