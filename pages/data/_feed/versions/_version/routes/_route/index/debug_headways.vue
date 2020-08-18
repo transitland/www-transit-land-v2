@@ -2,8 +2,6 @@
   <div>
     <headway-viewer :headways="entity.headways" />
 
-    asd
-
     <b-tabs type="is-boxed">
       <b-tab-item v-for="(hw,key) of hws" :key="key" :label="key">
         <debug-stop-viewer

@@ -50,18 +50,20 @@ export default {
       isComponentModalActive: false
     }
   },
-  mounted () {
-    if (this.features) {
-      this.initMap()
-    }
-  },
-  wach: {
+  watch: {
     features (v) {
       if (v) {
         this.$nextTick(() => {
-          this.initMap()
+          // this.initMap()
+          // this.drawMap()
+          this.redraw()
         })
       }
+    }
+  },
+  mounted () {
+    if (this.features) {
+      this.initMap()
     }
   },
   methods: {
@@ -103,22 +105,34 @@ export default {
       this.map.addControl(new mapboxgl.FullscreenControl())
       this.map.on('load', this.drawMap)
     },
-    drawMap () {
-      const buffers = this.features.filter((s) => { return s.geometry.type === 'MultiPolygon' })
+    redraw () {
+      const polygons = this.features.filter((s) => { return s.geometry.type === 'MultiPolygon' || s.geometry.type === 'Polygon' })
       const points = this.features.filter((s) => { return s.geometry.type === 'Point' })
       const lines = this.features.filter((s) => { return s.geometry.type === 'LineString' })
-      this.map.addSource('buffers', {
+      this.map.getSource('polygons').setData({ type: 'FeatureCollection', features: polygons })
+      this.map.getSource('lines').setData({ type: 'FeatureCollection', features: lines })
+      this.map.getSource('points').setData({ type: 'FeatureCollection', features: points })
+    },
+    drawMap () {
+      const polygons = this.features.filter((s) => { return s.geometry.type === 'MultiPolygon' || s.geometry.type === 'Polygon' })
+      const points = this.features.filter((s) => { return s.geometry.type === 'Point' })
+      const lines = this.features.filter((s) => { return s.geometry.type === 'LineString' })
+      this.map.addSource('polygons', {
         type: 'geojson',
-        data: { type: 'FeatureCollection', features: buffers }
+        data: { type: 'FeatureCollection', features: polygons }
       })
-      this.map.addSource('routes', {
+      this.map.addSource('lines', {
         type: 'geojson',
         data: { type: 'FeatureCollection', features: lines }
       })
+      this.map.addSource('points', {
+        type: 'geojson',
+        data: { type: 'FeatureCollection', features: points }
+      })
       this.map.addLayer({
-        id: 'buffers',
+        id: 'polygons',
         type: 'fill',
-        source: 'buffers',
+        source: 'polygons',
         layout: {},
         paint: {
           'fill-color': '#ccc',
@@ -126,9 +140,9 @@ export default {
         }
       })
       this.map.addLayer({
-        id: 'buffers-outline',
+        id: 'polygons-outline',
         type: 'line',
-        source: 'buffers',
+        source: 'polygons',
         layout: {},
         paint: {
           'line-width': 2,
@@ -140,7 +154,7 @@ export default {
         const l = {
           id: v.name,
           type: 'line',
-          source: 'routes',
+          source: 'lines',
           layout: {
             'line-cap': 'round',
             'line-join': 'round'
@@ -156,6 +170,13 @@ export default {
       for (const line of lines) {
         for (const c of line.geometry.coordinates) {
           coordinates.push(c)
+        }
+      }
+      for (const polygon of polygons) {
+        for (const a of polygon.geometry.coordinates) {
+          for (const b of a) {
+            coordinates.push(b)
+          }
         }
       }
       this.map.resize()
@@ -179,14 +200,14 @@ export default {
       map.getCanvas().style.cursor = 'pointer'
       for (const k of this.hovering) {
         map.setFeatureState(
-          { source: 'routes', id: k },
+          { source: 'lines', id: k },
           { hover: false }
         )
       }
       this.hovering = []
       for (const v of features) {
         this.hovering.push(v.id)
-        map.setFeatureState({ source: 'routes', id: v.id }, { hover: true })
+        map.setFeatureState({ source: 'lines', id: v.id }, { hover: true })
       }
       const agencyFeatures = {}
       for (const v of features) {
