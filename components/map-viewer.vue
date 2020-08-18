@@ -84,7 +84,7 @@ export default {
           sources: {
             'raster-tiles': {
               type: 'raster',
-              tiles: ['https://0.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{scale}.png'],
+              tiles: ['https://0.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{scale}.png'],
               tileSize: 256,
               attribution: 'Transitland | Interline | &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>'
             }
@@ -218,7 +218,7 @@ export default {
 <style scoped>
 #mapelem {
   width: 100%;
-  height: 1000px;
+  height: 600px;
 }
 .map-agencies {
   position:absolute;
