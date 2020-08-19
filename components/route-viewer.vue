@@ -44,7 +44,7 @@
           :sortable="true"
           field="route_long_name"
           label=""
-          :width="600"
+          :width="500"
         >
           {{ props.row.route_long_name }}
         </b-table-column>
@@ -59,14 +59,30 @@
           {{ props.row.agency.agency_name }}
         </b-table-column>
 
-        <b-table-column field="headways" label="Headway" :numeric="true" :sortable="true">
+        <b-table-column v-if="showGeometry" field="geometry" label="Shape" :width="60">
+          <template v-if="props.row.geometries.filter((s)=>{return s.generated === true}).length > 0">
+            <b-tooltip label="This route contains generated shapes">
+              <b-icon icon="alert" type="is-grey-light" />
+            </b-tooltip>
+          </template>
+          <template v-else-if="props.row.geometries.filter((s)=>{return s.generated === false}).length > 0">
+            <b-icon icon="check" type="is-grey-dark" />
+          </template>
+          <template v-else>
+            <b-tooltip label="No shape information was present or generated">
+              <b-icon type="is-warning" icon="alert" />
+            </b-tooltip>
+          </template>
+        </b-table-column>
+
+        <b-table-column field="headways" label="Headway" :numeric="true" :sortable="true" :width="100">
           <span v-if="props.row.headways_weekday && props.row.headways_weekday.headway_secs">
             <b-tooltip
               :label="headwayTooltip(props.row.headways)"
               :dashed="true"
               multilined
             >
-              {{ Math.ceil(props.row.headways_weekday.headway_secs / 60) }}
+              {{ Math.ceil(props.row.headways_weekday.headway_secs / 60) }} mins
             </b-tooltip>
           </span>
         </b-table-column>
@@ -84,7 +100,8 @@ export default {
     fvids: { type: Array, default: null },
     agencyIds: { type: Array, default: null },
     routeIds: { type: Array, default: null },
-    showAgency: { type: Boolean, default: true }
+    showAgency: { type: Boolean, default: true },
+    showGeometry: { type: Boolean, default: true }
   },
   data () {
     return {
