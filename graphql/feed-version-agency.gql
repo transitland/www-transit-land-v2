@@ -25,6 +25,11 @@ query($feed_onestop_id: String!, $feed_version_sha1: String!, $agency_id: String
     agency_name
     agency_phone
     agency_url
+    fare_attributes(distinct_on: price) {
+      id
+      price
+      currency_type
+    }
     feed_version {
         id
         sha1

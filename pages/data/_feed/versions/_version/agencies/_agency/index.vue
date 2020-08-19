@@ -49,6 +49,15 @@
           <td>Agency website</td>
           <td>{{ entity.agency_url }}</td>
         </tr>
+        <tr>
+          <td>Fares</td>
+          <td>
+            <span v-if="entity.fare_attributes.length > 0">
+              {{ fareMin }} - {{ fareMax }} {{ entity.fare_attributes[0].currency_type }}
+            </span>
+            <span v-else>Not present</span>
+          </td>
+        </tr>
       </table>
 
       <br>
@@ -98,6 +107,12 @@ export default {
     }
   },
   computed: {
+    fareMin () {
+      return Math.min(...this.entity.fare_attributes.map((s) => { return s.price }))
+    },
+    fareMax () {
+      return Math.max(...this.entity.fare_attributes.map((s) => { return s.price }))
+    },
     hasMultipleAgencies () {
       return this.entity.feed_version.agencies.length > 1
     },

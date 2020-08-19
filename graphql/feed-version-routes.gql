@@ -25,6 +25,10 @@ query ($feed_version_ids: [bigint!], $offset: Int!, $limit: Int!, $agency_ids:[b
       agency_id
       agency_name
     }
+    geometries {
+      direction_id
+      generated
+    }
     headways {
       selected_stop_id
       service_date
