@@ -21,7 +21,7 @@
           </span>
         </b-table-column>
         <b-table-column :sortable="true" field="stop_name" label="Stop">
-          <nuxt-link :to="{name: 'data-feed-versions-version-stops-stop', params:{feed:$route.params.feed, version:$route.params.version, stop:props.row.stop.id}}">
+          <nuxt-link :to="{name: 'data-feed-versions-version-stops-stop', params:{feed:$route.params.feed, version:$route.params.version, stop:props.row.stop.stop_id}}">
             {{ props.row.stop.stop_name }}
           </nuxt-link>
         </b-table-column>
@@ -45,6 +45,7 @@ query ($feed_version_id: bigint!, $trip_id: String) {
       stop {
         id
         stop_name
+        stop_id
       }
     }
   }

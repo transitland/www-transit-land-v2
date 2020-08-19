@@ -1,0 +1,78 @@
+query ($feed_onestop_id: String!, $feed_version_sha1: String!, $stop_id: String!) {
+  active_stops(limit: 1, where: {stop_id: {_eq: $stop_id}, feed_version: {current_feed: {onestop_id: {_eq: $feed_onestop_id}}}}) {
+    feed_version_id
+    id
+    feed_version {
+      id
+      sha1
+      current_feed {
+        id
+        onestop_id
+      }
+    }
+    stop_name
+    geometry
+    location_type
+    parent_station
+    stop_timezone
+    stop_url
+    wheelchair_boarding
+    zone_id
+    route_stops {
+      route {
+        id
+        agency_id
+        agency {
+          agency_name
+          id
+        }
+        route_long_name
+        route_short_name
+        route_type
+        route_url
+        route_id
+        geometries {
+          geometry
+        }        
+      }
+    }
+  }
+  gtfs_stops(limit: 1, where: {feed_version: {sha1: {_eq: $feed_version_sha1}}, stop_id: {_eq: $stop_id}}) {
+    feed_version_id
+    id
+    feed_version {
+      id
+      sha1
+      current_feed {
+        id
+        onestop_id
+      }
+    }
+    stop_name
+    geometry
+    location_type
+    parent_station
+    stop_timezone
+    stop_url
+    wheelchair_boarding
+    zone_id
+    route_stops {
+      route {
+        id        
+        agency_id
+        agency {
+          agency_name
+          id
+        }
+        route_long_name
+        route_short_name
+        route_type
+        route_url
+        route_id
+        geometries {
+          geometry
+        }        
+      }
+    }
+  }
+}

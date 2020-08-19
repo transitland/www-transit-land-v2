@@ -1,4 +1,4 @@
-query ($feed_version_ids: [bigint!], $offset: Int!, $limit: Int!, $agency_ids: [bigint!], $route_ids: [bigint!]) {
+query ($feed_version_ids: [bigint!], $offset: Int!, $limit: Int!, $agency_ids: [bigint!], $route_ids: [bigint!], $include_stops: Boolean!=false) {
   features: gtfs_routes(limit: $limit, where: {agency_id:{_in:$agency_ids}, feed_version_id: {_in: $feed_version_ids}, id: {_in: $route_ids}}, order_by: {id: asc}, offset: $offset) {
     id
     route_id
@@ -24,5 +24,11 @@ query ($feed_version_ids: [bigint!], $offset: Int!, $limit: Int!, $agency_ids: [
       id
       agency_name
     }
+    route_stops @include(if: $include_stops) {
+      stop {
+        id
+        geometry
+      }
+    }    
   }
 }
