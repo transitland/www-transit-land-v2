@@ -3,27 +3,27 @@
     <b-message v-if="error" class="is-danger">
       {{ error }}
     </b-message>
-    <span v-else-if="$apollo.loading" class="is-loading">Loading</span>
     <b-table
       v-else
-      :data="routes"
+      :loading="$apollo.loading"
+      :data="entityPage"
       :striped="true"
+      :per-page="perPage"
       :paginated="true"
+      :current-page.sync="page"
       :total="total"
-      :pagination-simple="true"
       sort-icon="menu-up"
       backend-pagination
       backend-sorting
       backend-filtering
       @sort="onSort"
-      @page-change="onPageChange"
-      @filters-change="onFilter"
     >
       <template slot-scope="props">
         <b-table-column
           field="route_id"
           label="Route ID"
           :sortable="true"
+          :width="140"
         >
           <nuxt-link
             :to="{name:'data-feed-versions-version-routes-route', params:{feed:props.row.feed_version.current_feed.onestop_id, version:props.row.feed_version.sha1, route:props.row.route_id}}"
@@ -33,9 +33,10 @@
         </b-table-column>
 
         <b-table-column
-          :sortable="true"
           field="route_short_name"
           label="Name"
+          :sortable="true"
+          :width="140"
         >
           {{ props.row.route_short_name }}
         </b-table-column>
@@ -43,6 +44,7 @@
           :sortable="true"
           field="route_long_name"
           label=""
+          :width="600"
         >
           {{ props.row.route_long_name }}
         </b-table-column>
@@ -74,8 +76,10 @@
 </template>
 
 <script>
+import TableViewerMixin from '~/components/table-viewer-mixin'
 
 export default {
+  mixins: [TableViewerMixin],
   props: {
     fvids: { type: Array, default: null },
     agencyIds: { type: Array, default: null },
@@ -84,13 +88,8 @@ export default {
   },
   data () {
     return {
-      offset: 0,
-      limit: 20,
-      total: 0,
-      routes: [],
-      sortField: null,
-      sortOrder: null,
-      error: null
+      sortField: 'headways',
+      sortOrder: 'asc'
     }
   },
   methods: {
@@ -111,15 +110,6 @@ Weekday Morning: ${fmt(ret.weekday, 'morning')} mins
 Weekday Midday: ${fmt(ret.weekday, 'midday')} mins
 Weekday Afternoon: ${fmt(ret.weekday, 'afternoon')} mins
 Weekday Night: ${fmt(ret.weekday, 'night')} mins`
-    },
-    onPageChange (page) {
-      this.offset = this.limit * (page - 1)
-    },
-    onSort (field, order) {
-      this.sortField = field
-      this.sortOrder = order
-    },
-    onFilter (a) {
     }
   },
   apollo: {
@@ -128,14 +118,12 @@ Weekday Night: ${fmt(ret.weekday, 'night')} mins`
       variables () {
         let orderby = {}
         if (this.sortField === 'headways') {
-          orderby = { headways_weekday: { headway_secs: this.sortOrder } }
-        } else if (this.sortField) {
-          orderby[this.sortField] = this.sortOrder
+          orderby = { headways_weekday: { headway_secs: this.sortOrder }, route_id: 'asc' }
         } else {
-          orderby = { headways_weekday: { headway_secs: 'asc' }, route_id: 'asc' }
+          orderby = this.orderBy
         }
         return {
-          offset: this.offset,
+          offset: this.entityOffset,
           limit: this.limit,
           agency_ids: this.agencyIds,
           route_ids: this.routeIds,
@@ -146,7 +134,7 @@ Weekday Night: ${fmt(ret.weekday, 'night')} mins`
       error (e) { this.error = e },
       update (data) {
         this.total = data.total.aggregate.count
-        this.routes = data.routes
+        this.entities = data.routes
       }
     }
   }
