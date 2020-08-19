@@ -5,14 +5,27 @@
     </b-message>
     <span v-else-if="$apollo.loading" class="is-loading" />
     <div v-else-if="entity">
+      <nav class="breadcrumb">
+        <ul>
+          <li>
+            <nuxt-link :to="{name:'data'}">
+              Data
+            </nuxt-link>
+          </li>
+          <li>
+            <nuxt-link :to="{name: 'data-feed', params:{feed:$route.params.feed}}">
+              {{ $route.params.feed | shortenName }}
+            </nuxt-link>
+          </li>
+          <li>
+            <nuxt-link :to="{name: 'data-feed-versions-version', params:{feed:$route.params.feed, version:$route.params.version}}">
+              {{ $route.params.version | shortenName(6) }}
+            </nuxt-link>
+          </li>
+        </ul>
+      </nav>
       <h1 class="title">
-        <nuxt-link :to="{name:'data'}">
-          Data
-        </nuxt-link> /
-        <nuxt-link :to="{name:'data-feed', params:{feed:$route.params.feed}}">
-          {{ $route.params.feed | shortenName }}
-        </nuxt-link>  /
-        {{ $route.params.version }}
+        Feed version details: {{ $route.params.version | shortenName(6) }}
       </h1>
       <nav class="level">
         <div class="level-item has-text-centered">
