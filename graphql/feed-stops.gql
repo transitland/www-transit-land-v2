@@ -1,10 +1,10 @@
-query ($feed_version_ids: [bigint!], $offset: Int!, $limit: Int!, $stop_ids: [bigint!], $agency_ids: [bigint!], $route_ids: [bigint!]) {
+query ($feed_version_ids: [bigint!], $offset: Int!, $limit: Int!, $stop_ids: [bigint!], $agency_ids: [bigint!], $route_ids: [bigint!], $order_by:[gtfs_stops_order_by!]) {
   total: gtfs_stops_aggregate(where: {feed_version_id: {_in: $feed_version_ids}, id: {_in: $stop_ids}, route_stops: {agency_id: {_in: $agency_ids}, route_id: {_in: $route_ids}}}) {
     aggregate {
       count
     }
   }
-  stops: gtfs_stops(limit: $limit, order_by: {id: asc}, offset: $offset, where: {feed_version_id: {_in: $feed_version_ids}, id: {_in: $stop_ids}, route_stops: {agency_id: {_in: $agency_ids}, route_id: {_in: $route_ids}}}) {
+  stops: gtfs_stops(limit: $limit, order_by: $order_by, offset: $offset, where: {feed_version_id: {_in: $feed_version_ids}, id: {_in: $stop_ids}, route_stops: {agency_id: {_in: $agency_ids}, route_id: {_in: $route_ids}}}) {
     id
     stop_id
     stop_name

@@ -25,19 +25,17 @@
     </div>
 
     <b-table
-      :data="feeds"
+      :loading="$apollo.loading"
+      :data="feedPage"
       :striped="true"
       :paginated="true"
-      :pagination-simple="true"
-      :loading="$apollo.loading"
-      pagination-position="both"
+      :current-page.sync="page"
       sort-icon="menu-up"
       :total="total"
-      :current-page="currentPage"
       backend-pagination
       backend-sorting
+      backend-filtering
       @sort="onSort"
-      @page-change="onPageChange"
     >
       <template slot-scope="props">
         <b-table-column field="onestop_id" label="Feed Onestop ID">
@@ -85,23 +83,22 @@
 </template>
 
 <script>
+import TableViewerMixin from '~/components/table-viewer-mixin'
+
 export default {
+  mixins: [TableViewerMixin],
   apollo: {
     q: {
       query: require('~/graphql/current-feeds.gql'),
       variables () {
         return {
-          specs: this.feedSpecs,
-          offset: this.blockOffset,
-          limit: 100
+          offset: this.entityOffset,
+          limit: this.limit,
+          specs: this.feedSpecs
         }
       },
       update (data) {
-        const b = new Map()
-        for (let i = 0; i < data.entities.length; i++) {
-          b.set(i + this.blockOffset, data.entities[i])
-        }
-        this.blockEntities = b
+        this.entities = data.entities
         this.total = data.count.aggregate.count
       },
       error (e) { this.error = e }
@@ -109,35 +106,12 @@ export default {
   },
   data () {
     return {
-      feedSpecs: ['gtfs', 'gtfs-rt'],
-      blockEntities: new Map(),
-      blockSize: 100,
-      total: 0,
-      error: null
+      feedSpecs: ['gtfs', 'gtfs-rt']
     }
   },
   computed: {
-    blockOffset () {
-      const blockOffset = Math.floor(((this.currentPage - 1) * 20) / this.blockSize) * this.blockSize
-      return blockOffset
-    },
-    currentPage () {
-      return this.$route.query.page ? parseInt(this.$route.query.page) : 1
-    },
-    currentPageEntities () {
-      const a = (this.currentPage - 1) * 20
-      const b = []
-      for (let i = a; i < a + 20; i++) {
-        const row = this.blockEntities.get(i)
-        if (!row) {
-          return b
-        }
-        b.push(row)
-      }
-      return b
-    },
-    feeds () {
-      return this.currentPageEntities.map((feed) => {
+    feedPage () {
+      return this.entityPage.map((feed) => {
         const feedState = feed.feed_state || {}
         const currentFeedVersion = feedState.feed_version || {}
         const currentImport = (currentFeedVersion && currentFeedVersion.feed_version_gtfs_import) || {}
@@ -167,13 +141,6 @@ export default {
       const q = { page: 1 }
       q[a] = b
       this.$router.push({ path: 'data', query: q })
-    },
-    onPageChange (page) {
-      const q = Object.assign({}, this.$route.query)
-      q.page = page
-      this.$router.push({ path: 'data', query: q })
-    },
-    onSort (field, order) {
     }
   }
 }

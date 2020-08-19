@@ -3,20 +3,19 @@
     <b-message v-if="error" class="is-danger">
       {{ error }}
     </b-message>
-    <span v-else-if="$apollo.loading" class="is-loading">Loading</span>
     <b-table
-      :data="entities"
+      :loading="$apollo.loading"
+      :data="entityPage"
       :striped="true"
       :paginated="true"
+      :per-page="perPage"
+      :current-page.sync="page"
       :total="total"
-      :pagination-simple="true"
       sort-icon="menu-up"
       backend-pagination
       backend-sorting
       backend-filtering
       @sort="onSort"
-      @page-change="onPageChange"
-      @filters-change="onFilter"
     >
       <template slot-scope="props">
         <b-table-column field="agency_id" label="Agency ID">
@@ -43,30 +42,17 @@
 </template>
 
 <script>
+import TableViewerMixin from '~/components/table-viewer-mixin'
+
 export default {
+  mixins: [TableViewerMixin],
   props: {
     fvid: { type: String, default () { return '' } }
   },
   data () {
     return {
-      offset: 0,
-      limit: 20,
       sortField: 'agency_id',
-      sortOrder: 'asc',
-      total: 0,
-      entities: [],
-      error: null
-    }
-  },
-  methods: {
-    onPageChange (page) {
-      this.offset = this.limit * (page - 1)
-    },
-    onSort (field, order) {
-      this.sortField = field
-      this.sortOrder = order
-    },
-    onFilter (a) {
+      sortOrder: 'asc'
     }
   },
   apollo: {
@@ -75,7 +61,7 @@ export default {
       variables () {
         return {
           feed_version_sha1: this.fvid,
-          offset: this.offset,
+          offset: this.entityOffset,
           limit: this.limit
         }
       },
