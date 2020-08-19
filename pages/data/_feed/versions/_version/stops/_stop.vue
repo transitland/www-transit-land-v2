@@ -36,15 +36,25 @@
         <div class="column is-two-thirds">
           <b-tabs v-model="activeTab" type="is-boxed" :animated="false">
             <b-tab-item label="Summary">
-              <div class="clearfix">
-                {{ entity.stop_name }}
+              <div>With service to:</div>
+              <div v-for="rs of entity.route_stops" :key="rs.route.id">
+                <nuxt-link
+                  :to="{name:'data-feed-versions-version-routes-route', params:{feed:$route.params.feed, version:$route.params.version, route:rs.route.route_id}}"
+                >
+                  <route-icon :route-type="rs.route.route_type" :route-short-name="rs.route.route_short_name" :route-long-name="rs.route.route_long_name" :route-link="rs.route.route_url" />
+                </nuxt-link>
               </div>
             </b-tab-item>
           </b-tabs>
         </div>
-
         <div class="column is-one-third" style="width:400px">
-          <feed-version-map-viewer :route-ids="[entity.id]" :overlay="false" />
+          <map-viewer
+            :features="features"
+            :auto-fit="false"
+            :center="entity.geometry.coordinates"
+            :circle-radius="20"
+            :zoom="14"
+          />
         </div>
       </div>
     </div>
@@ -82,6 +92,20 @@ export default {
     }
   },
   computed: {
+    features () {
+      const ret = []
+      ret.push({ type: 'Feature', id: this.entity.id, geometry: this.entity.geometry, properties: { id: this.entity.id } })
+      let featid = 1
+      for (const rs of this.entity.route_stops) {
+        for (const geom of rs.route.geometries || []) {
+          featid++
+          ret.push(
+            { type: 'Feature', id: featid, geometry: geom.geometry, properties: { id: featid, route_type: rs.route.route_type, generated: false, headway_secs: 60 } }
+          )
+        }
+      }
+      return ret
+    },
     entity () {
       if (this.$route.params.version === 'current') {
         return this.activeEntity
@@ -101,7 +125,7 @@ export default {
   head () {
     if (this.entity) {
       return {
-        title: `${this.entity.route_long_name} (stop)`
+        title: `${this.entity.stop_name} (stop)`
       }
     }
   }

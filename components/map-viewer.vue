@@ -38,6 +38,11 @@ const mapboxgl = require('mapbox-gl/dist/mapbox-gl.js')
 export default {
   props: {
     overlay: { type: Boolean, default: false },
+    autoFit: { type: Boolean, default: true },
+    center: { type: Array, default () { return [] } },
+    circleRadius: { type: Number, default: 5 },
+    circleColor: { type: String, default: '#f03b20' },
+    zoom: { type: Number, default: 14 },
     features: {
       type: Array, default () { return [] }
     }
@@ -150,6 +155,16 @@ export default {
           'line-opacity': 1.0
         }
       })
+      this.map.addLayer({
+        id: 'points',
+        type: 'circle',
+        source: 'points',
+        paint: {
+          'circle-color': this.circleColor,
+          'circle-radius': this.circleRadius,
+          'circle-opacity': 0.4
+        }
+      })
       for (const v of mapLayers.routeLayers) {
         const l = {
           id: v.name,
@@ -180,13 +195,21 @@ export default {
         }
       }
       this.map.resize()
-      const bounds = coordinates.reduce(function (bounds, coord) {
-        return bounds.extend(coord)
-      }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]))
-      this.map.fitBounds(bounds, {
-        duration: 0,
-        padding: 20
-      })
+      if (this.autoFit) {
+        const bounds = coordinates.reduce(function (bounds, coord) {
+          return bounds.extend(coord)
+        }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]))
+        this.map.fitBounds(bounds, {
+          duration: 0,
+          padding: 20
+        })
+      } else {
+        this.map.flyTo({
+          center: this.center,
+          zoom: this.zoom,
+          duration: 0
+        })
+      }
       // Click handler
       this.map.on('mousemove', this.mapMouseMove)
       this.map.on('click', 'route-active', this.mapClick)

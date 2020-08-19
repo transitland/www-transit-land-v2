@@ -65,7 +65,7 @@
           </b-tabs>
         </div>
         <div class="column is-one-third" style="width:400px">
-          <feed-version-map-viewer :route-ids="[entity.id]" :overlay="false" />
+          <feed-version-map-viewer :route-ids="[entity.id]" :overlay="false" :include-stops="true" />
 
           <div style="margin-left:40px;margin-top:20px;">
             <route-trip-date-selector v-model="serviceDate" :route-id="entity.id" />

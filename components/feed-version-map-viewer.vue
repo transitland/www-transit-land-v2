@@ -4,7 +4,7 @@
       {{ error }}
     </b-message>
     <span v-else-if="$apollo.loading" class="is-loading">Loading</span>
-    <map-viewer v-else :features="mapFeatures" :overlay="overlay" />
+    <map-viewer v-else :features="mapFeatures" :overlay="overlay" :circle-radius="8" />
   </div>
 </template>
 
@@ -16,6 +16,7 @@ export default {
       error (e) { this.error = e },
       variables () {
         return {
+          include_stops: this.includeStops,
           feed_version_ids: this.fvids,
           route_ids: this.routeIds,
           agency_ids: this.agencyIds,
@@ -26,6 +27,7 @@ export default {
     }
   },
   props: {
+    includeStops: { type: Boolean, default: false },
     overlay: { type: Boolean, default: false },
     fvids: { type: Array, default: null },
     routeIds: { type: Array, default: null },
@@ -66,6 +68,15 @@ export default {
             },
             geometry: feature.geometries[0].geometry
           })
+          for (const rs of feature.route_stops || []) {
+            features.push({
+              id: rs.stop.id,
+              properties: {
+                id: rs.stop.id
+              },
+              geometry: rs.stop.geometry
+            })
+          }
         }
       }
       return features
