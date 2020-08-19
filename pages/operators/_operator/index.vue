@@ -5,13 +5,21 @@
     </b-message>
     <span v-else-if="$apollo.loading" class="is-loading" />
     <div v-else>
+      <nav class="breadcrumb">
+        <ul>
+          <li>
+            <nuxt-link :to="{name:'operators'}">
+              Operators
+            </nuxt-link>
+          </li><li>
+            <nuxt-link :to="{name:'operators', params:{operator:$route.params.operator}}">
+              {{ operatorName }}
+            </nuxt-link>
+          </li>
+        </ul>
+      </nav>
       <h1 class="title">
-        <nuxt-link :to="{name:'operators'}">
-          Operators
-        </nuxt-link> /
-        <nuxt-link :to="{name:'operators', params:{operator:$route.params.operator}}">
-          {{ operatorName }}
-        </nuxt-link>
+        {{ operatorName }}
       </h1>
       <section class="content">
         <dl>

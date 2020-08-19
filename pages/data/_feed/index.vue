@@ -5,10 +5,22 @@
     </b-message>
     <span v-else-if="$apollo.loading" class="is-loading" />
     <div v-else>
+      <nav class="breadcrumb">
+        <ul>
+          <li>
+            <nuxt-link :to="{name:'data'}">
+              Data
+            </nuxt-link>
+          </li>
+          <li>
+            <nuxt-link :to="{name: 'data-feed', params:{feed:$route.params.feed}}">
+              {{ $route.params.feed | shortenName }}
+            </nuxt-link>
+          </li>
+        </ul>
+      </nav>
       <h1 class="title">
-        <nuxt-link :to="{name: 'data'}">
-          Data
-        </nuxt-link> / {{ feed.onestop_id }}
+        Feed details: {{ feed.onestop_id }}
       </h1>
 
       <table class="property-list">

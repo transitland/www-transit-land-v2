@@ -5,19 +5,32 @@
     </b-message>
     <span v-else-if="$apollo.loading" class="is-loading" />
     <div v-else-if="entity">
+      <nav class="breadcrumb">
+        <ul>
+          <li>
+            <nuxt-link :to="{name:'data'}">
+              Data
+            </nuxt-link>
+          </li>
+          <li>
+            <nuxt-link :to="{name: 'data-feed', params:{feed:$route.params.feed}}">
+              {{ $route.params.feed | shortenName }}
+            </nuxt-link>
+          </li>
+          <li>
+            <nuxt-link :to="{name: 'data-feed-versions-version', params:{feed:$route.params.feed, version:$route.params.version}}">
+              {{ $route.params.version | shortenName(6) }}
+            </nuxt-link>
+          </li>
+          <li>
+            <nuxt-link :to="{name: 'data-feed-versions-version-agencies-agency', params:{feed:$route.params.feed, version:$route.params.version, agency: entity.agency_id }}">
+              {{ entity.agency_name }}
+            </nuxt-link>
+          </li>
+        </ul>
+      </nav>
       <h1 class="title clearfix">
-        <nuxt-link :to="{name:'data'}">
-          Data
-        </nuxt-link> /
-        <nuxt-link :to="{name: 'data-feed', params:{feed:$route.params.feed}}">
-          {{ $route.params.feed | shortenName }}
-        </nuxt-link> /
-        <nuxt-link :to="{name: 'data-feed-versions-version', params:{feed:$route.params.feed, version:$route.params.version}}">
-          {{ entity.feed_version.sha1 | shortenName(6) }}
-        </nuxt-link> /
-        <nuxt-link :to="{name: 'data-feed-versions-version-agencies-agency', params:{feed:$route.params.feed, version:$route.params.version, agency: entity.agency_id }}">
-          {{ entity.agency_name }}
-        </nuxt-link>
+        {{ entity.agency_name }}
       </h1>
 
       <b-notification v-if="hasMultipleAgencies" type="is-light" has-icon icon="information" :closable="false">

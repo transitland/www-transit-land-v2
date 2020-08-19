@@ -5,27 +5,42 @@
     </b-message>
     <span v-else-if="$apollo.loading" class="is-loading" />
     <div v-else-if="entity">
-      <h1 class="title clearfix">
-        <nuxt-link :to="{name:'data'}">
-          Data
-        </nuxt-link> /
-        <nuxt-link :to="{name: 'data-feed', params:{feed:$route.params.feed}}">
-          {{ $route.params.feed | shortenName }}
-        </nuxt-link> /
-        <nuxt-link :to="{name: 'data-feed-versions-version', params:{feed:$route.params.feed, version:$route.params.version}}">
-          {{ entity.feed_version.sha1 | shortenName(6) }}
-        </nuxt-link> /
-        <nuxt-link :to="{name: 'data-feed-versions-version-agencies-agency', params:{feed:$route.params.feed, version:$route.params.version, agency: entity.agency.agency_id }}">
-          {{ entity.agency.agency_name }}
-        </nuxt-link>
+      <nav class="breadcrumb">
+        <ul>
+          <li>
+            <nuxt-link :to="{name:'data'}">
+              Data
+            </nuxt-link>
+          </li>
+          <li>
+            <nuxt-link :to="{name: 'data-feed', params:{feed:$route.params.feed}}">
+              {{ $route.params.feed | shortenName }}
+            </nuxt-link>
+          </li>
+          <li>
+            <nuxt-link :to="{name: 'data-feed-versions-version', params:{feed:$route.params.feed, version:$route.params.version}}">
+              {{ $route.params.version | shortenName(6) }}
+            </nuxt-link>
+          </li>
+          <li>
+            <nuxt-link :to="{name: 'data-feed-versions-version-agencies-agency', params:{feed:$route.params.feed, version:$route.params.version, agency: entity.agency.agency_id }}">
+              {{ entity.agency.agency_name }}
+            </nuxt-link>
+          </li>
+          <li>
+            <nuxt-link :to="{name: 'data-feed-versions-version-routes-route', params:$route.params}">
+              {{ entity.route_short_name || entity.route_long_name }}
+            </nuxt-link>
+          </li>
+        </ul>
+      </nav>
+      <h1 class="title">
+        {{ entity.agency.agency_name }}
       </h1>
       <h1 class="title">
-        <nuxt-link
-          :to="{name: 'data-feed-versions-version-routes-route', params:{feed:$route.params.feed,version:$route.params.version,route:$route.params.route}}"
-        >
-          <route-icon :route-link="entity.route_url" :route-type="entity.route_type" :route-short-name="entity.route_short_name" :route-long-name="entity.route_long_name" />
-        </nuxt-link>
+        <route-icon :route-link="entity.route_url" :route-type="entity.route_type" :route-short-name="entity.route_short_name" :route-long-name="entity.route_long_name" />
       </h1>
+
       <div class="columns">
         <div class="column is-two-thirds">
           <b-tabs v-model="activeTab" type="is-boxed" :animated="false">
@@ -49,7 +64,6 @@
             </b-tab-item>
           </b-tabs>
         </div>
-
         <div class="column is-one-third" style="width:400px">
           <feed-version-map-viewer :route-ids="[entity.id]" :overlay="false" />
 

@@ -133,24 +133,24 @@ const routeLayers = [
     name: 'metro',
     filter: ['all', ['==', 'route_type', 1]],
     paint: { 'line-width': 3.0, 'line-color': ['coalesce', ['get', 'route_color'], colors.metro] }
-  }
+  },
   // OTHER
-  // {
-  //   name: 'other',
-  //   filter: ['all', ['>', 'route_type', 3]],
-  //   paint: {
-  //     'line-opacity': 1.0,
-  //     'line-width': [
-  //       'step',
-  //       ['get', 'headway_secs'],
-  //       1, 1,
-  //       2, 600,
-  //       1, 1200,
-  //       1
-  //     ],
-  //     'line-color': colors.other
-  //   }
-  // }
+  {
+    name: 'other',
+    filter: ['all', ['>', 'route_type', 3]],
+    paint: {
+      'line-opacity': 1.0,
+      'line-width': [
+        'step',
+        ['get', 'headway_secs'],
+        1, 1,
+        2, 600,
+        1, 1200,
+        1
+      ],
+      'line-color': colors.other
+    }
+  }
 ]
 
 export default { headways, colors, routeLayers, headwayLayers }
