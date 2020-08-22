@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-field label="Search by operator name or location">
-      <div v-if="$route.query.agency_name || $route.query.city_name || $route.query.state_name || $route.query.country_name">
+      <div v-if="$route.query.name || $route.query.city_name || $route.query.adm1name || $route.query.adm0name">
         <b-tag
           size="is-medium"
           attached
@@ -9,7 +9,7 @@
           aria-close-label="Close tag"
           @close="clearQuery"
         >
-          {{ $route.query.agency_name || $route.query.city_name || $route.query.state_name || $route.query.country_name }}
+          {{ $route.query.name || $route.query.city_name || $route.query.adm1name || $route.query.adm0name }}
         </b-tag>
       </div>
       <div v-else>
@@ -22,7 +22,7 @@
     </b-message>
 
     <b-table
-      :data="entityPage"
+      :data="entityPageFlat"
       :striped="true"
       :paginated="true"
       :loading="$apollo.loading"
@@ -36,19 +36,21 @@
     >
       <!-- TODO: fix sorting -->
       <template slot-scope="props">
-        <b-table-column field="agency_name" label="Operator Name">
+        <b-table-column field="name" label="Operator Name">
           <nuxt-link :to="{name: 'operators-operator', params: {operator: props.row.operator_onestop_id}}">
-            {{ props.row.agency_name }}
+            {{ props.row.name }}
           </nuxt-link>
         </b-table-column>
-        <b-table-column field="city_name" label="City" :width="200">
-          {{ props.row.city_name }}
+        <b-table-column field="best_place.city_name" label="City" :width="200">
+          {{ props.row.best_place.city_name }}
         </b-table-column>
-        <b-table-column field="state_name" label="State/Province" :width="200">
-          {{ props.row.state_name }}
+        <b-table-column field="best_place.adm1name" label="State/Province" :width="200">
+          {{ props.row.best_place.adm1name }}
         </b-table-column>
         <b-table-column field="country_name" label="Country" :width="260">
-          {{ props.row.country_name }}
+          <b-tooltip :label="props.row.other_places.join(',')" dashed>
+            {{ props.row.best_place.adm0name }}
+          </b-tooltip>
         </b-table-column>
       </template>
     </b-table>
@@ -65,22 +67,31 @@ export default {
       query: require('~/graphql/agency-operator-merge.gql'),
       error (e) { this.error = e },
       variables () {
-        const vars = {
+        return {
           offset: this.entityOffset,
           limit: this.limit,
-          order_by: [{ country_name: 'asc' }, { state_name: 'asc' }, { city_name: 'asc' }, { agency_name: 'asc' }]
+          name: this.$route.query.name,
+          city_name: this.$route.query.city_name,
+          adm1name: this.$route.query.adm1name,
+          adm0name: this.$route.query.adm0name
+          // order_by: [{ country_name: 'asc' }, { state_name: 'asc' }, { city_name: 'asc' }, { agency_name: 'asc' }]
         }
-        const q = this.$route.query // Object.assign({}, this.$route.query)
-        vars.agency_name = q.agency_name ? `%${q.agency_name}%` : null
-        vars.city_name = q.city_name ? `%${q.city_name}%` : null
-        vars.state_name = q.state_name ? `%${q.state_name}%` : null
-        vars.country_name = q.country_name ? `%${q.country_name}%` : null
-        return vars
       },
       update (data) {
         this.entities = data.entities
-        this.total = data.count.aggregate.count
+        this.total = 1000 // data.count.aggregate.count
       }
+    }
+  },
+  computed: {
+    entityPageFlat () {
+      return this.entityPage.map((s) => {
+        return {
+          name: s.agency.agency_name,
+          best_place: s.agency.places.length > 0 ? s.agency.places[0] : {},
+          other_places: s.agency.places || []
+        }
+      })
     }
   },
   methods: {
