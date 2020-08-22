@@ -9,7 +9,7 @@
         <ul>
           <li>
             <nuxt-link :to="{name:'data'}">
-              Data
+              Source Feeds
             </nuxt-link>
           </li>
           <li>
