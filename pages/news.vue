@@ -3,6 +3,7 @@
     <h1 class="title is-2">
       News & Updates
     </h1>
+    <!-- TODO: query @nuxt/content for blog posts -->
     <p class="content is-medium">
       For updates on Transitland, see <a href="https://transit.land/news/">See the blog on Transitland v1</a> and <a href="https://twitter.com/transitland">@transitland on Twitter</a>.
     </p>

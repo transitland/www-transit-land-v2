@@ -63,8 +63,13 @@ export default {
     // Doc: https://buefy.github.io/#/documentation
     'nuxt-buefy',
     // https://github.com/nuxt-community/apollo-module
-    '@nuxtjs/apollo'
+    '@nuxtjs/apollo',
+    // https://content.nuxtjs.org/
+    '@nuxt/content'
   ],
+  content: {
+
+  },
   /* APOLLO */
   apollo: {
     clientConfigs: {

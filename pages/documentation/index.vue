@@ -3,6 +3,7 @@
     <h1 class="title">
       Documentation
     </h1>
+    <!-- TODO: query @nuxt/content -->
   </div>
 </template>
 
