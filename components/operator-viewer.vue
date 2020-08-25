@@ -102,13 +102,13 @@ export default {
   mixins: [TableViewerMixin],
   data () {
     return {
-      distinctOn: 'operator_onestop_id',
+      distinctOn: 'agency_id',
       filterOperators: 'yes'
     }
   },
   apollo: {
     q: {
-      query () { return require('~/graphql/agency-operator-merge.gql') },
+      query () { return this.distinctOn === 'operator_onestop_id' ? require('~/graphql/agency-operator-merge.gql') : require('~/graphql/agency-operator.gql') },
       error (e) { this.error = e },
       variables () {
         return {
@@ -118,10 +118,7 @@ export default {
           city_name: this.$route.query.city_name,
           adm1name: this.$route.query.adm1name,
           adm0name: this.$route.query.adm0name,
-          order_by: { operator_name: 'asc' }
-          // distinct_on: this.distinctOn
-          // order_by: [{ operator_onestop_id: 'asc' }, { agency_name: 'asc' }]
-          // order_by: this.distinctOn === 'operator_onestop_id' ? { operator_name: 'asc' } : { agency_name: 'asc' }
+          order_by: this.distinctOn === 'operator_onestop_id' ? { operator_name: 'asc' } : { agency_name: 'asc' }
         }
       },
       update (data) {
@@ -134,7 +131,7 @@ export default {
     entityPageFlat () {
       return this.entityPage.map((s) => {
         return {
-          name: s.operator_name, // this.distinctOn === 'operator_onestop_id' ? s.operator_name : s.agency_name,
+          name: this.distinctOn === 'operator_onestop_id' ? s.operator_name : s.agency_name,
           operator: s.operator,
           best_place: [], // s.agency.places.length > 0 ? s.agency.places[0] : {},
           other_places: [], // s.agency.places || [],

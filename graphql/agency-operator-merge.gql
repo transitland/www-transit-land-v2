@@ -11,16 +11,6 @@ query ($offset: Int!, $limit: Int!, $name: String, $city_name: String, $adm1name
     city_name
     adm1name
     adm0name
-    # unmerged_agencies {
-    #   agency_name
-    #     agency {
-    #         places {
-    #             name
-    #             adm1name
-    #             adm0name
-    #         }
-    #     }
-    # }
     operator_onestop_id
     operator {
       id
