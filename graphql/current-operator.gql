@@ -1,24 +1,36 @@
-query current_operators($operator_onestop_id: String) {
-  entities: tl_agency_operator_associations(where: {operator_onestop_id: {_eq: $operator_onestop_id}}) {
-    operator_id
+query ($operator_onestop_id: String!) {
+  entities: tl_agency_operators(where: {operator_onestop_id: {_eq:$operator_onestop_id}}) {    
+    id
+    agency_name
     operator_name
-    agency_id
-    agency {
+    city_name
+    adm1name
+    adm0name
+    operator_onestop_id
+    operator {
       id
-      agency_name
-      feed_version {
+      name
+      onestop_id
+    }
+    agency {
+      feed_version { 
         id
+        sha1
         current_feed {
           id
           onestop_id
         }
       }
+      id
+      agency_name
+      places(where: {rank: {_gt: 0.2}}, order_by: {rank: desc, adm1name: desc}) {
+        rank
+        name
+        adm0name
+        adm1name
+        best_match
+        best_match_type
+      }
     }
-    city_name
-    country_name
-    group_id
-    operator_onestop_id
-    operator_short_name
-    state_name
   }
 }

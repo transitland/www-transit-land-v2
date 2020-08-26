@@ -12,7 +12,7 @@
               Operators
             </nuxt-link>
           </li><li>
-            <nuxt-link :to="{name:'operators', params:{operator:$route.params.operator}}">
+            <nuxt-link :to="{name:'operators', params:{operator:$route.params.operator_onestop_id}}">
               {{ operatorName }}
             </nuxt-link>
           </li>

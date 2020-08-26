@@ -102,7 +102,7 @@ export default {
   mixins: [TableViewerMixin],
   data () {
     return {
-      distinctOn: 'agency_id',
+      distinctOn: 'operator_onestop_id',
       filterOperators: 'yes'
     }
   },
