@@ -1,0 +1,33 @@
+query ($offset: Int!, $limit: Int!, $name: String, $city_name: String, $adm1name: String, $adm0name: String, $distinct_on: [tl_agency_operators_select_column!], $order_by: [tl_agency_operators_order_by!]) {
+  total: tl_agency_operators_aggregate(distinct_on:$distinct_on, where: {agency: {agency_name: {_eq: $name}, places: {name: {_eq: $city_name}, adm0name: {_eq: $adm0name}, adm1name: {_eq: $adm1name}}}}) {
+    aggregate {
+      count
+    }
+  }
+  entities: tl_agency_operators(distinct_on:$distinct_on, offset: $offset, limit: $limit, where: {agency: {agency_name: {_eq: $name}, places: {name: {_eq: $city_name}, adm0name: {_eq: $adm0name}, adm1name: {_eq: $adm1name}}}}, order_by:$order_by) {
+    id
+    agency_name
+    operator_name
+    city_name
+    adm1name
+    adm0name
+    operator_onestop_id
+    operator {
+      id
+      name
+      onestop_id
+    }
+    agency {
+      id
+      agency_name
+      places(where: {rank: {_gt: 0.2}}, order_by: {rank: desc, adm1name: desc}) {
+        rank
+        name
+        adm0name
+        adm1name
+        best_match
+        best_match_type
+      }
+    }
+  }
+}

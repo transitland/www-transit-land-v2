@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 class="title">
-      Transitland Data Feeds
+      Transitland Source Feeds
     </h1>
 
     <div class="content is-medium">

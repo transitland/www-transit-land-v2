@@ -1,16 +1,21 @@
-query ($offset: Int, $limit: Int, $agency_name: String, $city_name: String, $state_name: String, $country_name: String, $order_by: [tl_agency_operator_merge_order_by!]) {
-  count: tl_agency_operator_merge_aggregate(where: {agency_name: {_ilike: $agency_name}, city_name: {_ilike: $city_name}, state_name: {_ilike: $state_name}, country_name: {_ilike: $country_name}}) {
+query ($offset: Int!, $limit: Int!, $name: String, $city_name: String, $adm1name: String, $adm0name: String, $order_by: [tl_agency_operators_merge_order_by!]) {
+  total: tl_agency_operators_merge_aggregate(where: {unmerged_agencies: {agency: {agency_name:{_ilike:$name}, places: {name: {_eq: $city_name}, adm0name: {_eq: $adm0name}, adm1name: {_eq: $adm1name}}}}}) {
     aggregate {
       count
     }
   }
-  entities: tl_agency_operator_merge(limit: $limit, offset: $offset, order_by: $order_by, where: {agency_name: {_ilike: $agency_name}, city_name: {_ilike: $city_name}, state_name: {_ilike: $state_name}, country_name: {_ilike: $country_name}}) {
-    agency_id
-    operator_id
-    operator_onestop_id
-    state_name
-    country_name
-    city_name
+  entities: tl_agency_operators_merge(offset: $offset, limit: $limit, where: {unmerged_agencies: {agency: {agency_name:{_ilike:$name}, places: {name: {_eq: $city_name}, adm0name: {_eq: $adm0name}, adm1name: {_eq: $adm1name}}}}}, order_by: $order_by) {
+    id
     agency_name
+    operator_name
+    city_name
+    adm1name
+    adm0name
+    operator_onestop_id
+    operator {
+      id
+      name
+      onestop_id
+    }
   }
 }
