@@ -25,8 +25,19 @@
 
       <table class="property-list">
         <tr>
-          <td>Onestop ID</td>
-          <td>{{ feed.onestop_id }}</td>
+          <td>
+            <b-tooltip dashed label="A unique identifier for this operator">
+              Operator ID
+            </b-tooltip>
+          </td>
+          <td>
+            <nuxt-link :to="{name:'operators-operator', params:{operator:$route.params.operator}}">
+              {{ onestopId }}
+            </nuxt-link>
+            <b-tooltip dashed label="Edit this Feed in Transitland Atlas">
+              <a :href="editLink" target="_blank"><b-icon icon="pencil" size="is-small" /></a>
+            </b-tooltip>
+          </td>
         </tr>
         <tr>
           <td>Format</td>
@@ -155,7 +166,7 @@ export default {
       error (e) { this.error = e },
       variables () {
         return {
-          feed_onestop_id: this.$route.params.feed
+          feed_onestop_id: this.onestopId
         }
       }
     }
@@ -167,13 +178,19 @@ export default {
     }
   },
   computed: {
+    editLink () {
+      return `https://github.com/transitland/transitland-atlas/blob/master/feeds/${this.onestopId}.json`
+    },
+    onestopId () {
+      return this.$route.params.feed
+    },
     feed () {
       return (this.entities && this.entities.length > 0) ? this.entities[0] : null
     }
   },
   head () {
     return {
-      title: `${this.$route.params.feed} • feed details`
+      title: `${this.onestopId} • Feed details`
     }
   }
 }
