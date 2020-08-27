@@ -13,6 +13,7 @@ query current_feeds($feed_onestop_id: String) {
     other_ids
     spec
     urls
+    file
     feed_versions(order_by: {fetched_at: desc}) {
       id
       sha1

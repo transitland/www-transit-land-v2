@@ -179,7 +179,7 @@ export default {
   },
   computed: {
     editLink () {
-      return `https://github.com/transitland/transitland-atlas/blob/master/feeds/${this.onestopId}.json`
+      return `https://github.com/transitland/transitland-atlas/blob/master/feeds/${this.feed.file}`
     },
     onestopId () {
       return this.$route.params.feed

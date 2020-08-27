@@ -37,6 +37,7 @@ const mapboxgl = require('mapbox-gl/dist/mapbox-gl.js')
 
 export default {
   props: {
+    interactive: { type: Boolean, default: true },
     overlay: { type: Boolean, default: false },
     autoFit: { type: Boolean, default: true },
     center: { type: Array, default () { return [] } },
@@ -59,8 +60,6 @@ export default {
     features (v) {
       if (v) {
         this.$nextTick(() => {
-          // this.initMap()
-          // this.drawMap()
           this.redraw()
         })
       }
@@ -84,6 +83,7 @@ export default {
     },
     initMap () {
       this.map = new mapboxgl.Map({
+        interactive: this.interactive,
         preserveDrawingBuffer: true,
         container: this.$refs.mapelem,
         style: {

@@ -67,3 +67,30 @@ Vue.filter('formatDate',
 Vue.filter('joinUnique', function (values) {
   return Array.from(new Set(values)).sort().join(', ')
 })
+
+Vue.filter('round', function (value) {
+  return value.toFixed(2)
+})
+
+Vue.filter('thousands', function (value) {
+  value = parseFloat(value)
+  if (isNaN(value)) {
+    return '-'
+  }
+  return Math.ceil(value).toLocaleString()
+})
+
+Vue.filter('dig', function (object, path) {
+  return path.reduce((xs, x) => (xs && xs[x]) ? xs[x] : null, object)
+})
+
+Vue.filter('pct', function (value) {
+  if (isNaN(parseFloat(value))) {
+    return ''
+  }
+  return `${(value * 100).toFixed(2)} %`
+})
+
+Vue.filter('capitalize', function (value) {
+  return value.split(' ').map((w) => { return w.substr(0, 1).toUpperCase() + w.substr(1, w.length - 1).toLowerCase() }).join(' ')
+})

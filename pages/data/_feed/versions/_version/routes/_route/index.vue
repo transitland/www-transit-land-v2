@@ -43,7 +43,7 @@
 
       <div class="columns">
         <div class="column is-two-thirds">
-          <b-tabs v-model="activeTab" type="is-boxed" :animated="false">
+          <b-tabs v-model="activeTab" type="is-boxed" :animated="false" @input="setTab">
             <b-tab-item label="Summary">
               <headway-viewer :headways="entity.headways" />
               <div class="clearfix">
@@ -51,12 +51,16 @@
               </div>
             </b-tab-item>
 
-            <b-tab-item label="Inbound">
-              <route-trips-viewer v-if="activeTab === 1" :service-date="serviceDate" :route-id="entity.id" :feed-version-id="entity.feed_version_id" :direction-id="0" />
+            <b-tab-item label="Demographics">
+              <census-viewer v-if="activeTab === 1" :entity="entity" />
             </b-tab-item>
 
-            <b-tab-item label="Outbound">
-              <route-trips-viewer v-if="activeTab === 2" :service-date="serviceDate" :route-id="entity.id" :feed-version-id="entity.feed_version_id" :direction-id="1" />
+            <b-tab-item label="Inbound Trips">
+              <route-trips-viewer v-if="activeTab === 2" :service-date="serviceDate" :route-id="entity.id" :feed-version-id="entity.feed_version_id" :direction-id="0" />
+            </b-tab-item>
+
+            <b-tab-item label="Outbound Trips">
+              <route-trips-viewer v-if="activeTab === 3" :service-date="serviceDate" :route-id="entity.id" :feed-version-id="entity.feed_version_id" :direction-id="1" />
             </b-tab-item>
 
             <b-tab-item :label="childLabel">
@@ -88,7 +92,13 @@ export default {
       versionEntity: null,
       activeTab: 0,
       childLabel: null,
-      error: null
+      error: null,
+      tabIndex: {
+        0: 'summary',
+        1: 'demographics',
+        2: 'inbound-trips',
+        3: 'outbound-trips'
+      }
     }
   },
   apollo: {
@@ -140,7 +150,25 @@ export default {
   },
   watch: {
     childLabel () {
-      this.activeTab = 3
+      this.activeTab = 4
+    }
+  },
+  mounted () {
+    const tab = this.$route.hash.substr(1)
+    if (tab) {
+      for (const [k, v] of Object.entries(this.tabIndex)) {
+        if (v === tab) {
+          this.activeTab = parseInt(k)
+        }
+      }
+    }
+  },
+  methods: {
+    setTab (value) {
+      const tab = this.tabIndex[value]
+      if (tab) {
+        this.$router.replace({ hash: '#' + tab })
+      }
     }
   },
   head () {
