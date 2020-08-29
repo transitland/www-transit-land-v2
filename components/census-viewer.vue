@@ -160,8 +160,8 @@ import gql from 'graphql-tag'
 const dig = (path, object) => path.reduce((xs, x) => (xs && xs[x]) ? xs[x] : null, object)
 
 const q2 = gql`
-query ($agency_id: bigint, $route_id: bigint, $stop_id: bigint, $radius: numeric, $layer_name: String!, $table_names: _text) {
-  query: tl_census_values_for_route_stops(args: {agency_id: $agency_id, radius: $radius, table_names: $table_names, layer_name: $layer_name, route_id: $route_id, stop_id: $stop_id}) {
+query ($agency_ids: _int8, $route_ids: _int8, $stop_ids: _int8, $radius: numeric, $layer_name: String!, $table_names: _text) {
+  query: tl_census_values_for_route_stops(args: {agency_ids: $agency_ids, radius: $radius, table_names: $table_names, layer_name: $layer_name, route_ids: $route_ids, stop_ids: $stop_ids}) {
     table_values
     table {
       id
@@ -188,7 +188,10 @@ const tableNames = [
 
 export default {
   props: {
-    entity: { type: Object, default () { return {} } }
+    // entity: { type: Object, default () { return {} } }
+    stopIds: { type: Array, default () { return null } },
+    routeIds: { type: Array, default () { return null } },
+    agencyIds: { type: Array, default () { return null } }
   },
   data () {
     return {
@@ -210,13 +213,19 @@ export default {
     q: {
       query: q2,
       variables () {
-        return {
-          route_id: this.entity.id,
-          agency_id: null,
+        const q = {
           table_names: `{${tableNames.join(',')}}`,
           layer_name: this.layer,
           radius: this.radius
         }
+        if (this.agencyIds) {
+          q.agency_ids = `{${this.agencyIds.join(',')}}`
+        } else if (this.routeIds) {
+          q.route_ids = `{${this.routeIds.join(',')}}`
+        } else if (this.stopIds) {
+          q.stop_ids = `{${this.stopIds.join(',')}}`
+        }
+        return q
       },
       update (data) {
         this.query = data.query

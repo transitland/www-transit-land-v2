@@ -52,7 +52,7 @@
             </b-tab-item>
 
             <b-tab-item label="Demographics">
-              <census-viewer v-if="activeTab === 1" :entity="entity" />
+              <census-viewer v-if="activeTab === 1" :route-ids="[entity.id]" />
             </b-tab-item>
 
             <b-tab-item label="Inbound Trips">
