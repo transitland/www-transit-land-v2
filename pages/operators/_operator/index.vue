@@ -264,8 +264,13 @@ export default {
           })
         }
       }
-      for (const ent of this.operators) {
-        for (const a of ent.associated_feeds || []) {
+      for (const ent of this.operators || []) {
+        // check if the json column value is an array
+        const af = ent.associated_feeds || []
+        if (!Array.isArray(af)) {
+          continue
+        }
+        for (const a of af) {
           const key = `${a.feed_onestop_id}:${a.gtfs_agency_id}`
           ret.push({
             target_type: 'Associated Feed',
