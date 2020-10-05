@@ -14,9 +14,9 @@
   "dependencies": {
     "@nuxt/content": "^1.6.1",
     "@nuxtjs/apollo": "^v4.0.1-rc.1",
-    "buefy": "=0.8.20",
+    "buefy": "~> 0.9.3",
     "core-js": "^2.6.5",
-    "nuxt": "^2.13.3",
+    "nuxt": "~> 2.14",
     "nuxt-buefy": "^0.3.2"
   },
   "devDependencies": {
