@@ -104,55 +104,60 @@
         pagination-position="top"
         sort-icon="menu-up"
       >
-        <template slot-scope="props">
-          <b-table-column
-            :sortable="true"
-            field="fetched_at"
-            label="Fetched"
+        <b-table-column
+          v-slot="props"
+          :sortable="true"
+          field="fetched_at"
+          label="Fetched"
+        >
+          {{ props.row.fetched_at | moment("from","now") }}
+        </b-table-column>
+        <b-table-column v-slot="props" :sortable="true" field="sha1" label="SHA1">
+          <nuxt-link
+            :to="{name: 'data-feed-versions-version', params: {feed: feed.onestop_id, version: props.row.sha1}}"
           >
-            {{ props.row.fetched_at | moment("from","now") }}
-          </b-table-column>
-          <b-table-column :sortable="true" field="sha1" label="SHA1">
-            <nuxt-link
-              :to="{name: 'data-feed-versions-version', params: {feed: feed.onestop_id, version: props.row.sha1}}"
+            {{ props.row.sha1.substr(0,6) }}…
+          </nuxt-link>
+        </b-table-column>
+        <b-table-column
+          v-slot="props"
+          :sortable="true"
+          field="earliest_calendar_date"
+          label="Earliest date"
+        >
+          {{ props.row.earliest_calendar_date }}
+        </b-table-column>
+        <b-table-column
+          v-slot="props"
+          :sortable="true"
+          field="latest_calendar_date"
+          label="Latest date"
+        >
+          {{ props.row.latest_calendar_date }}
+        </b-table-column>
+        <b-table-column v-slot="props" field="feed_version_gtfs_import" label="Imported">
+          <template v-if="props.row.feed_version_gtfs_import">
+            <b-icon v-if="props.row.feed_version_gtfs_import.success" icon="check" />
+            <b-icon v-else-if="props.row.feed_version_gtfs_import.in_progress" icon="clock" />
+            <b-tooltip
+              v-else-if="props.row.feed_version_gtfs_import.success == false"
+              :label="props.row.feed_version_gtfs_import.exception_log"
+              position="is-top"
             >
-              {{ props.row.sha1.substr(0,6) }}…
-            </nuxt-link>
-          </b-table-column>
-          <b-table-column
-            :sortable="true"
-            field="earliest_calendar_date"
-            label="Earliest date"
-          >
-            {{ props.row.earliest_calendar_date }}
-          </b-table-column>
-          <b-table-column
-            :sortable="true"
-            field="latest_calendar_date"
-            label="Latest date"
-          >
-            {{ props.row.latest_calendar_date }}
-          </b-table-column>
-          <b-table-column field="feed_version_gtfs_import" label="Imported">
-            <template v-if="props.row.feed_version_gtfs_import">
-              <b-icon v-if="props.row.feed_version_gtfs_import.success" icon="check" />
-              <b-icon v-else-if="props.row.feed_version_gtfs_import.in_progress" icon="clock" />
-              <b-tooltip
-                v-else-if="props.row.feed_version_gtfs_import.success == false"
-                :label="props.row.feed_version_gtfs_import.exception_log"
-                position="is-top"
-              >
-                <b-icon icon="alert" />
-              </b-tooltip>
-            </template>
-          </b-table-column>
-          <b-table-column label="Active">
-            <b-icon
-              v-if="feed.feed_state && feed.feed_state.feed_version && feed.feed_state.feed_version.id === props.row.id"
-              icon="check"
-            />
-          </b-table-column>
-        </template>
+              <b-icon icon="alert" />
+            </b-tooltip>
+          </template>
+        </b-table-column>
+        <b-table-column v-slot="props" label="Active">
+          <b-icon
+            v-if="feed.feed_state && feed.feed_state.feed_version && feed.feed_state.feed_version.id === props.row.id"
+            icon="check"
+          />
+        </b-table-column>
+      </b-table>
+    </div>
+  </div>
+</template>
       </b-table>
     </div>
   </div>

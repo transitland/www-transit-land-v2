@@ -18,44 +18,48 @@
       backend-filtering
       @sort="onSort"
     >
-      <template slot-scope="props">
-        <b-table-column
-          field="stop_id"
-          label="Stop ID"
-          :sortable="true"
-          :width="140"
+      <b-table-column
+        v-slot="props"
+        field="stop_id"
+        label="Stop ID"
+        :sortable="true"
+        :width="140"
+      >
+        <nuxt-link
+          :to="{name:'data-feed-versions-version-stops-stop', params:{feed:props.row.feed_version.current_feed.onestop_id, version:props.row.feed_version.sha1, stop:props.row.stop_id}}"
         >
-          <nuxt-link
-            :to="{name:'data-feed-versions-version-stops-stop', params:{feed:props.row.feed_version.current_feed.onestop_id, version:props.row.feed_version.sha1, stop:props.row.stop_id}}"
-          >
-            {{ props.row.stop_id }}
-          </nuxt-link>
-        </b-table-column>
-        <b-table-column
-          field="stop_name"
-          label="Name"
-          :sortable="true"
-          :width="600"
-        >
-          {{ props.row.stop_name }}
-        </b-table-column>
-        <b-table-column
-          field="stop_url"
-          label="URL"
-          :width="100"
-        >
-          <a v-if="props.row.stop_url" target="_blank" :href="props.row.stop_url">
-            <b-icon icon="link" />
-          </a>
-        </b-table-column>
+          {{ props.row.stop_id }}
+        </nuxt-link>
+      </b-table-column>
+      <b-table-column
+        v-slot="props"
+        field="stop_name"
+        label="Name"
+        :sortable="true"
+        :width="600"
+      >
+        {{ props.row.stop_name }}
+      </b-table-column>
+      <b-table-column
+        v-slot="props"
+        field="stop_url"
+        label="URL"
+        :width="100"
+      >
+        <a v-if="props.row.stop_url" target="_blank" :href="props.row.stop_url">
+          <b-icon icon="link" />
+        </a>
+      </b-table-column>
 
-        <b-table-column v-if="showAgencies" field="agencies" label="Agencies">
-          {{ props.row.route_stops.map((s)=>{return s.agency.agency_name}) | joinUnique }}
-        </b-table-column>
-        <b-table-column v-if="showRoutes" field="routes" label="Routes">
-          {{ props.row.route_stops.map((s)=>{return s.route.route_short_name}) | joinUnique }}
-        </b-table-column>
-      </template>
+      <b-table-column v-if="showAgencies" v-slot="props" field="agencies" label="Agencies">
+        {{ props.row.route_stops.map((s)=>{return s.agency.agency_name}) | joinUnique }}
+      </b-table-column>
+      <b-table-column v-if="showRoutes" v-slot="props" field="routes" label="Routes">
+        {{ props.row.route_stops.map((s)=>{return s.route.route_short_name}) | joinUnique }}
+      </b-table-column>
+    </b-table>
+  </div>
+</template>
     </b-table>
   </div>
 </template>

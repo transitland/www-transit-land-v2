@@ -22,19 +22,31 @@
         :default-sort="defaultSort"
         sort-icon="menu-up"
       >
-        <template slot-scope="props">
-          <b-table-column :sortable="true" field="first_departure_time" label="Begin" width="120" numeric>
-            {{ props.row.first_departure_time | formatHMS }}
-          </b-table-column>
-          <b-table-column :sortable="true" field="last_arrival_time" label="End" width="120" numeric>
-            {{ props.row.last_arrival_time | formatHMS }}
-          </b-table-column>
-          <b-table-column :sortable="true" field="trip_headsign" label="Headsign">
-            <nuxt-link :to="{name: 'data-feed-versions-version-routes-route-index-trips-trip', params:{feed:$route.params.feed, version:$route.params.version, trip: props.row.trip_id}}">
-              {{ props.row.trip_short_name || props.row.trip_headsign || props.row.trip_id }}
-            </nuxt-link>
-          </b-table-column>
-        </template>
+        <b-table-column
+          v-slot="props"
+          :sortable="true"
+          field="first_departure_time"
+          label="Begin"
+          width="120"
+          numeric
+        >
+          {{ props.row.first_departure_time | formatHMS }}
+        </b-table-column>
+        <b-table-column
+          v-slot="props"
+          :sortable="true"
+          field="last_arrival_time"
+          label="End"
+          width="120"
+          numeric
+        >
+          {{ props.row.last_arrival_time | formatHMS }}
+        </b-table-column>
+        <b-table-column v-slot="props" :sortable="true" field="trip_headsign" label="Headsign">
+          <nuxt-link :to="{name: 'data-feed-versions-version-routes-route-index-trips-trip', params:{feed:$route.params.feed, version:$route.params.version, trip: props.row.trip_id}}">
+            {{ props.row.trip_short_name || props.row.trip_headsign || props.row.trip_id }}
+          </nuxt-link>
+        </b-table-column>
       </b-table>
     </div>
     <div />

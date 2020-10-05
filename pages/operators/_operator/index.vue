@@ -115,31 +115,29 @@
             :striped="true"
             sort-icon="menu-up"
           >
-            <template slot-scope="props">
-              <b-table-column field="agency" label="Association type">
-                {{ props.row.target_type }}
-              </b-table-column>
-              <b-table-column field="agency" label="Source Feed">
-                <nuxt-link :to="{name:'data-feed', params:{feed:props.row.target_feed}}">
-                  {{ props.row.target_feed }}
+            <b-table-column field="agency" label="Association type" v-slot="props">
+              {{ props.row.target_type }}
+            </b-table-column>
+            <b-table-column field="agency" label="Source Feed" v-slot="props">
+              <nuxt-link :to="{name:'data-feed', params:{feed:props.row.target_feed}}">
+                {{ props.row.target_feed }}
+              </nuxt-link>
+            </b-table-column>
+            <b-table-column field="agency" label="Source Agency ID" v-slot="props">
+              {{ props.row.target_id }}
+            </b-table-column>
+            <b-table-column field="agency" label="Matched Agency" v-slot="props">
+              <template v-if="props.row.target_match">
+                <nuxt-link :to="{name:'data-feed-versions-version-agencies-agency', params:{feed:props.row.target_feed, version:props.row.target_match.feed_version.sha1, agency:props.row.target_match.agency_id}}">
+                  {{ props.row.target_match.agency_name }}
                 </nuxt-link>
-              </b-table-column>
-              <b-table-column field="agency" label="Source Agency ID">
-                {{ props.row.target_id }}
-              </b-table-column>
-              <b-table-column field="agency" label="Matched Agency">
-                <template v-if="props.row.target_match">
-                  <nuxt-link :to="{name:'data-feed-versions-version-agencies-agency', params:{feed:props.row.target_feed, version:props.row.target_match.feed_version.sha1, agency:props.row.target_match.agency_id}}">
-                    {{ props.row.target_match.agency_name }}
-                  </nuxt-link>
-                </template>
-                <template v-else-if="!props.row.target_id" /><template v-else>
-                  <b-tooltip dashed label="No active agency with this source feed and agency ID could be located">
-                    No
-                  </b-tooltip>
-                </template>
-              </b-table-column>
-            </template>
+              </template>
+              <template v-else-if="!props.row.target_id" /><template v-else>
+                <b-tooltip dashed label="No active agency with this source feed and agency ID could be located">
+                  No
+                </b-tooltip>
+              </template>
+            </b-table-column>
           </b-table>
         </b-tab-item>
         <b-tab-item label="Routes">

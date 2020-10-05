@@ -11,21 +11,29 @@
       sort-icon="menu-up"
       :default-sort="defaultSort"
     >
-      <template slot-scope="props">
-        <b-table-column :sortable="true" field="departure_time" label="Time" width="180" numeric>
-          <span v-if="props.row.departure_time - props.row.arrival_time > 60">
-            {{ props.row.arrival_time | formatHMS }} / {{ props.row.departure_time | formatHMS }}
-          </span>
-          <span v-else>
-            {{ props.row.departure_time | formatHMS }}
-          </span>
-        </b-table-column>
-        <b-table-column :sortable="true" field="stop_name" label="Stop">
-          <nuxt-link :to="{name: 'data-feed-versions-version-stops-stop', params:{feed:$route.params.feed, version:$route.params.version, stop:props.row.stop.stop_id}}">
-            {{ props.row.stop.stop_name }}
-          </nuxt-link>
-        </b-table-column>
-      </template>
+      <b-table-column
+        v-slot="props"
+        :sortable="true"
+        field="departure_time"
+        label="Time"
+        width="180"
+        numeric
+      >
+        <span v-if="props.row.departure_time - props.row.arrival_time > 60">
+          {{ props.row.arrival_time | formatHMS }} / {{ props.row.departure_time | formatHMS }}
+        </span>
+        <span v-else>
+          {{ props.row.departure_time | formatHMS }}
+        </span>
+      </b-table-column>
+      <b-table-column v-slot="props" :sortable="true" field="stop_name" label="Stop">
+        <nuxt-link :to="{name: 'data-feed-versions-version-stops-stop', params:{feed:$route.params.feed, version:$route.params.version, stop:props.row.stop.stop_id}}">
+          {{ props.row.stop.stop_name }}
+        </nuxt-link>
+      </b-table-column>
+    </b-table>
+  </div>
+</template>
     </b-table>
   </div>
 </template>

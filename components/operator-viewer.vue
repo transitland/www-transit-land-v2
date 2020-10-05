@@ -73,24 +73,22 @@
       @sort="onSort"
     >
       <!-- TODO: fix sorting -->
-      <template slot-scope="props">
-        <b-table-column field="name" label="Operator Name">
-          <nuxt-link :to="{name: 'operators-operator', params: {operator: props.row.operator_onestop_id}}">
-            {{ props.row.name }}
-          </nuxt-link>
-        </b-table-column>
-        <b-table-column field="city_name" label="City" :width="200">
-          {{ props.row.city_name }}
-        </b-table-column>
-        <b-table-column field="adm1name" label="State/Province" :width="200">
-          {{ props.row.adm1name }}
-        </b-table-column>
-        <b-table-column field="adm0name" label="Country" :width="260">
-          <b-tooltip :label="props.row.other_places.join(',')" dashed>
-            {{ props.row.adm0name }}
-          </b-tooltip>
-        </b-table-column>
-      </template>
+      <b-table-column v-slot="props" field="name" label="Operator Name">
+        <nuxt-link :to="{name: 'operators-operator', params: {operator: props.row.operator_onestop_id}}">
+          {{ props.row.name }}
+        </nuxt-link>
+      </b-table-column>
+      <b-table-column v-slot="props" field="city_name" label="City" :width="200">
+        {{ props.row.city_name }}
+      </b-table-column>
+      <b-table-column v-slot="props" field="adm1name" label="State/Province" :width="200">
+        {{ props.row.adm1name }}
+      </b-table-column>
+      <b-table-column v-slot="props" field="adm0name" label="Country" :width="260">
+        <b-tooltip :label="props.row.other_places.join(',')" dashed>
+          {{ props.row.adm0name }}
+        </b-tooltip>
+      </b-table-column>
     </b-table>
   </div>
 </template>
