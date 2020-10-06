@@ -26,8 +26,8 @@
       <table class="property-list">
         <tr>
           <td>
-            <b-tooltip dashed label="A unique identifier for this operator">
-              Operator ID
+            <b-tooltip dashed label="A globally unique identifier for this feed">
+              Onestop ID
             </b-tooltip>
           </td>
           <td>
@@ -184,7 +184,7 @@ export default {
   },
   computed: {
     editLink () {
-      return `https://github.com/transitland/transitland-atlas/blob/master/feeds/${this.feed.file}`
+      return `https://github.com/transitland/transitland-atlas/edit/master/feeds/${this.feed.file}`
     },
     onestopId () {
       return this.$route.params.feed

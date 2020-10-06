@@ -4,6 +4,7 @@ query ($operator_onestop_id: String!) {
       name
       onestop_id
       associated_feeds
+      tags
   }
   matches: tl_agency_operators(where: {operator_onestop_id: {_eq:$operator_onestop_id}}) {    
     id
