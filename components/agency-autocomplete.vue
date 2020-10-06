@@ -1,22 +1,21 @@
 <template>
-  <section>
-    <b-autocomplete
-      :data="data"
-      placeholder="e.g. Bay Area Rapid Transit"
-      field="title"
-      :loading="isFetching"
-      @typing="getAsyncData"
-      @select="option => selected = option"
-    >
-      <template slot-scope="props">
-        {{ props.option.name }}
-        <span v-if="props.option.city_name" style="padding-left:30px;color:#ccc">{{ props.option.city_name }}</span>
-        <span v-if="props.option.adm1name" style="padding-left:30px;color:#ccc">{{ props.option.adm1name }}</span>
-        <span v-if="props.option.adm0name" style="padding-left:30px;color:#ccc">{{ props.option.adm0name }}</span>
-        <span style="float:right;color:#ccc">{{ props.option.type }}</span>
-      </template>
-    </b-autocomplete>
-  </section>
+  <b-autocomplete
+    :data="data"
+    placeholder="e.g. Bay Area Rapid Transit"
+    field="title"
+    :loading="isFetching"
+    expanded
+    @typing="getAsyncData"
+    @select="option => selected = option"
+  >
+    <template slot-scope="props">
+      {{ props.option.name }}
+      <span v-if="props.option.city_name" style="padding-left:30px;color:#ccc">{{ props.option.city_name }}</span>
+      <span v-if="props.option.adm1name" style="padding-left:30px;color:#ccc">{{ props.option.adm1name }}</span>
+      <span v-if="props.option.adm0name" style="padding-left:30px;color:#ccc">{{ props.option.adm0name }}</span>
+      <span style="float:right;color:#ccc">{{ props.option.type }}</span>
+    </template>
+  </b-autocomplete>
 </template>
 
 <script>
