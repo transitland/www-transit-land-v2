@@ -121,7 +121,8 @@ export default {
     drawMap () {
       const polygons = this.features.filter((s) => { return s.geometry.type === 'MultiPolygon' || s.geometry.type === 'Polygon' })
       const points = this.features.filter((s) => { return s.geometry.type === 'Point' })
-      const lines = this.features.filter((s) => { return s.geometry.type === 'LineString' })
+      const lines = this.features.filter((s) => { return s.geometry.type === 'LineString' && s.properties.class !== 'test' })
+      const lines2 = this.features.filter((s) => { return s.geometry.type === 'LineString' && s.properties.class === 'test' })
       this.map.addSource('polygons', {
         type: 'geojson',
         data: { type: 'FeatureCollection', features: polygons }
@@ -130,6 +131,11 @@ export default {
         type: 'geojson',
         data: { type: 'FeatureCollection', features: lines }
       })
+      this.map.addSource('lines2', {
+        type: 'geojson',
+        data: { type: 'FeatureCollection', features: lines2 }
+      })
+
       this.map.addSource('points', {
         type: 'geojson',
         data: { type: 'FeatureCollection', features: points }
@@ -163,6 +169,17 @@ export default {
           'circle-color': this.circleColor,
           'circle-radius': this.circleRadius,
           'circle-opacity': 0.4
+        }
+      })
+      this.map.addLayer({
+        id: 'lines2',
+        type: 'line',
+        source: 'lines2',
+        layout: {},
+        paint: {
+          'line-width': 2,
+          'line-color': '#000',
+          'line-opacity': 1.0
         }
       })
       for (const v of mapLayers.routeLayers) {
