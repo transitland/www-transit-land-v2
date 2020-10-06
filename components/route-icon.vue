@@ -19,6 +19,23 @@
 
 <script>
 export default {
-  props: ['routeType', 'routeShortName', 'routeLongName', 'routeLink']
+  props: {
+    routeType: {
+      type: Number,
+      default: null
+    },
+    routeShortName: {
+      type: String,
+      default: null
+    },
+    routeLongName: {
+      type: String,
+      default: null
+    },
+    routeLink: {
+      type: String,
+      default: null
+    }
+  }
 }
 </script>
