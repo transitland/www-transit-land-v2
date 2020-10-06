@@ -195,7 +195,10 @@ export default {
   },
   head () {
     return {
-      title: `${this.onestopId} • Feed details`
+      title: `${this.onestopId} • Feed details`,
+      meta: [
+        { hid: 'description', name: 'description', content: `${this.onestopId} is a ${this.feed.spec.toUpperCase()} feed registered on the Transitland open data platform.` }
+      ]
     }
   }
 }

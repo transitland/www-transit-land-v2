@@ -282,8 +282,15 @@ export default {
     }
   },
   head () {
+    const feedsNumber = new Set(this.sources.map(s => s.target_feed)).size
+    const locations = this.locations
+      .map(l => [l.adm0name, l.adm1name, l.name].filter(Boolean).join(', '))
+      .join('; ')
     return {
-      title: `${this.operatorName} • Operator details`
+      title: `${this.operatorName} • Operator details`,
+      meta: [
+        { hid: 'description', name: 'description', content: `${this.operatorName} is an operator listed on the Transitland open data platform. ${this.operatorName} provides transit services in the following locations: ${locations}. Transitland sources data for this operator from ${feedsNumber} GTFS ${feedsNumber > 1 ? 'feeds' : 'feed'}.` }
+      ]
     }
   }
 }
