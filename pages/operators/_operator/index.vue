@@ -115,18 +115,18 @@
             :striped="true"
             sort-icon="menu-up"
           >
-            <b-table-column field="agency" label="Association type" v-slot="props">
+            <b-table-column v-slot="props" field="agency" label="Association type">
               {{ props.row.target_type }}
             </b-table-column>
-            <b-table-column field="agency" label="Source Feed" v-slot="props">
+            <b-table-column v-slot="props" field="agency" label="Source Feed">
               <nuxt-link :to="{name:'data-feed', params:{feed:props.row.target_feed}}">
                 {{ props.row.target_feed }}
               </nuxt-link>
             </b-table-column>
-            <b-table-column field="agency" label="Source Agency ID" v-slot="props">
+            <b-table-column v-slot="props" field="agency" label="Source Agency ID">
               {{ props.row.target_id }}
             </b-table-column>
-            <b-table-column field="agency" label="Matched Agency" v-slot="props">
+            <b-table-column v-slot="props" field="agency" label="Matched Agency">
               <template v-if="props.row.target_match">
                 <nuxt-link :to="{name:'data-feed-versions-version-agencies-agency', params:{feed:props.row.target_feed, version:props.row.target_match.feed_version.sha1, agency:props.row.target_match.agency_id}}">
                   {{ props.row.target_match.agency_name }}
