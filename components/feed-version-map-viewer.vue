@@ -55,6 +55,7 @@ export default {
           features.push({
             id: feature.id,
             properties: {
+              class: 'route',
               id: feature.id,
               route_id: feature.route_id,
               feed_version_sha1: feature.feed_version.sha1,
@@ -72,6 +73,7 @@ export default {
             features.push({
               id: rs.stop.id,
               properties: {
+                class: 'stop',
                 id: rs.stop.id
               },
               geometry: rs.stop.geometry

@@ -42,22 +42,22 @@ const headwayLayers = [
     }
   },
   {
-    name: 'headway-unknown',
+    name: 'route-headway-unknown',
     filter: ['all', ['==', 'headway_secs', 0]],
     paint: { 'line-opacity': 0.75, 'line-width': 3.0, 'line-color': hwcolors.low }
   },
   {
-    name: 'headway-low',
+    name: 'route-headway-low',
     filter: ['all', ['>', 'headway_secs', headways.medium]],
     paint: { 'line-opacity': 0.75, 'line-width': 3.0, 'line-color': hwcolors.low }
   },
   {
-    name: 'headway-medium',
+    name: 'route-headway-medium',
     filter: ['all', ['<=', 'headway_secs', headways.medium], ['>', 'headway_secs', headways.high]],
     paint: { 'line-opacity': 0.75, 'line-width': 3.0, 'line-color': hwcolors.medium }
   },
   {
-    name: 'headway-high',
+    name: 'route-headway-high',
     filter: ['all', ['<=', 'headway_secs', headways.high], ['>', 'headway_secs', 0]],
     paint: { 'line-opacity': 0.75, 'line-width': 3.0, 'line-color': hwcolors.high }
   }
@@ -80,63 +80,63 @@ const routeLayers = [
   },
   // RAIL
   {
-    name: 'rail-outline',
+    name: 'route-rail-outline',
     filter: ['all', ['==', 'route_type', 2]],
     paint: { 'line-width': 3.0, 'line-gap-width': 1.0, 'line-color': colors.railoutline }
   },
   {
-    name: 'rail',
+    name: 'route-rail',
     filter: ['all', ['<', 'route_type', 3]],
     paint: { 'line-width': 3.0, 'line-color': '#ff0000' }
   },
 
   // BUS LOW AND UNKNOWN
   {
-    name: 'bus-unknown',
+    name: 'route-bus-unknown',
     filter: ['all', ['==', 'route_type', 3], ['==', 'headway_secs', 0]],
     paint: { 'line-color': colors.buslow }
   },
   {
-    name: 'bus-low',
+    name: 'route-bus-low',
     filter: ['all', ['==', 'route_type', 3], ['>', 'headway_secs', headways.medium]],
     paint: { 'line-color': colors.buslow }
   },
   // BUS MEDIUM/HIGH
   {
-    name: 'bus-medium-outline',
+    name: 'route-bus-medium-outline',
     filter: ['all', ['==', 'route_type', 3], ['<=', 'headway_secs', headways.medium], ['>', 'headway_secs', 0]],
     paint: { 'line-width': 2.0, 'line-gap-width': 1.0, 'line-color': colors.busoutline }
   },
   {
-    name: 'bus-medium',
+    name: 'route-bus-medium',
     filter: ['all', ['==', 'route_type', 3], ['<=', 'headway_secs', headways.medium], ['>', 'headway_secs', 0]],
     paint: { 'line-width': 2.0, 'line-color': colors.busmedium }
   },
   // TRAM
   {
-    name: 'tram-outline',
+    name: 'route-tram-outline',
     filter: ['all', ['==', 'route_type', 0]],
     paint: { 'line-width': 3.0, 'line-gap-width': 1.0, 'line-color': colors.tramoutline }
   },
   {
-    name: 'tram',
+    name: 'route-tram',
     filter: ['all', ['==', 'route_type', 0]],
     paint: { 'line-width': 3.0, 'line-color': ['coalesce', ['get', 'route_color'], colors.tram] }
   },
   // METRO
   {
-    name: 'metro-outline',
+    name: 'route-metro-outline',
     filter: ['all', ['==', 'route_type', 1]],
     paint: { 'line-width': 3.0, 'line-gap-width': 1.0, 'line-color': colors.metrooutline }
   },
   {
-    name: 'metro',
+    name: 'route-metro',
     filter: ['all', ['==', 'route_type', 1]],
     paint: { 'line-width': 3.0, 'line-color': ['coalesce', ['get', 'route_color'], colors.metro] }
   },
   // OTHER
   {
-    name: 'other',
+    name: 'route-other',
     filter: ['all', ['>', 'route_type', 3]],
     paint: {
       'line-opacity': 1.0,

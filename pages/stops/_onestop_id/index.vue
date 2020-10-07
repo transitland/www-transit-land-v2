@@ -126,17 +126,17 @@ export default {
       let featid = 1
       for (const i of this.entities) {
         featid++
-        ret.push({ type: 'Feature', id: featid, geometry: i.geometry, properties: { id: featid } })
+        ret.push({ type: 'Feature', id: featid, geometry: i.geometry, properties: { class: 'stop', id: featid } })
       }
       const sg = this.entity.geometry
       for (const i of this.entity.children) {
         featid++
-        ret.push({ type: 'Feature', id: featid, geometry: i.geometry, properties: { id: featid } })
+        ret.push({ type: 'Feature', id: featid, geometry: i.geometry, properties: { class: 'stop', id: featid } })
         featid++
         ret.push({
           type: 'Feature',
           id: featid,
-          properties: { class: 'test' },
+          properties: { },
           geometry: {
             type: 'LineString',
             coordinates: [
@@ -149,7 +149,18 @@ export default {
       for (const rs of this.entity.route_stops) {
         featid++
         ret.push(
-          { type: 'Feature', id: featid, geometry: rs.route.geometry, properties: { id: featid, route_type: rs.route.route_type, generated: false, headway_secs: 60 } }
+          {
+            type: 'Feature',
+            id: featid,
+            geometry: rs.route.geometry,
+            properties: {
+              class: 'route',
+              id: featid,
+              route_type: rs.route.route_type,
+              generated: false,
+              headway_secs: 60
+            }
+          }
         )
       }
       console.log('ret:', ret)

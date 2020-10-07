@@ -120,26 +120,47 @@ export default {
     },
     drawMap () {
       const polygons = this.features.filter((s) => { return s.geometry.type === 'MultiPolygon' || s.geometry.type === 'Polygon' })
-      const points = this.features.filter((s) => { return s.geometry.type === 'Point' })
-      const lines = this.features.filter((s) => { return s.geometry.type === 'LineString' && s.properties.class !== 'test' })
-      const lines2 = this.features.filter((s) => { return s.geometry.type === 'LineString' && s.properties.class === 'test' })
+      const lines = this.features.filter((s) => { return s.geometry.type === 'LineString' && s.properties.class !== 'route' })
+      const routeLines = this.features.filter((s) => { return s.geometry.type === 'LineString' && s.properties.class === 'route' })
+      const points = this.features.filter((s) => { return s.geometry.type === 'Point' && s.properties.class !== 'stop' })
+      const stopPoints = this.features.filter((s) => { return s.geometry.type === 'Point' && s.properties.class === 'stop' })
+      console.log('stopPoints:', stopPoints)
       this.map.addSource('polygons', {
         type: 'geojson',
         data: { type: 'FeatureCollection', features: polygons }
+      })
+      this.map.addSource('route-lines', {
+        type: 'geojson',
+        data: { type: 'FeatureCollection', features: routeLines }
       })
       this.map.addSource('lines', {
         type: 'geojson',
         data: { type: 'FeatureCollection', features: lines }
       })
-      this.map.addSource('lines2', {
-        type: 'geojson',
-        data: { type: 'FeatureCollection', features: lines2 }
-      })
-
       this.map.addSource('points', {
         type: 'geojson',
         data: { type: 'FeatureCollection', features: points }
       })
+      this.map.addSource('stop-points', {
+        type: 'geojson',
+        data: { type: 'FeatureCollection', features: stopPoints }
+      })
+      for (const v of mapLayers.routeLayers) {
+        const l = {
+          id: v.name,
+          type: 'line',
+          source: 'route-lines',
+          layout: {
+            'line-cap': 'round',
+            'line-join': 'round'
+          },
+          paint: v.paint
+        }
+        if (v.filter != null) {
+          l.filter = v.filter
+        }
+        this.map.addLayer(l)
+      }
       this.map.addLayer({
         id: 'polygons',
         type: 'fill',
@@ -172,9 +193,19 @@ export default {
         }
       })
       this.map.addLayer({
-        id: 'lines2',
+        id: 'stop-points',
+        type: 'circle',
+        source: 'stop-points',
+        paint: {
+          'circle-color': '#0000FF',
+          'circle-radius': this.circleRadius,
+          'circle-opacity': 0.4
+        }
+      })
+      this.map.addLayer({
+        id: 'lines',
         type: 'line',
-        source: 'lines2',
+        source: 'lines',
         layout: {},
         paint: {
           'line-width': 2,
@@ -182,23 +213,7 @@ export default {
           'line-opacity': 1.0
         }
       })
-      for (const v of mapLayers.routeLayers) {
-        const l = {
-          id: v.name,
-          type: 'line',
-          source: 'lines',
-          layout: {
-            'line-cap': 'round',
-            'line-join': 'round'
-          },
-          paint: v.paint
-        }
-        if (v.filter != null) {
-          l.filter = v.filter
-        }
-        this.map.addLayer(l)
-      }
-      const coordinates = points.map((s) => { return s.geometry.coordinates })
+      const coordinates = stopPoints.map((s) => { return s.geometry.coordinates })
       for (const line of lines) {
         for (const c of line.geometry.coordinates) {
           coordinates.push(c)
