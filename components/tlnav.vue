@@ -6,7 +6,7 @@
       </nuxt-link>
     </div>
     <div class="navbar-menu">
-      <div v-for="(item,key) in items" :key="key" class="navbar-item" :class="$route.name.startsWith(item.to.name) ? 'is-active is-tab': ''">
+      <div v-for="(item,key) in items" :key="key" class="navbar-item" :class="($route && $route.name && $route.name.startsWith(item.to.name)) ? 'is-active is-tab': ''">
         <nuxt-link :to="item.to">
           {{ item.title }}
         </nuxt-link>
