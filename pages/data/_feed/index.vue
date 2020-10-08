@@ -194,11 +194,17 @@ export default {
     }
   },
   head () {
+    const meta = []
+    if (this.feed) {
+      meta.push({
+        hid: 'description',
+        name: 'description',
+        content: `${this.onestopId} is a ${this.feed.spec.toUpperCase()} feed registered on the Transitland open data platform.`
+      })
+    }
     return {
       title: `${this.onestopId} • Feed details`,
-      meta: [
-        { hid: 'description', name: 'description', content: `${this.onestopId} is a ${this.feed.spec.toUpperCase()} feed registered on the Transitland open data platform.` }
-      ]
+      meta
     }
   }
 }
