@@ -214,7 +214,7 @@ export default {
         }
       })
       const coordinates = stopPoints.map((s) => { return s.geometry.coordinates })
-      for (const line of lines) {
+      for (const line of routeLines) {
         for (const c of line.geometry.coordinates) {
           coordinates.push(c)
         }
@@ -228,14 +228,17 @@ export default {
       }
       this.map.resize()
       if (this.autoFit) {
+        console.log('autoFit')
         const bounds = coordinates.reduce(function (bounds, coord) {
           return bounds.extend(coord)
         }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]))
+        console.log('bounds:', bounds)
         this.map.fitBounds(bounds, {
           duration: 0,
           padding: 20
         })
       } else {
+        console.log('flyTo')
         this.map.flyTo({
           center: this.center,
           zoom: this.zoom,

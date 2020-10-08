@@ -22,6 +22,14 @@
       <h1 class="title">
         {{ entity.stop_name }}
       </h1>
+
+      <b-notification v-if="linkActive" type="is-light" has-icon icon="information" :closable="false">
+        You are viewing a specific version of this entity from a single GTFS feed. <br>
+        Click <nuxt-link :to="{name: 'stops-onestop_id', params:{onestop_id:$route.params.onestop_id}}">
+          here
+        </nuxt-link> to return to the main view.
+      </b-notification>
+
       <div class="columns">
         <div class="column is-two-thirds">
           <b-tabs v-model="activeTab" type="is-boxed" :animated="false">
@@ -29,11 +37,30 @@
               <div>With service to:</div>
               <div v-for="rs of entity.route_stops" :key="rs.route.id">
                 <nuxt-link
-                  :to="{name:'data-feed-versions-version-routes-route', params:{feed:$route.params.feed, version:$route.params.version, route:rs.route.route_id}}"
+                  :to="{name:'routes-onestop_id', params:{onestop_id:rs.route.onestop_id}}"
                 >
                   <route-icon :route-type="rs.route.route_type" :route-short-name="rs.route.route_short_name" :route-long-name="rs.route.route_long_name" :route-link="rs.route.route_url" />
                 </nuxt-link>
               </div>
+            </b-tab-item>
+
+            <b-tab-item label="Data sources">
+              <b-table
+                :data="entities"
+                :striped="true"
+              >
+                <b-table-column v-slot="props" field="feed_onestop_id" label="Feed">
+                  {{ props.row.feed_onestop_id }}
+                </b-table-column>
+                <b-table-column v-slot="props" field="feed_version_sha1" label="Version">
+                  {{ props.row.feed_version_sha1 }}
+                </b-table-column>
+                <b-table-column v-slot="props" field="stop_id" label="Stop ID">
+                  <nuxt-link :to="{name:'stops-onestop_id', params:{onestop_id:props.row.onestop_id}, query:{feed_onestop_id:props.row.feed_onestop_id, feed_version_sha1:props.row.feed_version_sha1, stop_id:props.row.stop_id}}">
+                    {{ props.row.stop_id }}
+                  </nuxt-link>
+                </b-table-column>
+              </b-table>
             </b-tab-item>
           </b-tabs>
         </div>
@@ -55,11 +82,14 @@
 import gql from 'graphql-tag'
 
 const query = gql`
-query ($onestop_id: String!) {
-  entities: tl_mv_active_stops(limit: 100, order_by: {id: desc}, where: {onestop_id: {_eq: $onestop_id}}) {
+query ($onestop_id: String, $inactive: Boolean, $stop_id: String, $feed_onestop_id: String, $feed_version_sha1: String) {
+  entities: tl_vw_gtfs_stops(limit: 100, order_by: {id: desc}, where: {onestop_id: {_eq: $onestop_id}, feed_onestop_id:{_eq:$feed_onestop_id}, feed_version_sha1:{_eq:$feed_version_sha1}, stop_id:{_eq:$stop_id}, feed_version: {feed_states: {id: {_is_null: $inactive}}}}) {
     feed_version_id
+    feed_version_sha1
+    feed_onestop_id
+    onestop_id
     id
-
+    stop_id
     stop_name
     geometry
     location_type
@@ -74,14 +104,6 @@ query ($onestop_id: String!) {
       stop_name
       geometry
     }
-    feed_version {
-      id
-      sha1
-      current_feed {
-        id
-        onestop_id
-      }
-    }    
     route_stops {
       route: tl_route {
         id
@@ -115,12 +137,19 @@ export default {
       query,
       variables () {
         return {
-          onestop_id: this.$route.params.onestop_id
+          onestop_id: this.$route.params.onestop_id,
+          feed_onestop_id: this.$route.query.feed_onestop_id,
+          feed_version_sha1: this.$route.query.feed_version_sha1,
+          stop_id: this.$route.query.stop_id,
+          inactive: false
         }
       }
     }
   },
   computed: {
+    linkActive () {
+      return Object.keys(this.$route.query).length > 0
+    },
     features () {
       const ret = []
       let featid = 1
@@ -163,7 +192,6 @@ export default {
           }
         )
       }
-      console.log('ret:', ret)
       return ret
     },
     entity () {

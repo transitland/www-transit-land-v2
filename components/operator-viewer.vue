@@ -74,7 +74,7 @@
     >
       <!-- TODO: fix sorting -->
       <b-table-column v-slot="props" field="name" label="Operator Name">
-        <nuxt-link :to="{name: 'operators-operator', params: {operator: props.row.operator_onestop_id}}">
+        <nuxt-link :to="{name: 'operators-onestop_id', params: {onestop_id: props.row.operator_onestop_id}}">
           {{ props.row.name }}
         </nuxt-link>
       </b-table-column>

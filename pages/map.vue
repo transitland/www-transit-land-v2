@@ -73,7 +73,6 @@ export default {
               tileSize: 256,
               attribution:
                         'Transitland | Interline | &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>'
-
             }
           },
           layers: [
@@ -107,7 +106,7 @@ export default {
         maxzoom: 14
       }
       )
-      for (const v of mapLayers.routelayers) {
+      for (const v of mapLayers.routeLayers) {
         const l = {
           id: v.name,
           type: 'line',
@@ -173,23 +172,11 @@ export default {
         agencyFeatures[agencyId][routeId] = v.properties
       }
       this.agencyFeatures = agencyFeatures
-    },
-    mapMoveEnd () {
-      const map = this.map
-      map.on('moveend', function (e) {
-        const count = {}
-        const agencies = {}
-        for (const f of map.queryRenderedFeatures({ layers: ['route-active'] })) {
-          count[f.id] = true
-          agencies[f.properties.agency_id] = true
-        }
-        document.getElementById('summary').innerHTML = `features:, ${Object.keys(count).length} agencies: ${Object.keys(agencies).length}`
-      })
     }
   },
   head () {
     return {
-      title: 'Global Map of Transit Routes'
+      title: 'Global Transit Map'
     }
   }
 }

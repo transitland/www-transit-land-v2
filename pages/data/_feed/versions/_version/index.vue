@@ -14,7 +14,7 @@
           </li>
           <li>
             <nuxt-link :to="{name: 'data-feed', params:{feed:$route.params.feed}}">
-              {{ $route.params.feed | shortenName }}
+              {{ $route.params.feed }}
             </nuxt-link>
           </li>
           <li>
@@ -150,7 +150,7 @@
         </b-tab-item>
 
         <b-tab-item label="Routes">
-          <route-viewer v-if="activeTab === 2" :fvids="[entity.id]" />
+          <route-viewer v-if="activeTab === 2" :link-version="true" :fvids="[entity.id]" />
         </b-tab-item>
 
         <b-tab-item label="Stops">

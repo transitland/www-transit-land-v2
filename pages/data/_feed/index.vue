@@ -14,7 +14,7 @@
           </li>
           <li>
             <nuxt-link :to="{name: 'data-feed', params:{feed:$route.params.feed}}">
-              {{ $route.params.feed | shortenName }}
+              {{ $route.params.feed }}
             </nuxt-link>
           </li>
         </ul>
@@ -31,7 +31,7 @@
             </b-tooltip>
           </td>
           <td>
-            <nuxt-link :to="{name:'operators-operator', params:{operator:$route.params.operator}}">
+            <nuxt-link :to="{name:'operators-onestop_id', params:{onestop_id:$route.params.operator}}">
               {{ onestopId }}
             </nuxt-link>
             <b-tooltip dashed label="Edit this Feed in Transitland Atlas">

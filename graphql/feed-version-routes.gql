@@ -1,24 +1,20 @@
-query ($feed_version_ids: [bigint!], $offset: Int!, $limit: Int!, $agency_ids:[bigint!], $route_ids: [bigint!], $order_by:[gtfs_routes_order_by!])
+query ($feed_version_ids: [bigint!], $offset: Int!, $limit: Int!, $agency_ids:[bigint!], $route_ids: [bigint!], $order_by:[tl_vw_gtfs_routes_order_by!])
  {
   total: gtfs_routes_aggregate(where: {agency_id:{_in:$agency_ids}, feed_version_id: {_in: $feed_version_ids}, id: {_in: $route_ids}}) {
     aggregate {
       count
     }
   }
-  routes: gtfs_routes(limit: $limit, where: {agency_id:{_in:$agency_ids}, feed_version_id: {_in: $feed_version_ids}, id: {_in: $route_ids}}, order_by: $order_by, offset: $offset) {
+  routes: tl_vw_gtfs_routes(limit: $limit, where: {agency_id:{_in:$agency_ids}, feed_version_id: {_in: $feed_version_ids}, id: {_in: $route_ids}}, order_by: $order_by, offset: $offset) {
     id
+    onestop_id
     feed_version_id
-    feed_version {
-      id
-      sha1
-      current_feed {
-        id
-        onestop_id
-      }
-    }
+    feed_version_sha1
+    feed_onestop_id
     route_id
     route_short_name
     route_long_name
+    route_type
     route_url
     agency {
       id

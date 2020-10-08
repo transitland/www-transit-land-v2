@@ -89,7 +89,6 @@ const routeLayers = [
     filter: ['all', ['<', 'route_type', 3]],
     paint: { 'line-width': 3.0, 'line-color': '#ff0000' }
   },
-
   // BUS LOW AND UNKNOWN
   {
     name: 'route-bus-unknown',

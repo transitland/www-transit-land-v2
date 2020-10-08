@@ -8,7 +8,7 @@
       <template v-else>
         <div v-for="route in routes" :key="route.id">
           <nuxt-link
-            :to="{name: 'data-feed-versions-version-routes-route', params:{feed:route.onestop_id,version:route.feed_version_sha1,route:route.route_id}}"
+            :to="{name: 'routes-onestop_id', params:{onestop_id:route.onestop_id}, query:(linkVersion ? {feed_onestop_id:route.feed_onestop_id,feed_version_sha1:route.feed_version_sha1,route_id:route.route_id} : {})}"
           >
             <route-icon
               :key="route.id"
@@ -28,6 +28,7 @@ export default {
   props: {
     maxAgencyRows: { type: Number, default () { return 5 } },
     collapse: { type: Boolean },
+    linkVersion: { type: Boolean, default: false },
     agencyFeatures: { type: Object, default () { return {} } }
   },
   computed: {

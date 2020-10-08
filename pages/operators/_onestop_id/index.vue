@@ -12,7 +12,7 @@
               Operators
             </nuxt-link>
           </li><li>
-            <nuxt-link :to="{name:'operators', params:{operator:$route.params.operator_onestop_id}}">
+            <nuxt-link :to="{name:'operators-onestop_id', params:{onestop_id:$route.params.onestop_id}}">
               {{ operatorName }}
             </nuxt-link>
           </li>
@@ -29,7 +29,7 @@
             </b-tooltip>
           </td>
           <td>
-            <nuxt-link :to="{name:'operators-operator', params:{operator:$route.params.operator}}">
+            <nuxt-link :to="{name:'operators-onestop_id', params:{onestop_id:$route.params.onestop_id}}">
               {{ onestopId }}
             </nuxt-link>
             <template v-if="generatedOperator">
@@ -115,20 +115,20 @@
             :striped="true"
             sort-icon="menu-up"
           >
-            <b-table-column field="agency" label="Association type" v-slot="props">
+            <b-table-column v-slot="props" field="agency" label="Association type">
               {{ props.row.target_type }}
             </b-table-column>
-            <b-table-column field="agency" label="Source Feed" v-slot="props">
+            <b-table-column v-slot="props" field="agency" label="Source Feed">
               <nuxt-link :to="{name:'data-feed', params:{feed:props.row.target_feed}}">
                 {{ props.row.target_feed }}
               </nuxt-link>
             </b-table-column>
-            <b-table-column field="agency" label="Source Agency ID" v-slot="props">
+            <b-table-column v-slot="props" field="agency" label="Source Agency ID">
               {{ props.row.target_id }}
             </b-table-column>
-            <b-table-column field="agency" label="Matched Agency" v-slot="props">
+            <b-table-column v-slot="props" field="agency" label="Matched Agency">
               <template v-if="props.row.target_match">
-                <nuxt-link :to="{name:'data-feed-versions-version-agencies-agency', params:{feed:props.row.target_feed, version:props.row.target_match.feed_version.sha1, agency:props.row.target_match.agency_id}}">
+                <nuxt-link :to="{name:'operators-onestop_id', params:{onestop_id:onestopId}, query:{feed_onestop_id:props.row.target_match.feed_onestop_id,feed_version_sha1:props.row.target_match.feed_version_sha1,agency_id:props.row.target_match.agency_id}}">
                   {{ props.row.target_match.agency_name }}
                 </nuxt-link>
               </template>
@@ -184,18 +184,14 @@ export default {
       return `https://github.com/transitland/transitland-atlas/new/master/operators?filename=${this.onestopId}.json`
     },
     locations () {
-      const ret = {}
+      const ret = new Map()
       for (const ent of this.agencies) {
         for (const p of ent.places || []) {
           const key = `{p.adm0name} / ${p.adm1name} - ${p.name}`
-          ret[key] = p
+          ret.set(key, p)
         }
       }
-      const ret2 = []
-      for (const key of Object.keys(ret).sort()) {
-        ret2.push(ret[key])
-      }
-      return ret2
+      return Array.from(ret.values()).sort()
     },
     agencies () {
       const ret = []
@@ -207,7 +203,7 @@ export default {
       return ret
     },
     onestopId () {
-      return this.$route.params.operator
+      return this.$route.params.onestop_id
     },
     agencyIds () {
       return this.agencies.map((s) => { return s.id }).filter((s) => { return s })
@@ -219,7 +215,7 @@ export default {
       return [...new Set(this.agencies.map((s) => { return s.agency_url }))]
     },
     fvids () {
-      return this.agencies.map((s) => { return s.feed_version.id })
+      return this.agencies.map((s) => { return s.feed_version_id })
     },
     operator () {
       if (this.operators && this.operators.length > 0) {
@@ -246,18 +242,18 @@ export default {
         for (const ent of this.agencies) {
           ret.push({
             target_type: 'Generated',
-            target_feed: ent.feed_version.current_feed.onestop_id,
+            target_feed: ent.feed_onestop_id,
             target_match: ent
           })
         }
       }
       for (const ent of this.agencies) {
-        const key = `${ent.feed_version.onestop_id}:${ent.agency_id}`
+        const key = `${ent.feed_onestop_id}:${ent.agency_id}`
         amap[key] = ent
         if (ent.feed_version && ent.feed_version.current_feed && ent.feed_version.current_feed.feed_namespace_id === this.onestopId) {
           ret.push({
             target_type: 'Feed Namespace',
-            target_feed: ent.feed_version.current_feed.onestop_id,
+            target_feed: ent.feed_onestop_id,
             target_match: ent
           })
         }

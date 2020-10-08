@@ -26,7 +26,7 @@
         :width="140"
       >
         <nuxt-link
-          :to="{name:'data-feed-versions-version-stops-stop', params:{feed:props.row.feed_version.current_feed.onestop_id, version:props.row.feed_version.sha1, stop:props.row.stop_id}}"
+          :to="{name:'stops-onestop_id', params:{onestop_id:props.row.onestop_id}, query: (linkVersion ? {feed_onestop_id:props.row.feed_onestop_id, feed_version_sha1:props.row.feed_version_sha1, stop_id:props.row.stop_id} : {})}"
         >
           {{ props.row.stop_id }}
         </nuxt-link>
@@ -74,7 +74,8 @@ export default {
     agencyIds: { type: Array, default: null },
     routeIds: { type: Array, default: null },
     showAgencies: { type: Boolean, default: true },
-    showRoutes: { type: Boolean, default: true }
+    showRoutes: { type: Boolean, default: true },
+    linkVersion: { type: Boolean, default: false }
   },
   data () {
     return {
