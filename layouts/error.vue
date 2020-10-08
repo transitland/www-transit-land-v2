@@ -31,8 +31,11 @@
             </circle>
           </svg>
         </div>
-        <p class="content is-medium">
+        <p v-if="statusCode === 404" class="content is-medium">
           <strong>Sorry.</strong> The page you were looking for appears to have been moved, deleted or does not exist. Please use the navigation bar or go back to the <a href="/">homepage</a>.
+        </p>
+        <p v-else class="content is-medium">
+          <strong>Sorry.</strong> An error has occured: {{ messages.client_error_details }}
         </p>
       </div>
     </div>
@@ -42,9 +45,24 @@
 <script>
 export default {
   layout: 'default',
+  name: 'NuxtError',
+  props: {
+    error: {
+      type: Object,
+      default: null
+    }
+  },
+  computed: {
+    statusCode () {
+      return (this.error && this.error.statusCode) || 500
+    },
+    message () {
+      return this.error.message || '<%= messages.client_error %>'
+    }
+  },
   head () {
     return {
-      title: 'Error'
+      title: this.message
     }
   }
 }
