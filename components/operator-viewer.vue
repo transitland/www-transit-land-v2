@@ -2,7 +2,7 @@
   <div>
     <b-field grouped>
       <b-field label="Search by operator name or location" expanded>
-        <div v-if="$route.query.name || $route.query.city_name || $route.query.adm1name || $route.query.adm0name">
+        <b-field v-if="$route.query.name || $route.query.city_name || $route.query.adm1name || $route.query.adm0name" expanded>
           <b-tag
             size="is-medium"
             attached
@@ -12,14 +12,13 @@
           >
             {{ $route.query.name || $route.query.city_name || $route.query.adm1name || $route.query.adm0name }}
           </b-tag>
-        </div>
-        <div v-else>
+        </b-field>
+        <template v-else>
           <agency-autocomplete @selected="onAutocomplete" />
-        </div>
-      </b-field>
-      <b-field label="‎">
+        </template>
+
         <!-- the label is a zero width space! -->
-        <b-dropdown position="is-bottom-left" append-to-body aria-role="menu" trap-focus>
+        <b-dropdown position="is-bottom-left" class="is-pulled-right" append-to-body aria-role="menu" trap-focus>
           <a
             slot="trigger"
             class="navbar-item"

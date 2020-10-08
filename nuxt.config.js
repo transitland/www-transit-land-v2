@@ -1,6 +1,6 @@
 
 export default {
-  mode: 'spa',
+  ssr: false,
   // https://github.com/nuxt/components
   components: true,
   server: {

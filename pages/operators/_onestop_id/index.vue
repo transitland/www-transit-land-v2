@@ -24,25 +24,11 @@
       <table class="property-list">
         <tr>
           <td>
-            <b-tooltip dashed label="A unique identifier for this operator">
-              Operator ID
+            <b-tooltip dashed label="A globally unique identifier for this operator">
+              Onestop ID
             </b-tooltip>
           </td>
-          <td>
-            <nuxt-link :to="{name:'operators-onestop_id', params:{onestop_id:$route.params.onestop_id}}">
-              {{ onestopId }}
-            </nuxt-link>
-            <template v-if="generatedOperator">
-              <b-tooltip label="Create a new Operator metadata file in Transitland Atlas">
-                <a :href="newLink" target="_blank"><b-icon size="is-small" icon="help-circle-outline" /></a>
-              </b-tooltip>
-            </template>
-            <template v-else>
-              <b-tooltip dashed label="Edit this Operator and associated metadata in Transitland Atlas">
-                <a :href="editLink" target="_blank"><b-icon icon="pencil" size="is-small" /></a>
-              </b-tooltip>
-            </template>
-          </td>
+          <td>{{ onestopId }}</td>
         </tr>
         <tr>
           <td>
@@ -60,7 +46,9 @@
         </tr>
         <tr>
           <td>
-            Locations
+            <b-tooltip dashed multiline label="Operators and their service areas are matched against place names from the Natural Earth project">
+              Locations
+            </b-tooltip>
           </td>
           <td>
             <ul>
@@ -96,9 +84,37 @@
             </ul>
           </td>
         </tr>
+        <tr v-if="operator.tags">
+          <td>
+            <b-tooltip dashed multiline label="Links between Transitland and other catalogs and data sources on the Internet">
+              Crosswalk
+            </b-tooltip>
+          </td>
+          <td>
+            <ul>
+              <li v-if="operator.tags.us_ntd_id">
+                US National Transit Database (NTD) ID: <code>{{ operator.tags.us_ntd_id }}</code> <a href="https://www.transit.dot.gov/ntd/"><b-icon icon="information" title="US National Transit Database" /></a>
+              </li>
+              <!-- TODO: add omd_provider_id -->
+            </ul>
+          </td>
+        </tr>
       </table>
 
-      <br>
+      <b-notification type="is-light" has-icon icon="information" :closable="false">
+        <div class="columns">
+          <div class="column is-8">
+            <p>
+              The metadata associated with this operator record can be edited in the <a href="https://github.com/transitland/transitland-atlas">Transitland Atlas</a> repository. We welcome edits and additions. Press the button at right to start a pull request.
+            </p>
+          </div>
+          <div class="column is-4 has-text-right">
+            <b-tooltip label="Create or edit an associated operator metadata file in the Transitland Atlas repository">
+              <a class="button is-primary" :href="generatedOperator ? newLink : editLink" target="_blank"><b-icon icon="pencil" size="is-small" /> &nbsp; Edit Operator Record</a>
+            </b-tooltip>
+          </div>
+        </div>
+      </b-notification>
 
       <b-tabs v-model="activeTab" type="is-boxed">
         <b-tab-item label="Map">
@@ -178,7 +194,7 @@ export default {
   },
   computed: {
     editLink () {
-      return `https://github.com/transitland/transitland-atlas/blob/master/operators/${this.onestopId}.json`
+      return `https://github.com/transitland/transitland-atlas/edit/master/operators/${this.onestopId}.json`
     },
     newLink () {
       return `https://github.com/transitland/transitland-atlas/new/master/operators?filename=${this.onestopId}.json`
@@ -278,8 +294,15 @@ export default {
     }
   },
   head () {
+    const feedsNumber = new Set(this.sources.map(s => s.target_feed)).size
+    const locations = this.locations
+      .map(l => [l.adm0name, l.adm1name, l.name].filter(Boolean).join(', '))
+      .join('; ')
     return {
-      title: `${this.operatorName} • Operator details`
+      title: `${this.operatorName} • Operator details`,
+      meta: [
+        { hid: 'description', name: 'description', content: `${this.operatorName} is an operator listed on the Transitland open data platform. ${this.operatorName} provides transit services in the following locations: ${locations}. Transitland sources data for this operator from ${feedsNumber} GTFS ${feedsNumber > 1 ? 'feeds' : 'feed'}.` }
+      ]
     }
   }
 }
