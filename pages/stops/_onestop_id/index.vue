@@ -84,20 +84,20 @@ import gql from 'graphql-tag'
 const query = gql`
 query ($onestop_id: String, $inactive: Boolean, $stop_id: String, $feed_onestop_id: String, $feed_version_sha1: String) {
   entities: tl_vw_gtfs_stops(limit: 100, order_by: {id: desc}, where: {onestop_id: {_eq: $onestop_id}, feed_onestop_id:{_eq:$feed_onestop_id}, feed_version_sha1:{_eq:$feed_version_sha1}, stop_id:{_eq:$stop_id}, feed_version: {feed_states: {id: {_is_null: $inactive}}}}) {
+    id
     feed_version_id
     feed_version_sha1
     feed_onestop_id
     onestop_id
-    id
     stop_id
     stop_name
-    geometry
-    location_type
-    parent_station
     stop_timezone
     stop_url
+    location_type
+    parent_station
     wheelchair_boarding
     zone_id
+    geometry
     children {
       id
       stop_id

@@ -13,7 +13,7 @@
             </nuxt-link>
           </li>
           <li>
-            <nuxt-link v-for="operator of operators" :key="operator.id" :to="{name: 'operators-onestop_id', params:{onestop_id:operator.onestop_id}}">
+            <nuxt-link v-for="operator of operators" :key="operator.id" :to="{name: 'operators-onestop_id', params:{onestop_id:operator.operator_onestop_id}}">
               {{ operator.operator_name || operator.agency_name || operator.onestop_id }}
             </nuxt-link>
           </li>
@@ -126,7 +126,7 @@ query ($onestop_id: String, $inactive: Boolean, $route_id: String, $feed_onestop
       id
       operator_name
       agency_name
-      onestop_id: operator_onestop_id
+      operator_onestop_id
     }
     headways {
       selected_stop_id
@@ -147,14 +147,6 @@ query ($onestop_id: String, $inactive: Boolean, $route_id: String, $feed_onestop
       headway_seconds_afternoon_max
       headway_seconds_night_max
     } 
-    feed_version {
-      id
-      sha1
-      current_feed {
-        id
-        onestop_id
-      }
-    }
   }
 }
 `
@@ -162,11 +154,8 @@ query ($onestop_id: String, $inactive: Boolean, $route_id: String, $feed_onestop
 export default {
   data () {
     return {
-      map: null,
       entities: [],
       selectDate: null,
-      activeEntity: null,
-      versionEntity: null,
       activeTab: 0,
       childLabel: null,
       error: null,
