@@ -124,7 +124,6 @@ export default {
       const routeLines = this.features.filter((s) => { return s.geometry.type === 'LineString' && s.properties.class === 'route' })
       const points = this.features.filter((s) => { return s.geometry.type === 'Point' && s.properties.class !== 'stop' })
       const stopPoints = this.features.filter((s) => { return s.geometry.type === 'Point' && s.properties.class === 'stop' })
-      console.log('stopPoints:', stopPoints)
       this.map.addSource('polygons', {
         type: 'geojson',
         data: { type: 'FeatureCollection', features: polygons }
@@ -228,17 +227,14 @@ export default {
       }
       this.map.resize()
       if (this.autoFit) {
-        console.log('autoFit')
         const bounds = coordinates.reduce(function (bounds, coord) {
           return bounds.extend(coord)
         }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]))
-        console.log('bounds:', bounds)
         this.map.fitBounds(bounds, {
           duration: 0,
           padding: 20
         })
       } else {
-        console.log('flyTo')
         this.map.flyTo({
           center: this.center,
           zoom: this.zoom,
