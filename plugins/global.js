@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import mermaid from 'mermaid'
 import RouteIcon from '~/components/route-icon'
 
 Vue.use(require('vue-moment'))
@@ -94,3 +95,5 @@ Vue.filter('pct', function (value) {
 Vue.filter('capitalize', function (value) {
   return value.split(' ').map((w) => { return w.substr(0, 1).toUpperCase() + w.substr(1, w.length - 1).toLowerCase() }).join(' ')
 })
+
+mermaid.initialize({ startOnLoad: false })
