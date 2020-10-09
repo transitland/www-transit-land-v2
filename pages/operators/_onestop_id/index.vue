@@ -87,15 +87,17 @@
         <tr v-if="operator.tags">
           <td>
             <b-tooltip dashed multiline label="Links between Transitland and other catalogs and data sources on the Internet">
-              Crosswalk
+              ID Crosswalk
             </b-tooltip>
           </td>
           <td>
             <ul>
               <li v-if="operator.tags.us_ntd_id">
-                US National Transit Database (NTD) ID: <code>{{ operator.tags.us_ntd_id }}</code> <a href="https://www.transit.dot.gov/ntd/"><b-icon icon="information" title="US National Transit Database" /></a>
+                US National Transit Database (NTD) ID: <code>{{ operator.tags.us_ntd_id }}</code> <a target="_blank" href="https://www.transit.dot.gov/ntd/"><b-icon icon="link" title="US National Transit Database website" /></a>
               </li>
-              <!-- TODO: add omd_provider_id -->
+              <li v-if="operator.tags.omd_provider_id">
+                OpenMobilityData Provider ID: <code>{{ operator.tags.omd_provider_id }}</code> <a target="_blank" :href="`https://openmobilitydata.org/p/${operator.tags.omd_provider_id}`"><b-icon icon="link" title="OpenMobilityData provider page" /></a>
+              </li>
             </ul>
           </td>
         </tr>
