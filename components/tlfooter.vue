@@ -1,9 +1,13 @@
 <template>
-  <footer class="footer">
-    Transitland source code is ©
-    <a href="https://mapzen.com">Mapzen Foundation</a>, a project of
-    <a href="https://www.linuxfoundation.org/">The Linux Foundation</a>. Transitland website and platform are operated by
-    <a href="https://www.interline.io">Interline Technologies</a>.
+  <footer class="footer content is-small">
+    <p>
+      Transitland is ©
+      <a href="https://mapzen.com">Mapzen Foundation</a>, a project of
+      <a href="https://www.linuxfoundation.org/">The Linux Foundation</a>.
+    </p><p>
+      Transitland website and platform are operated by
+      <a href="https://www.interline.io">Interline Technologies</a>.
+    </p><p>See <a href="https://transit.land/transitland">github.com/transitland</a> for open-source code. Contact us at <a href="mailto:info@interline.io">info@interline.io</a>.</p>
   </footer>
 </template>
 
