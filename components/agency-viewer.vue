@@ -31,11 +31,6 @@
       >
         {{ props.row.agency_name }}
       </b-table-column>
-      <b-table-column v-slot="props" field="agency_url" label="URL">
-        <a v-if="props.row.agency_url" :href="props.row.agency_url">
-          <b-icon icon="link" />
-        </a>
-      </b-table-column>
     </b-table>
   </div>
 </template>

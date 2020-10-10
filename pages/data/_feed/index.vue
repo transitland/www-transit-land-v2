@@ -58,17 +58,16 @@
           <td>
             <ul>
               <li v-for="(url,key) in entity.urls" :key="key">
-                {{ key }}:
-                <a :href="url">{{ url }}</a>
+                {{ key }}: {{ url }}
               </li>
             </ul>
           </td>
         </tr>
-        <tr>
+        <tr v-if="entity.authorization">
           <td>Authorization</td>
           <td>{{ entity.authorization }}</td>
         </tr>
-        <tr>
+        <tr v-if="entity.license">
           <td>License</td>
           <td>
             <ul>
@@ -96,13 +95,9 @@
             </ul>
           </td>
         </tr>
-        <tr>
+        <tr v-if="entity.languages">
           <td>Languages</td>
           <td>{{ entity.languages }}</td>
-        </tr>
-        <tr>
-          <td>Other IDs</td>
-          <td>{{ entity.other_ids }}</td>
         </tr>
       </table>
 

@@ -51,12 +51,6 @@
         {{ props.row.route_long_name }}
       </b-table-column>
 
-      <b-table-column v-slot="props" field="route_url" label=" ">
-        <a v-if="props.row.route_url" target="_blank" :href="props.row.route_url">
-          <b-icon icon="link" />
-        </a>
-      </b-table-column>
-
       <b-table-column v-if="showAgency" v-slot="props" field="agency" label="Agency">
         {{ props.row.agency.agency_name }}
       </b-table-column>

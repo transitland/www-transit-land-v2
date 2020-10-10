@@ -11,6 +11,7 @@ query ($onestop_id: String, $feed_version_sha1: String, $feed_onestop_id: String
       name
       onestop_id
       associated_feeds
+      tags
     }
     agency {
       id

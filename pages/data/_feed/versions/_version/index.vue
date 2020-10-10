@@ -87,7 +87,7 @@
         </tr>
         <tr>
           <td>URL</td>
-          <td><a :href="entity.url">{{ entity.url }}</a></td>
+          <td>{{ entity.url }}</td>
         </tr>
         <tr>
           <td>SHA1</td>

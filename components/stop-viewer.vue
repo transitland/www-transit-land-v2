@@ -40,16 +40,6 @@
       >
         {{ props.row.stop_name }}
       </b-table-column>
-      <b-table-column
-        v-slot="props"
-        field="stop_url"
-        label="URL"
-        :width="100"
-      >
-        <a v-if="props.row.stop_url" target="_blank" :href="props.row.stop_url">
-          <b-icon icon="link" />
-        </a>
-      </b-table-column>
 
       <b-table-column v-if="showAgencies" v-slot="props" field="agencies" label="Agencies">
         {{ props.row.route_stops.map((s)=>{return s.agency.agency_name}) | joinUnique }}

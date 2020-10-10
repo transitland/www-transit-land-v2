@@ -116,7 +116,7 @@
           <td>
             <ul>
               <li v-for="k of agencyURLs" :key="k">
-                <a v-if="k" :href="k">{{ k }}</a>
+                {{ k }}
               </li>
             </ul>
           </td>
