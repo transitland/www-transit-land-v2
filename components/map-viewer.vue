@@ -41,7 +41,7 @@ export default {
     overlay: { type: Boolean, default: false },
     autoFit: { type: Boolean, default: true },
     center: { type: Array, default () { return [] } },
-    circleRadius: { type: Number, default: 5 },
+    circleRadius: { type: Number, default: 1 },
     circleColor: { type: String, default: '#f03b20' },
     linkVersion: { type: Boolean, default: false },
     zoom: { type: Number, default: 14 },
@@ -255,14 +255,14 @@ export default {
       map.getCanvas().style.cursor = 'pointer'
       for (const k of this.hovering) {
         map.setFeatureState(
-          { source: 'lines', id: k },
+          { source: 'route-lines', id: k },
           { hover: false }
         )
       }
       this.hovering = []
       for (const v of features) {
         this.hovering.push(v.id)
-        map.setFeatureState({ source: 'lines', id: v.id }, { hover: true })
+        map.setFeatureState({ source: 'route-lines', id: v.id }, { hover: true })
       }
       const agencyFeatures = {}
       for (const v of features) {

@@ -4,7 +4,7 @@
       {{ error }}
     </b-message>
     <span v-else-if="$apollo.loading" class="is-loading">Loading</span>
-    <map-viewer v-else :features="mapFeatures" :overlay="overlay" :circle-radius="8" :link-version="linkVersion" />
+    <map-viewer v-else :features="mapFeatures" :overlay="overlay" :circle-radius="3" :link-version="linkVersion" />
   </div>
 </template>
 
@@ -45,10 +45,10 @@ export default {
       const features = []
       for (const feature of this.features) {
         if (feature.geometries && feature.geometries.length > 0) {
-          const hw = 60
-          // if (feature.headways_weekday && feature.headways_weekday.headway_secs) {
-          //   hw = feature.headways_weekday.headway_secs
-          // }
+          let hw = 10000
+          if (feature.headways_weekday && feature.headways_weekday.headway_secs) {
+            hw = feature.headways_weekday.headway_secs
+          }
           let routeColor = feature.route_color
           if (routeColor && routeColor.substr(0, 1) !== '#') {
             routeColor = '#' + routeColor
