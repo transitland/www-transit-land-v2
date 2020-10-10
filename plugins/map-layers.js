@@ -87,18 +87,18 @@ const routeLayers = [
   {
     name: 'route-rail',
     filter: ['all', ['<', 'route_type', 3]],
-    paint: { 'line-width': 3.0, 'line-color': '#ff0000' }
+    paint: { 'line-width': 3.0, 'line-color': '#666' }
   },
   // BUS LOW AND UNKNOWN
   {
     name: 'route-bus-unknown',
     filter: ['all', ['==', 'route_type', 3], ['==', 'headway_secs', 0]],
-    paint: { 'line-color': colors.buslow }
+    paint: { 'line-width': 1.5, 'line-color': colors.buslow }
   },
   {
     name: 'route-bus-low',
     filter: ['all', ['==', 'route_type', 3], ['>', 'headway_secs', headways.medium]],
-    paint: { 'line-color': colors.buslow }
+    paint: { 'line-width': 1.5, 'line-color': colors.buslow }
   },
   // BUS MEDIUM/HIGH
   {
