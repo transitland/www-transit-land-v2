@@ -38,13 +38,26 @@
         />
       </h1>
 
-      <b-notification v-if="linkVersion" type="is-light" has-icon icon="information" :closable="false">
-        You are viewing a specific version of this entity from a single GTFS feed. <br>
-        Click <nuxt-link :to="{name: 'routes-onestop_id', params:{onestop_id:$route.params.onestop_id}}">
-          here
-        </nuxt-link> to return to the main view.
-      </b-notification>
+      <!-- Warnings for freshness and viewing a specific version -->
+      <b-message v-if="dataFreshness > 365" type="is-warning" has-icon>
+        The GTFS feeds associated with this page were fetched {{ dataFreshness }} days ago; use caution or check if newer data is available.
+      </b-message>
+      <b-message v-if="linkVersion" type="is-warning" has-icon>
+        You are viewing a single GTFS Agency entity defined in source feed
+        <nuxt-link :to="{name:'data-feed', params:{feed:$route.query.feed_onestop_id}}">
+          {{ $route.query.feed_onestop_id | shortenName }}
+        </nuxt-link> version
+        <nuxt-link :to="{name:'data-feed-versions-version', params:{feed:$route.query.feed_onestop_id, version:$route.query.feed_version_sha1}}">
+          {{ $route.query.feed_version_sha1 | shortenName(8) }}
+        </nuxt-link>.<br>
+        <template v-if="!search">
+          Click <nuxt-link :to="{name: 'routes-onestop_id', params:{onestop_id:$route.params.onestop_id}}">
+            here
+          </nuxt-link> to return to the main view.
+        </template>
+      </b-message>
 
+      <!-- Main content -->
       <div class="columns">
         <div class="column is-two-thirds">
           <b-tabs v-model="activeTab" type="is-boxed" :animated="false" @input="setTab">
@@ -55,27 +68,32 @@
               </div>
             </b-tab-item>
 
+            <!-- Data sources -->
             <b-tab-item label="Data sources">
               <b-table
                 :data="entities"
                 :striped="true"
               >
                 <b-table-column v-slot="props" field="feed_onestop_id" label="Feed">
-                  {{ props.row.feed_onestop_id }}
+                  <nuxt-link :to="{name:'data-feed', params:{feed:props.row.feed_onestop_id}}">
+                    {{ props.row.feed_onestop_id | shortenName }}
+                  </nuxt-link>
                 </b-table-column>
                 <b-table-column v-slot="props" field="feed_version_sha1" label="Version">
-                  {{ props.row.feed_version_sha1 }}
+                  <nuxt-link :to="{name:'data-feed-versions-version', params:{feed:props.row.feed_onestop_id, version:props.row.feed_version_sha1}}">
+                    {{ props.row.feed_version_sha1 | shortenName(8) }}
+                  </nuxt-link>
                 </b-table-column>
                 <b-table-column v-slot="props" field="route_id" label="Route ID">
                   <nuxt-link :to="{name:'routes-onestop_id', params:{onestop_id:props.row.onestop_id}, query:{feed_onestop_id:props.row.feed_onestop_id, feed_version_sha1:props.row.feed_version_sha1, route_id:props.row.route_id}}">
-                    {{ props.row.route_id }}
+                    {{ props.row.route_id | shortenName }}
                   </nuxt-link>
                 </b-table-column>
               </b-table>
             </b-tab-item>
 
             <b-tab-item label="Demographics">
-              <census-viewer v-if="activeTab === 1" :route-ids="[entity.id]" />
+              <census-viewer v-if="activeTab === 2" :route-ids="[entity.id]" />
             </b-tab-item>
 
             <b-tab-item label="Inbound Trips">
@@ -103,64 +121,13 @@
 
 <script>
 import moment from 'moment'
-import gql from 'graphql-tag'
-
-const query = gql`
-query ($onestop_id: String, $inactive: Boolean, $route_id: String, $feed_onestop_id: String, $feed_version_sha1: String) {
-  entities: tl_vw_gtfs_routes(limit: 100, order_by: {id: desc}, where: {onestop_id: {_eq: $onestop_id}, feed_onestop_id:{_eq:$feed_onestop_id}, feed_version_sha1:{_eq:$feed_version_sha1}, route_id:{_eq:$route_id}, feed_version: {feed_states: {id: {_is_null: $inactive}}}}) {
-    id
-    onestop_id
-    feed_onestop_id
-    feed_version_sha1
-    route_id
-    route_color
-    route_desc
-    route_long_name
-    route_short_name
-    route_type
-    route_url
-    agency {
-      id
-      agency_id
-      agency_name
-    }
-    operator {
-      id
-      operator_name
-      agency_name
-      operator_onestop_id
-    }
-    headways {
-      selected_stop_id
-      dow_category
-      service_date
-      direction_id
-      headway_secs
-      headway_seconds_morning_min
-      headway_seconds_midday_min
-      headway_seconds_afternoon_min
-      headway_seconds_night_min
-      headway_seconds_morning_mid
-      headway_seconds_midday_mid
-      headway_seconds_afternoon_mid
-      headway_seconds_night_mid
-      headway_seconds_morning_max
-      headway_seconds_midday_max
-      headway_seconds_afternoon_max
-      headway_seconds_night_max
-    } 
-  }
-}
-`
+import EntityPageMixin from '~/components/entity-page-mixin'
 
 export default {
+  mixins: [EntityPageMixin],
   data () {
     return {
-      entities: [],
       selectDate: null,
-      activeTab: 0,
-      childLabel: null,
-      error: null,
       tabIndex: {
         0: 'summary',
         1: 'data-sources',
@@ -173,28 +140,19 @@ export default {
   apollo: {
     entities: {
       error (e) { this.error = e },
-      query,
+      query: require('~/graphql/feed-version-route.gql'),
       variables () {
         return {
-          onestop_id: this.$route.params.onestop_id,
+          onestop_id: this.linkVersion ? null : this.$route.params.onestop_id,
           feed_onestop_id: this.$route.query.feed_onestop_id,
           feed_version_sha1: this.$route.query.feed_version_sha1,
           route_id: this.$route.query.route_id,
-          inactive: this.linkVersion ? null : false
+          active_null: this.linkVersion ? null : false
         }
       }
     }
   },
   computed: {
-    linkVersion () {
-      return Object.keys(this.$route.query).length > 0
-    },
-    entity () {
-      return this.entities.length > 0 ? this.entities[0] : null
-    },
-    entityIds () {
-      return this.entities.map((s) => { return s.id })
-    },
     routeNames () {
       const rs = new Map()
       for (const ent of this.entities) {
@@ -223,29 +181,6 @@ export default {
             service_date: value
           }
         })
-      }
-    }
-  },
-  watch: {
-    childLabel () {
-      this.activeTab = 5
-    }
-  },
-  mounted () {
-    const tab = this.$route.hash.substr(1)
-    if (tab) {
-      for (const [k, v] of Object.entries(this.tabIndex)) {
-        if (v === tab) {
-          this.activeTab = parseInt(k)
-        }
-      }
-    }
-  },
-  methods: {
-    setTab (value) {
-      const tab = this.tabIndex[value]
-      if (tab) {
-        this.$router.replace({ hash: '#' + tab })
       }
     }
   },

@@ -22,19 +22,26 @@
         {{ operatorName }}
       </h1>
 
-      <b-message v-if="linkActive" type="is-warning" has-icon>
+      <!-- Warnings for freshness and viewing a specific version -->
+      <b-message v-if="dataFreshness > 365" type="is-warning" has-icon>
+        The GTFS feeds associated with this page were fetched {{ dataFreshness }} days ago; use caution or check if newer data is available.
+      </b-message>
+      <b-message v-if="linkVersion" type="is-warning" has-icon>
         You are viewing a single GTFS Agency entity defined in source feed
         <nuxt-link :to="{name:'data-feed', params:{feed:$route.query.feed_onestop_id}}">
-          {{ $route.query.feed_onestop_id }}
+          {{ $route.query.feed_onestop_id | shortenName }}
         </nuxt-link> version
         <nuxt-link :to="{name:'data-feed-versions-version', params:{feed:$route.query.feed_onestop_id, version:$route.query.feed_version_sha1}}">
           {{ $route.query.feed_version_sha1 | shortenName(8) }}
         </nuxt-link>.<br>
-        Click <nuxt-link :to="{name: 'operators-onestop_id', params:{onestop_id:$route.params.onestop_id}}">
-          here
-        </nuxt-link> to return to the main Operator view.
+        <template v-if="!search">
+          Click <nuxt-link :to="{name: 'operators-onestop_id', params:{onestop_id:$route.params.onestop_id}}">
+            here
+          </nuxt-link> to return to the main view.
+        </template>
       </b-message>
-      <b-message v-else type="is-light" has-icon icon="information" :closable="false">
+
+      <b-message v-else type="is-info" has-icon icon="information" :closable="false">
         <div class="columns">
           <div class="column is-8">
             <p>
@@ -50,6 +57,7 @@
         </div>
       </b-message>
 
+      <!-- Main content -->
       <table class="property-list">
         <tr>
           <td>
@@ -134,7 +142,7 @@
 
       <br>
 
-      <b-tabs v-model="activeTab" type="is-boxed">
+      <b-tabs v-model="activeTab" type="is-boxed" :animated="false" @input="setTab">
         <b-tab-item label="Map">
           <!-- need fvids for good index search -->
           <feed-version-map-viewer :fvids="fvids" :agency-ids="agencyIds" :overlay="true" />
@@ -189,31 +197,48 @@
 </template>
 
 <script>
+import EntityPageMixin from '~/components/entity-page-mixin'
+
 export default {
+  mixins: [EntityPageMixin],
+  data () {
+    return {
+      tabIndex: {
+        0: 'summary',
+        1: 'data-sources',
+        2: 'routes',
+        3: 'stops'
+      }
+    }
+  },
   apollo: {
     entities: {
       error (e) { this.error = e },
       query: require('~/graphql/agency-operator.gql'),
       variables () {
         return {
-          onestop_id: this.onestopId,
+          onestop_id: this.linkVersion ? null : this.$route.params.onestop_id,
           feed_onestop_id: this.$route.query.feed_onestop_id,
           feed_version_sha1: this.$route.query.feed_version_sha1,
-          agency_id: this.$route.query.agency_id
+          agency_id: this.$route.query.agency_id,
+          active_null: this.linkVersion ? null : false
         }
       }
     }
   },
-  data () {
-    return {
-      activeTab: 0,
-      entities: [],
-      error: null
-    }
-  },
   computed: {
-    linkActive () {
-      return Object.keys(this.$route.query).length > 0
+    dataFreshness () {
+      // The fetched_at is on agencies, not the top level entities
+      const daysAgo = []
+      const n = new Date()
+      try {
+        for (const ent of this.agencies) {
+          const n2 = Date.parse(ent.feed_version.fetched_at)
+          daysAgo.push(Math.floor((n2 - n) / (1000 * 3600 * 24 * -1)))
+        }
+      } catch {
+      }
+      return Math.max(...daysAgo)
     },
     editLink () {
       return `https://github.com/transitland/transitland-atlas/edit/master/operators/${this.onestopId}.json`
@@ -249,9 +274,6 @@ export default {
       }
       return Array.from(rs.values())
     },
-    onestopId () {
-      return this.$route.params.onestop_id
-    },
     agencyIds () {
       return this.agencies.map((s) => { return s.id }).filter((s) => { return s })
     },
@@ -260,9 +282,6 @@ export default {
     },
     agencyURLs () {
       return [...new Set(this.agencies.map((s) => { return s.agency_url }))]
-    },
-    fvids () {
-      return this.agencies.map((s) => { return s.feed_version_id })
     },
     operator () {
       if (this.operators && this.operators.length > 0) {
@@ -320,6 +339,11 @@ export default {
             target_match: amap.get(key)
           })
         }
+      }
+      if (ret.length === 0) {
+        ret.push({
+          target_type: 'No Associations'
+        })
       }
       return ret
     }

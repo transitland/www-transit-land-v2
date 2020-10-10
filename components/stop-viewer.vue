@@ -85,7 +85,7 @@ export default {
   },
   apollo: {
     q: {
-      query: require('~/graphql/feed-stops.gql'),
+      query: require('~/graphql/feed-version-stops.gql'),
       variables () {
         return {
           offset: this.entityOffset,

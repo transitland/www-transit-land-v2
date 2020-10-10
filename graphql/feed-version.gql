@@ -1,5 +1,5 @@
 query ($feed_version_sha1: String!) {
-  feed_versions(limit: 1, where: {sha1: {_eq: $feed_version_sha1}}) {
+  entities: feed_versions(limit: 1, where: {sha1: {_eq: $feed_version_sha1}}) {
     id
     sha1
     earliest_calendar_date
@@ -7,20 +7,13 @@ query ($feed_version_sha1: String!) {
     url
     feed_type
     fetched_at
-    agencies_aggregate {
-      aggregate {
-        count
-      }
-    }
-    routes_aggregate {
-      aggregate {
-        count
-      }
-    }
-    stops_aggregate {
-      aggregate {
-        count
-      }
+    files(order_by:{name:asc}) {
+      name
+      rows
+      size
+      sha1
+      csv_like
+      header
     }
     feed_version_gtfs_import {
       id

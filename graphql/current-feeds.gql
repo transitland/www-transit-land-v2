@@ -1,5 +1,5 @@
 
-query current_feeds($specs: [String!], $offset:Int, $limit:Int) {
+query current_feeds($specs: [String!], $offset:Int, $limit:Int = 100) {
   count: current_feeds_aggregate(where: {spec: {_in: $specs}, deleted_at: {_is_null: true}}) {
     aggregate {
       count

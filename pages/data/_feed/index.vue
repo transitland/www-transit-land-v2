@@ -20,8 +20,23 @@
         </ul>
       </nav>
       <h1 class="title">
-        Feed details: {{ feed.onestop_id }}
+        Feed details: {{ onestopId }}
       </h1>
+
+      <b-message type="is-info" has-icon icon="information" :closable="false">
+        <div class="columns">
+          <div class="column is-8">
+            <p>
+              You can update the URLs associated with this Feed record and other metadata in the <a href="https://github.com/transitland/transitland-atlas">Transitland Atlas</a> repository. We welcome edits and additions. Press the button at right to start a pull request.
+            </p>
+          </div>
+          <div class="column is-4 has-text-right">
+            <b-tooltip label="Create or edit an associated feed metadata file in the Transitland Atlas repository">
+              <a class="button is-primary" :href="editLink" target="_blank"><b-icon icon="pencil" size="is-small" /> &nbsp; Edit Feed Record</a>
+            </b-tooltip>
+          </div>
+        </div>
+      </b-message>
 
       <table class="property-list">
         <tr>
@@ -31,23 +46,18 @@
             </b-tooltip>
           </td>
           <td>
-            <nuxt-link :to="{name:'operators-onestop_id', params:{onestop_id:$route.params.operator}}">
-              {{ onestopId }}
-            </nuxt-link>
-            <b-tooltip dashed label="Edit this Feed in Transitland Atlas">
-              <a :href="editLink" target="_blank"><b-icon icon="pencil" size="is-small" /></a>
-            </b-tooltip>
+            {{ onestopId }}
           </td>
         </tr>
         <tr>
           <td>Format</td>
-          <td>{{ feed.spec }}</td>
+          <td>{{ entity.spec }}</td>
         </tr>
         <tr>
           <td>URLs</td>
           <td>
             <ul>
-              <li v-for="(url,key) in feed.urls" :key="key">
+              <li v-for="(url,key) in entity.urls" :key="key">
                 {{ key }}:
                 <a :href="url">{{ url }}</a>
               </li>
@@ -56,48 +66,48 @@
         </tr>
         <tr>
           <td>Authorization</td>
-          <td>{{ feed.authorization }}</td>
+          <td>{{ entity.authorization }}</td>
         </tr>
         <tr>
           <td>License</td>
           <td>
             <ul>
-              <li>License URL: {{ feed.license.url }}</li>
-              <li>License Identifier: {{ feed.license.spdx_identifier }}</li>
+              <li>License URL: {{ entity.license.url }}</li>
+              <li>License Identifier: {{ entity.license.spdx_identifier }}</li>
               <li>
                 Attribution optional:
-                <span v-if="feed.license.share_alike_optional === 'yes'">Yes</span>
-                <span v-else-if="feed.license.share_alike_optional === 'no'">No</span>
+                <span v-if="entity.license.share_alike_optional === 'yes'">Yes</span>
+                <span v-else-if="entity.license.share_alike_optional === 'no'">No</span>
                 <span v-else>Unknown</span>
               </li>
               <li>
                 Commercial use allowed:
-                <span v-if="feed.license.commercial_use_allowed === 'yes'">Yes</span>
-                <span v-else-if="feed.license.commercial_use_allowed === 'no'">No</span>
+                <span v-if="entity.license.commercial_use_allowed === 'yes'">Yes</span>
+                <span v-else-if="entity.license.commercial_use_allowed === 'no'">No</span>
                 <span v-else>Unknown</span>
               </li>
               <li>
                 Derivitive use allowed:
-                <span v-if="feed.license.create_derived_product === 'yes'">Yes</span>
-                <span v-else-if="feed.license.create_derived_product === 'no'">No</span>
+                <span v-if="entity.license.create_derived_product === 'yes'">Yes</span>
+                <span v-else-if="entity.license.create_derived_product === 'no'">No</span>
                 <span v-else>Unknown</span>
               </li>
-              <li>Attribution instructions: {{ feed.license.attribution_instructions }}</li>
+              <li>Attribution instructions: {{ entity.license.attribution_instructions }}</li>
             </ul>
           </td>
         </tr>
         <tr>
           <td>Languages</td>
-          <td>{{ feed.languages }}</td>
+          <td>{{ entity.languages }}</td>
         </tr>
         <tr>
           <td>Other IDs</td>
-          <td>{{ feed.other_ids }}</td>
+          <td>{{ entity.other_ids }}</td>
         </tr>
       </table>
 
       <b-table
-        :data="feed.feed_versions"
+        :data="entity.feed_versions"
         :striped="true"
         :paginated="true"
         :pagination-simple="true"
@@ -109,11 +119,11 @@
           field="fetched_at"
           label="Fetched"
         >
-          {{ props.row.fetched_at | moment("from","now") }}
+          {{ props.row.fetched_at | moment("YYYY-MM-DD") }}
         </b-table-column>
         <b-table-column v-slot="props" :sortable="true" field="sha1" label="SHA1">
           <nuxt-link
-            :to="{name: 'data-feed-versions-version', params: {feed: feed.onestop_id, version: props.row.sha1}}"
+            :to="{name: 'data-feed-versions-version', params: {feed: entity.onestop_id, version: props.row.sha1}}"
           >
             {{ props.row.sha1.substr(0,6) }}…
           </nuxt-link>
@@ -149,11 +159,12 @@
         </b-table-column>
         <b-table-column v-slot="props" label="Active">
           <b-icon
-            v-if="feed.feed_state && feed.feed_state.feed_version && feed.feed_state.feed_version.id === props.row.id"
+            v-if="entity.feed_state && entity.feed_state.feed_version && entity.feed_state.feed_version.id === props.row.id"
             icon="check"
           />
         </b-table-column>
       </b-table>
+      </b-messagetype="is-info">
     </div>
   </div>
 </template>
@@ -163,7 +174,10 @@
 </template>
 
 <script>
+import EntityPageMixin from '~/components/entity-page-mixin'
+
 export default {
+  mixins: [EntityPageMixin],
   apollo: {
     entities: {
       query: require('~/graphql/current-feed.gql'),
@@ -175,30 +189,24 @@ export default {
       }
     }
   },
-  data () {
-    return {
-      entities: [],
-      error: null
-    }
-  },
   computed: {
+    newLink () {
+      return ''
+    },
     editLink () {
-      return `https://github.com/transitland/transitland-atlas/edit/master/feeds/${this.feed.file}`
+      return `https://github.com/transitland/transitland-atlas/edit/master/feeds/${this.entity.file}`
     },
     onestopId () {
       return this.$route.params.feed
-    },
-    feed () {
-      return (this.entities && this.entities.length > 0) ? this.entities[0] : null
     }
   },
   head () {
     const meta = []
-    if (this.feed) {
+    if (this.entity) {
       meta.push({
         hid: 'description',
         name: 'description',
-        content: `${this.onestopId} is a ${this.feed.spec.toUpperCase()} feed registered on the Transitland open data platform.`
+        content: `${this.onestopId} is a ${this.entity.spec.toUpperCase()} feed registered on the Transitland open data platform.`
       })
     }
     return {

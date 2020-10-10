@@ -19,7 +19,7 @@
     >
       <b-table-column v-slot="props" field="agency_id" label="Agency ID">
         <nuxt-link
-          :to="{name:'data-feed-versions-version-agencies-agency', params:{feed:props.row.feed_version.current_feed.onestop_id, version:props.row.feed_version.sha1, agency:props.row.agency_id}}"
+          :to="{name:'operators-onestop_id', params:{onestop_id:'search'}, query:{feed_onestop_id:props.row.feed_onestop_id, feed_version_sha1:props.row.feed_version_sha1, agency_id:props.row.agency_id}}"
         >
           {{ props.row.agency_id }}
         </nuxt-link>
@@ -56,7 +56,7 @@ export default {
   },
   apollo: {
     q: {
-      query: require('~/graphql/feed-agencies.gql'),
+      query: require('~/graphql/feed-version-agencies.gql'),
       variables () {
         return {
           feed_version_sha1: this.fvid,

@@ -23,13 +23,26 @@
         {{ entity.stop_name }}
       </h1>
 
-      <b-notification v-if="linkActive" type="is-light" has-icon icon="information" :closable="false">
-        You are viewing a specific version of this entity from a single GTFS feed. <br>
-        Click <nuxt-link :to="{name: 'stops-onestop_id', params:{onestop_id:$route.params.onestop_id}}">
-          here
-        </nuxt-link> to return to the main view.
-      </b-notification>
+      <!-- Warnings for freshness and viewing a specific version -->
+      <b-message v-if="dataFreshness > 365" type="is-warning" has-icon>
+        The GTFS feeds associated with this page were fetched {{ dataFreshness }} days ago; use caution or check if newer data is available.
+      </b-message>
+      <b-message v-if="linkVersion" type="is-warning" has-icon>
+        You are viewing a single GTFS Agency entity defined in source feed
+        <nuxt-link :to="{name:'data-feed', params:{feed:$route.query.feed_onestop_id}}">
+          {{ $route.query.feed_onestop_id | shortenName }}
+        </nuxt-link> version
+        <nuxt-link :to="{name:'data-feed-versions-version', params:{feed:$route.query.feed_onestop_id, version:$route.query.feed_version_sha1}}">
+          {{ $route.query.feed_version_sha1 | shortenName(8) }}
+        </nuxt-link>.<br>
+        <template v-if="!search">
+          Click <nuxt-link :to="{name: 'routes-onestop_id', params:{onestop_id:$route.params.onestop_id}}">
+            here
+          </nuxt-link> to return to the main view.
+        </template>
+      </b-message>
 
+      <!-- Main content -->
       <div class="columns">
         <div class="column is-two-thirds">
           <b-tabs v-model="activeTab" type="is-boxed" :animated="false">
@@ -79,62 +92,16 @@
 </template>
 
 <script>
-import gql from 'graphql-tag'
-
-const query = gql`
-query ($onestop_id: String, $inactive: Boolean, $stop_id: String, $feed_onestop_id: String, $feed_version_sha1: String) {
-  entities: tl_vw_gtfs_stops(limit: 100, order_by: {id: desc}, where: {onestop_id: {_eq: $onestop_id}, feed_onestop_id:{_eq:$feed_onestop_id}, feed_version_sha1:{_eq:$feed_version_sha1}, stop_id:{_eq:$stop_id}, feed_version: {feed_states: {id: {_is_null: $inactive}}}}) {
-    id
-    feed_version_id
-    feed_version_sha1
-    feed_onestop_id
-    onestop_id
-    stop_id
-    stop_name
-    stop_timezone
-    stop_url
-    location_type
-    parent_station
-    wheelchair_boarding
-    zone_id
-    geometry
-    children {
-      id
-      stop_id
-      stop_name
-      geometry
-    }
-    route_stops {
-      route: tl_route {
-        id
-        onestop_id
-        route_long_name
-        route_short_name
-        route_type
-        route_url
-        route_id
-        geometry
-        agency {
-          agency_name
-          id
-        }
-      }
-    }
-  }
-}
-`
+import EntityPageMixin from '~/components/entity-page-mixin'
 
 export default {
+  mixins: [EntityPageMixin],
   data () {
-    return {
-      entities: [],
-      error: null,
-      activeTab: 0
-    }
+    return {}
   },
   apollo: {
     entities: {
-      query,
+      query: require('~/graphql/feed-version-stop.gql'),
       variables () {
         return {
           onestop_id: this.$route.params.onestop_id,
@@ -147,9 +114,6 @@ export default {
     }
   },
   computed: {
-    linkActive () {
-      return Object.keys(this.$route.query).length > 0
-    },
     features () {
       const ret = []
       let featid = 1

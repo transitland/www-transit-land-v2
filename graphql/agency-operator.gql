@@ -1,5 +1,5 @@
-query ($onestop_id: String, $feed_version_sha1: String, $feed_onestop_id: String, $agency_id: String, $inactive: Boolean) {
-  entities: tl_mv_active_agency_operators(where: {onestop_id: {_eq:$onestop_id}}) {    
+query ($onestop_id: String, $feed_version_sha1: String, $feed_onestop_id: String, $agency_id: String, $active_null: Boolean) {
+  entities: tl_mv_active_agency_operators(limit: 100, where: {onestop_id: {_eq:$onestop_id}}) {    
     onestop_id
     agency_name
     operator_name
@@ -23,6 +23,7 @@ query ($onestop_id: String, $feed_version_sha1: String, $feed_onestop_id: String
       agency_phone
       feed_version {
         id
+        fetched_at
         current_feed {
           id
           onestop_id

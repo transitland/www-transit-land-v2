@@ -19,13 +19,13 @@
           </li>
           <li>
             <nuxt-link :to="{name: 'data-feed-versions-version', params:{feed:$route.params.feed, version:$route.params.version}}">
-              {{ $route.params.version | shortenName(6) }}
+              {{ $route.params.version | shortenName(8) }}
             </nuxt-link>
           </li>
         </ul>
       </nav>
       <h1 class="title">
-        Feed version details: {{ $route.params.version | shortenName(6) }}
+        Feed version: {{ $route.params.version | shortenName(8) }}
       </h1>
       <nav class="level">
         <div class="level-item has-text-centered">
@@ -34,7 +34,7 @@
               Agencies
             </p>
             <p class="title">
-              {{ entity.agencies_aggregate.aggregate.count }}
+              {{ rowCount['agency.txt'] || '-' }}
             </p>
           </div>
         </div>
@@ -44,7 +44,7 @@
               Routes
             </p>
             <p class="title">
-              {{ entity.routes_aggregate.aggregate.count }}
+              {{ rowCount['routes.txt'] || '-' }}
             </p>
           </div>
         </div>
@@ -54,7 +54,7 @@
               Stops
             </p>
             <p class="title">
-              {{ entity.stops_aggregate.aggregate.count }}
+              {{ rowCount['stops.txt'] || '-' }}
             </p>
           </div>
         </div>
@@ -82,79 +82,124 @@
 
       <table class="property-list">
         <tr>
-          <td>SHA1</td>
-          <td>{{ entity.sha1 }}</td>
-        </tr>
-        <tr>
           <td>Fetched</td>
-          <td>{{ entity.fetched_at }}</td>
+          <td>{{ entity.fetched_at | moment("dddd, MMMM Do YYYY, h:mm:ss a") }} ( {{ entity.fetched_at | moment("from","now") }})</td>
         </tr>
         <tr>
           <td>URL</td>
           <td><a :href="entity.url">{{ entity.url }}</a></td>
         </tr>
         <tr>
+          <td>SHA1</td>
+          <td>{{ entity.sha1 }}</td>
+        </tr>
+        <tr>
           <td>Status</td>
-          <td v-if="entity.feed_version_gtfs_import && entity.feed_version_gtfs_import.success">
-            Success
+          <td v-if="!fvi">
+            Not imported
           </td>
-          <td v-else-if="entity.feed_version_gtfs_import && entity.feed_version_gtfs_import.in_progress">
+          <td v-else-if="fvi.success">
+            Imported successfully
+          </td>
+          <td v-else-if="fvi.in_progress">
             Import in progress
           </td>
-          <td v-else-if="!entity.feed_version_gtfs_import || !entity.feed_version_gtfs_import.success">
+          <td v-else-if="!fvi.success">
             Failed
-            <span v-if="entity.feed_version_gtfs_import">{{ entity.feed_version_gtfs_import.exception_log }}</span>
+            <b-message class="is-danger" has-icon>
+              {{ fvi.exception_log }}
+            </b-message>
           </td>
-        </tr>
-        <tr v-if="entity.feed_version_gtfs_import && entity.feed_version_gtfs_import.success">
-          <td />
-          <td>
-            <button class="button" @click="showImportDetails = !showImportDetails">
-              Show detailed import information
-            </button>
-          </td>
-        </tr>
-      </table>
-      <table v-if="showImportDetails" class="property-list">
-        <tr>
-          <th />
-          <th>Imported</th>
-          <th> / </th>
-          <th>Errors</th>
-          <th>Reference errors</th>
-          <th>Filtered</th>
-          <th>Unmarked</th>
-          <th>Warnings</th>
-        </tr>
-        <tr v-for="(v,fn) of mergedCount(entity.feed_version_gtfs_import)" :key="fn">
-          <td>{{ fn }}</td>
-          <td>{{ v.count }}</td>
-          <td />
-          <td>{{ v.skip_error }}</td>
-          <td>{{ v.skip_reference }}</td>
-          <td>{{ v.skip_marked }}</td>
-          <td>{{ v.skip_filter }} </td>
-          <td>{{ v.warnings }}</td>
         </tr>
       </table>
 
       <br>
 
-      <b-tabs v-model="activeTab" type="is-boxed">
+      <b-tabs v-model="activeTab" type="is-boxed" :animated="false" @input="setTab">
         <b-tab-item label="Map">
           <feed-version-map-viewer :fvids="[entity.id]" :overlay="true" />
         </b-tab-item>
 
+        <b-tab-item label="Files">
+          <div class="content">
+            <table class="table is-striped">
+              <thead>
+                <tr>
+                  <th>Filename</th>
+                  <th>Rows</th>
+                  <th>Size</th>
+                  <th>SHA1</th>
+                  <th>CSV</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="f of entity.files" :key="f.name">
+                  <td>{{ f.name }}</td>
+                  <td>{{ f.rows }}</td>
+                  <td>{{ f.size | prettyBytes }}</td>
+                  <td>{{ f.sha1 | shortenName(8) }}</td>
+                  <td>
+                    <b-tooltip v-if="f.csv_like" dashed>
+                      <template v-slot:content>
+                        <div>Columns</div>
+                        <ul>
+                          <li v-for="i of f.header.split(',')" :key="i">
+                            {{ i }}
+                          </li>
+                        </ul>
+                      </template>
+                      Yes
+                    </b-tooltip>
+                    <span v-else>No</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </b-tab-item>
+
+        <b-tab-item label="Import log">
+          <div class="content">
+            <table class="table is-striped">
+              <thead>
+                <tr>
+                  <th>Filename</th>
+                  <th>Rows</th>
+                  <th>Imported</th>
+                  <th> / </th>
+                  <th>Errors</th>
+                  <th>Reference errors</th>
+                  <th>Filtered</th>
+                  <th>Unmarked</th>
+                  <th>Warnings</th>
+                </tr>
+              </thead><tbody>
+                <tr v-for="(v,fn) of mergedCount(entity.feed_version_gtfs_import)" :key="fn">
+                  <td>{{ fn }}</td>
+                  <td>{{ rowCount[fn] }}</td>
+                  <td>{{ v.count }}</td>
+                  <td />
+                  <td>{{ v.skip_error }}</td>
+                  <td>{{ v.skip_reference }}</td>
+                  <td>{{ v.skip_marked }}</td>
+                  <td>{{ v.skip_filter }} </td>
+                  <td>{{ v.warnings }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </b-tab-item>
+
         <b-tab-item label="Agencies">
-          <agency-viewer v-if="activeTab === 1" :fvid="entity.sha1" />
+          <agency-viewer v-if="activeTab === 3" :fvid="entity.sha1" />
         </b-tab-item>
 
         <b-tab-item label="Routes">
-          <route-viewer v-if="activeTab === 2" :link-version="true" :fvids="[entity.id]" />
+          <route-viewer v-if="activeTab === 4" :link-version="true" :fvids="[entity.id]" />
         </b-tab-item>
 
         <b-tab-item label="Stops">
-          <stop-viewer v-if="activeTab === 3" :fvids="[entity.id]" />
+          <stop-viewer v-if="activeTab === 5" :fvids="[entity.id]" />
         </b-tab-item>
       </b-tabs>
     </div>
@@ -162,9 +207,12 @@
 </template>
 
 <script>
+import EntityPageMixin from '~/components/entity-page-mixin'
+
 export default {
+  mixins: [EntityPageMixin],
   apollo: {
-    feed_versions: {
+    entities: {
       error (e) { this.error = e },
       query: require('~/graphql/feed-version.gql'),
       variables () {
@@ -176,21 +224,33 @@ export default {
   },
   data () {
     return {
-      activeTab: 0,
-      showImportDetails: false,
-      feed_versions: [],
       features: [],
-      error: null
+      tabIndex: {
+        0: 'summary',
+        1: 'files',
+        2: 'import',
+        3: 'agencies',
+        4: 'routes',
+        5: 'stops'
+      }
     }
   },
   computed: {
-    entity () {
-      return this.feed_versions.length > 0 ? this.feed_versions[0] : null
+    fvi () {
+      return this.entity.feed_version_gtfs_import
+    },
+    rowCount () {
+      const ret = {}
+      for (const f of this.entity.files) {
+        ret[f.name] = f.rows
+      }
+      return ret
     }
   },
   methods: {
     mergedCount (fvi) {
       const m = {}
+      if (!fvi) { return m }
       for (const [a, b] of Object.entries(fvi.entity_count)) {
         m[a] = m[a] ? m[a] : {}
         m[a].count = b
@@ -216,7 +276,7 @@ export default {
   },
   head () {
     return {
-      title: `${this.$route.params.feed} • feed version • ${this.$route.params.version}`
+      title: `${this.$route.params.feed} • ${this.$route.params.version} • Feed version`
     }
   }
 

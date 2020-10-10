@@ -1,100 +1,49 @@
-fragment hw on tl_route_headways {
-  selected_stop_id
-  dow_category
-  service_date
-  direction_id
-  headway_secs
-  headway_seconds_morning_min
-  headway_seconds_midday_min
-  headway_seconds_afternoon_min
-  headway_seconds_night_min
-  headway_seconds_morning_mid
-  headway_seconds_midday_mid
-  headway_seconds_afternoon_mid
-  headway_seconds_night_mid
-  headway_seconds_morning_max
-  headway_seconds_midday_max
-  headway_seconds_afternoon_max
-  headway_seconds_night_max
-}
-
-query route($feed_onestop_id: String!, $feed_version_sha1: String!, $route_id: String!) {
-  active_routes(limit: 1, where: {route_id: {_eq: $route_id}, feed_version: {current_feed: {onestop_id: {_eq: $feed_onestop_id}}}}) {
-    feed_version_id
+query ($onestop_id: String, $active_null: Boolean, $route_id: String, $feed_onestop_id: String, $feed_version_sha1: String) {
+  entities: tl_vw_gtfs_routes(limit: 100, order_by: {id: desc}, where: {onestop_id: {_eq: $onestop_id}, feed_onestop_id:{_eq:$feed_onestop_id}, feed_version_sha1:{_eq:$feed_version_sha1}, route_id:{_eq:$route_id}, active: {_is_null: $active_null}}) {
     id
-    agency {
-      id
-      agency_id
-      agency_name
-      agency_url
-    }
-    feed_version {
-      id
-      sha1
-      current_feed {
-        id
-        onestop_id
-      }
-    }
+    onestop_id
+    feed_onestop_id
+    feed_version_sha1
     route_id
     route_color
     route_desc
     route_long_name
     route_short_name
-    route_sort_order
-    route_text_color
     route_type
     route_url
-    route_stops {
-      stop {
-        id
-        stop_name
-        stop_url
-        wheelchair_boarding
-        geometry
-      }
-    }
-    headways {
-      ...hw
-    } 
-  }
-  gtfs_routes(limit: 1, where: {feed_version: {sha1: {_eq: $feed_version_sha1}}, route_id: {_eq: $route_id}}) {
-    feed_version_id
-    id
     agency {
       id
       agency_id
       agency_name
-      agency_url
+    }
+    operator {
+      id
+      operator_name
+      agency_name
+      operator_onestop_id
+    }
+    headways {
+      selected_stop_id
+      dow_category
+      service_date
+      direction_id
+      headway_secs
+      headway_seconds_morning_min
+      headway_seconds_midday_min
+      headway_seconds_afternoon_min
+      headway_seconds_night_min
+      headway_seconds_morning_mid
+      headway_seconds_midday_mid
+      headway_seconds_afternoon_mid
+      headway_seconds_night_mid
+      headway_seconds_morning_max
+      headway_seconds_midday_max
+      headway_seconds_afternoon_max
+      headway_seconds_night_max
     }
     feed_version {
       id
-      sha1
-      current_feed {
-        id
-        onestop_id
-      }
-    }
-    route_id
-    route_color
-    route_desc
-    route_long_name
-    route_short_name
-    route_sort_order
-    route_text_color
-    route_type
-    route_url
-    route_stops {
-      stop {
-        id
-        stop_name
-        stop_url
-        wheelchair_boarding
-        geometry
-      }
-    }
-    headways {
-      ...hw
+      fetched_at
     }
   }
 }
