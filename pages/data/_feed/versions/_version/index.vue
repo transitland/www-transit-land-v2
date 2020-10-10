@@ -117,7 +117,7 @@
 
       <b-tabs v-model="activeTab" type="is-boxed" :animated="false" @input="setTab">
         <b-tab-item label="Map">
-          <feed-version-map-viewer :fvids="[entity.id]" :overlay="true" />
+          <feed-version-map-viewer v-if="activeTab === 0" :fvids="[entity.id]" :overlay="true" :link-version="true" />
         </b-tab-item>
 
         <b-tab-item label="Files">
@@ -226,7 +226,7 @@ export default {
     return {
       features: [],
       tabIndex: {
-        0: 'summary',
+        0: 'map',
         1: 'files',
         2: 'import',
         3: 'agencies',

@@ -112,7 +112,7 @@
           </b-tabs>
         </div>
         <div class="column is-one-third" style="width:400px">
-          <feed-version-map-viewer :route-ids="entityIds" :overlay="false" :include-stops="true" />
+          <feed-version-map-viewer :route-ids="entityIds" :overlay="false" :include-stops="true" :link-version="linkVersion" />
         </div>
       </div>
     </div>
@@ -143,7 +143,7 @@ export default {
       query: require('~/graphql/feed-version-route.gql'),
       variables () {
         return {
-          onestop_id: this.linkVersion ? null : this.$route.params.onestop_id,
+          onestop_id: this.search ? null : this.$route.params.onestop_id,
           feed_onestop_id: this.$route.query.feed_onestop_id,
           feed_version_sha1: this.$route.query.feed_version_sha1,
           route_id: this.$route.query.route_id,

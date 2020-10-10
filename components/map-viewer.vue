@@ -24,7 +24,7 @@
           </p>
         </header>
         <section class="modal-card-body">
-          <route-select :agency-features="agencyFeatures" />
+          <route-select :agency-features="agencyFeatures" :link-version="linkVersion" />
         </section>
       </div>
     </b-modal>
@@ -43,6 +43,7 @@ export default {
     center: { type: Array, default () { return [] } },
     circleRadius: { type: Number, default: 5 },
     circleColor: { type: String, default: '#f03b20' },
+    linkVersion: { type: Boolean, default: false },
     zoom: { type: Number, default: 14 },
     features: {
       type: Array, default () { return [] }

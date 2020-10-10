@@ -145,7 +145,7 @@
       <b-tabs v-model="activeTab" type="is-boxed" :animated="false" @input="setTab">
         <b-tab-item label="Map">
           <!-- need fvids for good index search -->
-          <feed-version-map-viewer :fvids="fvids" :agency-ids="agencyIds" :overlay="true" />
+          <feed-version-map-viewer v-if="activeTab === 0" :fvids="fvids" :agency-ids="agencyIds" :overlay="true" :link-version="linkVersion" />
         </b-tab-item>
         <b-tab-item label="Data sources">
           <b-message type="is-light" has-icon icon="information" :closable="false">
