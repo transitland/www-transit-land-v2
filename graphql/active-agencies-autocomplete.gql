@@ -1,18 +1,14 @@
 query ($query: String!) {
-  agency_names: active_agencies(limit: 100, where: {agency_name: {_ilike: $query}}, distinct_on: agency_name) {
-    id
+  agency_names: tl_mv_active_agency_operators(limit: 10, where: {agency_name: {_ilike: $query}}, distinct_on: agency_name) {
     agency_name
   }
   city_names: tl_agency_places(limit: 10, where: {name: {_ilike: $query}}, distinct_on: name) {
     name
-    adm1name
-    adm0name
   }
-  state_names: tl_agency_places(limit: 10, where: {best_match: {_eq: true}, adm1name: {_ilike: $query}}, distinct_on: adm1name) {
+  state_names: tl_agency_places(limit: 10, where: {adm1name: {_ilike: $query}}, distinct_on: adm1name) {
     adm1name
-    adm0name
   }
-  country_names: tl_agency_places(limit: 10, where: {best_match: {_eq: true}, adm0name: {_ilike: $query}}, distinct_on:adm0name) {
+  country_names: tl_agency_places(limit: 10, where: {adm0name: {_ilike: $query}}, distinct_on:adm0name) {
     adm0name
   }
 }

@@ -17,7 +17,6 @@
           <agency-autocomplete @selected="onAutocomplete" />
         </template>
 
-        <!-- the label is a zero width space! -->
         <b-dropdown position="is-bottom-left" class="is-pulled-right" append-to-body aria-role="menu" trap-focus>
           <a
             slot="trigger"
@@ -37,7 +36,7 @@
             <div class="modal-card" style="width:300px;">
               <section class="modal-card-body">
                 <div class="field">
-                  <b-checkbox v-model="distinctOn" true-value="operator_onestop_id" false-value="id">
+                  <b-checkbox v-model="merged" true-value="true" false-value="false">
                     Group by operator
                   </b-checkbox>
                 </div>
@@ -54,10 +53,6 @@
       </b-field>
     </b-field>
 
-    <b-message v-if="error" class="is-danger">
-      {{ error }}
-    </b-message>
-
     <b-table
       :data="entityPageFlat"
       :striped="true"
@@ -73,7 +68,7 @@
     >
       <!-- TODO: fix sorting -->
       <b-table-column v-slot="props" field="name" label="Operator Name">
-        <nuxt-link :to="{name: 'operators-onestop_id', params: {onestop_id: props.row.operator_onestop_id}}">
+        <nuxt-link :to="{name: 'operators-onestop_id', params: {onestop_id: props.row.onestop_id}}">
           {{ props.row.name }}
         </nuxt-link>
       </b-table-column>
@@ -99,28 +94,36 @@ export default {
   mixins: [TableViewerMixin],
   data () {
     return {
-      distinctOn: 'operator_onestop_id',
-      filterOperators: 'yes'
+      merged: true,
+      filterOperators: 'yes',
+      entities: [],
+      merged_entities: [],
+      error: null
     }
   },
   apollo: {
     q: {
-      query () { return this.distinctOn === 'operator_onestop_id' ? require('~/graphql/agency-operator-merge.gql') : require('~/graphql/agency-operator.gql') },
+      query: require('~/graphql/agency-operators.gql'),
       error (e) { this.error = e },
       variables () {
         return {
+          merged: this.merged,
+          unmerged: !this.merged,
           offset: this.entityOffset,
           limit: this.limit,
           name: this.$route.query.name,
           city_name: this.$route.query.city_name,
           adm1name: this.$route.query.adm1name,
-          adm0name: this.$route.query.adm0name,
-          order_by: this.distinctOn === 'operator_onestop_id' ? { operator_name: 'asc' } : { agency_name: 'asc' }
+          adm0name: this.$route.query.adm0name
         }
       },
       update (data) {
-        this.entities = data.entities
-        this.total = data.total.aggregate.count
+        if (this.merged) {
+          this.entities = data.merged_entities
+        } else {
+          this.entities = data.entities
+        }
+        this.total = 100 // data.total.aggregate.count
       }
     }
   },
@@ -128,11 +131,12 @@ export default {
     entityPageFlat () {
       return this.entityPage.map((s) => {
         return {
-          name: this.distinctOn === 'operator_onestop_id' ? s.operator_name : s.agency_name,
+          name: (this.merged ? s.operator_name : s.agency_name) || s.agency_name,
+          agency: s.agency,
           operator: s.operator,
           best_place: [], // s.agency.places.length > 0 ? s.agency.places[0] : {},
           other_places: [], // s.agency.places || [],
-          operator_onestop_id: s.operator_onestop_id,
+          onestop_id: s.onestop_id,
           city_name: s.city_name,
           adm1name: s.adm1name,
           adm0name: s.adm0name

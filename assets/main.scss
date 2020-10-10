@@ -33,6 +33,11 @@ $link-focus-border: $primary;
 
 //////////////
 
+.main .message {
+    margin-top:20px;
+    margin-bottom:20px;
+}
+
 table.property-list td, table.property-list th {
     padding:5px;
 }
@@ -100,3 +105,4 @@ table.property-list td:first-child {
     background-color: $info;
   }
 }
+

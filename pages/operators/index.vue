@@ -14,7 +14,7 @@
 
     <operator-viewer />
 
-    <div style="margin-top:40px">
+    <div>
       <b-message type="is-info">
         <div>
           Know an operator that's missing? <a href="https://github.com/transitland/transitland-atlas/blob/master/README.md#how-to-add-a-new-feed" class="button" style="float:right">Add an operator to Transitland Atlas</a>

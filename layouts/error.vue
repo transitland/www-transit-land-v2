@@ -52,6 +52,11 @@ export default {
       default: null
     }
   },
+  data () {
+    return {
+      messages: []
+    }
+  },
   computed: {
     statusCode () {
       return (this.error && this.error.statusCode) || 500

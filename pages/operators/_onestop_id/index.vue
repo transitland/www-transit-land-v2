@@ -21,6 +21,34 @@
       <h1 class="title">
         {{ operatorName }}
       </h1>
+
+      <b-message v-if="linkActive" type="is-warning" has-icon>
+        You are viewing a single GTFS Agency entity defined in source feed
+        <nuxt-link :to="{name:'data-feed', params:{feed:$route.query.feed_onestop_id}}">
+          {{ $route.query.feed_onestop_id }}
+        </nuxt-link> version
+        <nuxt-link :to="{name:'data-feed-versions-version', params:{feed:$route.query.feed_onestop_id, version:$route.query.feed_version_sha1}}">
+          {{ $route.query.feed_version_sha1 | shortenName(8) }}
+        </nuxt-link>.<br>
+        Click <nuxt-link :to="{name: 'operators-onestop_id', params:{onestop_id:$route.params.onestop_id}}">
+          here
+        </nuxt-link> to return to the main Operator view.
+      </b-message>
+      <b-message v-else type="is-light" has-icon icon="information" :closable="false">
+        <div class="columns">
+          <div class="column is-8">
+            <p>
+              The metadata associated with this operator record can be edited in the <a href="https://github.com/transitland/transitland-atlas">Transitland Atlas</a> repository. We welcome edits and additions. Press the button at right to start a pull request.
+            </p>
+          </div>
+          <div class="column is-4 has-text-right">
+            <b-tooltip label="Create or edit an associated operator metadata file in the Transitland Atlas repository">
+              <a class="button is-primary" :href="generatedOperator ? newLink : editLink" target="_blank"><b-icon icon="pencil" size="is-small" /> &nbsp; Edit Operator Record</a>
+            </b-tooltip>
+          </div>
+        </div>
+      </b-message>
+
       <table class="property-list">
         <tr>
           <td>
@@ -101,20 +129,7 @@
         </tr>
       </table>
 
-      <b-notification type="is-light" has-icon icon="information" :closable="false">
-        <div class="columns">
-          <div class="column is-8">
-            <p>
-              The metadata associated with this operator record can be edited in the <a href="https://github.com/transitland/transitland-atlas">Transitland Atlas</a> repository. We welcome edits and additions. Press the button at right to start a pull request.
-            </p>
-          </div>
-          <div class="column is-4 has-text-right">
-            <b-tooltip label="Create or edit an associated operator metadata file in the Transitland Atlas repository">
-              <a class="button is-primary" :href="generatedOperator ? newLink : editLink" target="_blank"><b-icon icon="pencil" size="is-small" /> &nbsp; Edit Operator Record</a>
-            </b-tooltip>
-          </div>
-        </div>
-      </b-notification>
+      <br>
 
       <b-tabs v-model="activeTab" type="is-boxed">
         <b-tab-item label="Map">
@@ -122,9 +137,11 @@
           <feed-version-map-viewer :fvids="fvids" :agency-ids="agencyIds" :overlay="true" />
         </b-tab-item>
         <b-tab-item label="Data sources">
-          <b-notification type="is-light" has-icon icon="information" :closable="false">
-            This operator includes the references listed below. Each reference may match one or more agencies imported from a GTFS feed. These agencies contain the routes, stops, schedules, and other information used for this operator. Clicking the link to a given source feed or matched agency will take you to the data source page for that feed. If a reference to an agency cannot be resolved, this will be noted.
-          </b-notification>
+          <b-message type="is-light" has-icon icon="information" :closable="false">
+            This operator includes data from the references listed below. These references are defined in the Operator's Atlas record, and describe the GTFS Agencies that provide the routes, stops, schedules, and other information for this operator. If a reference to an agency cannot be resolved, this will be noted. Please see the <nuxt-link :to="{name:'documentation'}">
+              Operator documentation
+            </nuxt-link> for more information on this process.
+          </b-message>
 
           <b-table
             :data="sources"
@@ -156,9 +173,11 @@
             </b-table-column>
           </b-table>
         </b-tab-item>
+
         <b-tab-item label="Routes">
           <route-viewer v-if="activeTab === 2" :agency-ids="agencyIds" :fvids="fvids" :show-agency="true" />
         </b-tab-item>
+
         <b-tab-item label="Stops">
           <stop-viewer v-if="activeTab === 3" :agency-ids="agencyIds" :fvids="fvids" />
         </b-tab-item>
@@ -172,15 +191,18 @@ export default {
   apollo: {
     entities: {
       error (e) { this.error = e },
-      query: require('~/graphql/current-operator.gql'),
+      query: require('~/graphql/agency-operator.gql'),
       variables () {
         return {
-          operator_onestop_id: this.onestopId
+          onestop_id: this.onestopId,
+          feed_onestop_id: this.$route.query.feed_onestop_id,
+          feed_version_sha1: this.$route.query.feed_version_sha1,
+          agency_id: this.$route.query.agency_id
         }
       },
       update (data) {
         this.operators = data.operators
-        this.matches = data.matches
+        this.entities = data.entities
       }
     }
   },
@@ -188,11 +210,14 @@ export default {
     return {
       activeTab: 0,
       operators: [],
-      matches: [],
+      entities: [],
       error: null
     }
   },
   computed: {
+    linkActive () {
+      return Object.keys(this.$route.query).length > 0
+    },
     editLink () {
       return `https://github.com/transitland/transitland-atlas/edit/master/operators/${this.onestopId}.json`
     },
@@ -211,7 +236,7 @@ export default {
     },
     agencies () {
       const ret = []
-      for (const ent of this.matches) {
+      for (const ent of this.entities) {
         if (ent.agency) {
           ret.push(ent.agency)
         }
