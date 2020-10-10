@@ -79,11 +79,13 @@
             </b-tab-item>
 
             <b-tab-item label="Inbound Trips">
-              <route-trips-viewer v-if="activeTab === 2" :service-date="serviceDate" :route-id="entity.id" :feed-version-id="entity.feed_version_id" :direction-id="0" />
+              Coming soon
+              <!-- <route-trips-viewer v-if="activeTab === 2" :service-date="serviceDate" :route-id="entity.id" :feed-version-id="entity.feed_version_id" :direction-id="0" /> -->
             </b-tab-item>
 
             <b-tab-item label="Outbound Trips">
-              <route-trips-viewer v-if="activeTab === 3" :service-date="serviceDate" :route-id="entity.id" :feed-version-id="entity.feed_version_id" :direction-id="1" />
+              Coming soon
+              <!-- <route-trips-viewer v-if="activeTab === 3" :service-date="serviceDate" :route-id="entity.id" :feed-version-id="entity.feed_version_id" :direction-id="1" /> -->
             </b-tab-item>
 
             <b-tab-item :label="childLabel">

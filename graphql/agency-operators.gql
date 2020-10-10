@@ -1,4 +1,5 @@
-query ($merged:Boolean!, $unmerged:Boolean!, $offset: Int = 0, $limit: Int = 100, $name: String, $city_name: String, $adm1name: String, $adm0name: String) {
+query ($merged:Boolean!, $unmerged:Boolean!, $unmatched: Boolean!, $offset: Int = 0, $limit: Int = 100, $name: String, $city_name: String, $adm1name: String, $adm0name: String) {
+  # Unmerged entities
   entities: tl_mv_active_agency_operators(limit: $limit, offset: $offset, where: {agency: {agency_name: {_eq: $name}, places: {name: {_eq: $city_name}, adm0name: {_eq: $adm0name}, adm1name: {_eq: $adm1name}}}}) @include(if: $unmerged) {
     agency_name
     operator_name
@@ -7,12 +8,37 @@ query ($merged:Boolean!, $unmerged:Boolean!, $offset: Int = 0, $limit: Int = 100
     adm1name
     adm0name
   }
-  merged_entities: tl_mv_active_agency_operators_merge(limit: $limit, offset: $offset, where: {agency_operators: {agency: {agency_name: {_eq: $name}, places: {name: {_eq: $city_name}, adm0name: {_eq: $adm0name}, adm1name: {_eq: $adm1name}}}}}) @include(if: $merged) {
+  total: tl_mv_active_agency_operators_aggregate(where: {agency: {agency_name: {_eq: $name}, places: {name: {_eq: $city_name}, adm0name: {_eq: $adm0name}, adm1name: {_eq: $adm1name}}}}) @include(if: $unmerged) {
+    aggregate {
+      count
+    }
+  }
+  # Merged entities
+  entities: tl_mv_active_agency_operators_merge(limit: $limit, offset: $offset, where: {agency_operators: {agency: {agency_name: {_eq: $name}, places: {name: {_eq: $city_name}, adm0name: {_eq: $adm0name}, adm1name: {_eq: $adm1name}}}}}) @include(if: $merged) {
     agency_name
     operator_name
     onestop_id
     city_name
     adm1name
     adm0name
+  }
+  total: tl_mv_active_agency_operators_merge_aggregate(where: {agency_operators: {agency: {agency_name: {_eq: $name}, places: {name: {_eq: $city_name}, adm0name: {_eq: $adm0name}, adm1name: {_eq: $adm1name}}}}}) @include(if: $merged) {
+    aggregate {
+      count
+    }
+  }  
+  # Unmatched operators
+  unmatched_entities: tl_mv_active_agency_operators_merge(limit: $limit, offset: $offset, where: {agency_id: {_is_null:true}}) @include(if: $unmatched) {
+    agency_name
+    operator_name
+    onestop_id
+    city_name
+    adm1name
+    adm0name
+  }
+  unmatched_total: tl_mv_active_agency_operators_merge_aggregate(where: {agency_id: {_is_null:true}}) @include(if: $unmatched) {
+    aggregate {
+      count
+    }
   }
 }

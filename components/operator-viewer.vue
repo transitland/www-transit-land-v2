@@ -33,17 +33,17 @@
             custom
             paddingless
           >
-            <div class="modal-card" style="width:300px;">
+            <div class="modal-card" style="width:400px;">
               <section class="modal-card-body">
                 <div class="field">
-                  <b-checkbox v-model="merged" true-value="true" false-value="false">
-                    Group by operator
+                  <b-checkbox v-model="merged">
+                    Group agencies by operator
                   </b-checkbox>
                 </div>
 
                 <div class="field">
-                  <b-checkbox>
-                    Include unmatched operators
+                  <b-checkbox v-model="unmatched">
+                    Show operators without agency matches
                   </b-checkbox>
                 </div>
               </section>
@@ -60,10 +60,8 @@
       :loading="$apollo.loading"
       sort-icon="menu-up"
       :total="total"
-      :current-page.sync="page"
       backend-pagination
-      backend-sorting
-      backend-filtering
+      @page-change="onPageChange"
       @sort="onSort"
     >
       <!-- TODO: fix sorting -->
@@ -94,10 +92,12 @@ export default {
   mixins: [TableViewerMixin],
   data () {
     return {
+      zpage: 1,
       merged: true,
+      unmatched: false,
       filterOperators: 'yes',
+      total: 0,
       entities: [],
-      merged_entities: [],
       error: null
     }
   },
@@ -109,6 +109,7 @@ export default {
         return {
           merged: this.merged,
           unmerged: !this.merged,
+          unmatched: this.unmatched,
           offset: this.entityOffset,
           limit: this.limit,
           name: this.$route.query.name,
@@ -118,12 +119,13 @@ export default {
         }
       },
       update (data) {
-        if (this.merged) {
-          this.entities = data.merged_entities
+        if (this.unmatched) {
+          this.entities = data.unmatched_entities
+          this.total = data.unmatched_total.aggregate.count
         } else {
           this.entities = data.entities
+          this.total = data.total.aggregate.count
         }
-        this.total = 100 // data.total.aggregate.count
       }
     }
   },
@@ -131,7 +133,7 @@ export default {
     entityPageFlat () {
       return this.entityPage.map((s) => {
         return {
-          name: (this.merged ? s.operator_name : s.agency_name) || s.agency_name,
+          name: (this.merged ? s.operator_name : s.agency_name) || s.agency_name || s.operator_name,
           agency: s.agency,
           operator: s.operator,
           best_place: [], // s.agency.places.length > 0 ? s.agency.places[0] : {},

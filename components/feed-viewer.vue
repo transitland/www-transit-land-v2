@@ -29,12 +29,12 @@
       :data="feedPage"
       :striped="true"
       :paginated="true"
-      :current-page.sync="page"
       sort-icon="menu-up"
       :total="total"
       backend-pagination
       backend-sorting
       backend-filtering
+      @page-change="onPageChange"
       @sort="onSort"
     >
       <b-table-column v-slot="props" field="onestop_id" label="Feed Onestop ID">

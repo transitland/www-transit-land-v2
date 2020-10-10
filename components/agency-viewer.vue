@@ -9,12 +9,12 @@
       :striped="true"
       :paginated="true"
       :per-page="perPage"
-      :current-page.sync="page"
       :total="total"
       sort-icon="menu-up"
       backend-pagination
       backend-sorting
       backend-filtering
+      @page-change="onPageChange"
       @sort="onSort"
     >
       <b-table-column v-slot="props" field="agency_id" label="Agency ID">

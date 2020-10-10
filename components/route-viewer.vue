@@ -10,12 +10,12 @@
       :striped="true"
       :per-page="perPage"
       :paginated="true"
-      :current-page.sync="page"
       :total="total"
       sort-icon="menu-up"
       backend-pagination
       backend-sorting
       backend-filtering
+      @page-change="onPageChange"
       @sort="onSort"
     >
       <b-table-column

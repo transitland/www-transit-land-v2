@@ -26,6 +26,9 @@ export default {
     }
   },
   methods: {
+    onPageChange (page) {
+      this.page = page
+    },
     onSort (field, order) {
       this.sortField = field
       this.sortOrder = order

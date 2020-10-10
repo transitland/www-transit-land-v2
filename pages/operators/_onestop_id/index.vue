@@ -43,7 +43,8 @@
           </div>
           <div class="column is-4 has-text-right">
             <b-tooltip label="Create or edit an associated operator metadata file in the Transitland Atlas repository">
-              <a class="button is-primary" :href="generatedOperator ? newLink : editLink" target="_blank"><b-icon icon="pencil" size="is-small" /> &nbsp; Edit Operator Record</a>
+              <a v-if="operator" class="button is-primary" :href="editLink" target="_blank"><b-icon icon="pencil" size="is-small" /> &nbsp; Edit Operator Record</a>
+              <a v-else class="button is-primary" :href="newLink" target="_blank"><b-icon icon="pencil" size="is-small" /> &nbsp; Create Operator Record</a>
             </b-tooltip>
           </div>
         </div>
@@ -112,7 +113,7 @@
             </ul>
           </td>
         </tr>
-        <tr v-if="operator.tags">
+        <tr v-if="operator && operator.tags">
           <td>
             <b-tooltip dashed multiline label="Links between Transitland and other catalogs and data sources on the Internet">
               ID Crosswalk
@@ -163,13 +164,12 @@
             </b-table-column>
             <b-table-column v-slot="props" field="agency" label="Matched Agency">
               <template v-if="props.row.target_match">
-                <nuxt-link :to="{name:'operators-onestop_id', params:{onestop_id:onestopId}, query:{feed_onestop_id:props.row.target_match.feed_onestop_id,feed_version_sha1:props.row.target_match.feed_version_sha1,agency_id:props.row.target_match.agency_id}}">
-                  {{ props.row.target_match.agency_name }}
-                </nuxt-link>
+                <b-icon icon="check" />
+                {{ props.row.target_match.agency_name }}
               </template>
-              <template v-else-if="!props.row.target_id" /><template v-else>
-                <b-tooltip dashed label="No active agency with this source feed and agency ID could be located">
-                  No
+              <template v-else>
+                <b-tooltip dashed label="The active version of this source feed does not contain a matching agency">
+                  <b-icon icon="alert" />
                 </b-tooltip>
               </template>
             </b-table-column>
@@ -201,17 +201,12 @@ export default {
           feed_version_sha1: this.$route.query.feed_version_sha1,
           agency_id: this.$route.query.agency_id
         }
-      },
-      update (data) {
-        this.operators = data.operators
-        this.entities = data.entities
       }
     }
   },
   data () {
     return {
       activeTab: 0,
-      operators: [],
       entities: [],
       error: null
     }
@@ -236,14 +231,23 @@ export default {
       }
       return Array.from(ret.values()).sort()
     },
-    agencies () {
-      const ret = []
+    operators () {
+      const rs = new Map()
       for (const ent of this.entities) {
-        if (ent.agency) {
-          ret.push(ent.agency)
+        if (ent.operator) {
+          rs.set(ent.operator.id, ent.operator)
         }
       }
-      return ret
+      return Array.from(rs.values())
+    },
+    agencies () {
+      const rs = new Map()
+      for (const ent of this.entities) {
+        if (ent.agency) {
+          rs.set(ent.agency.id, ent.agency)
+        }
+      }
+      return Array.from(rs.values())
     },
     onestopId () {
       return this.$route.params.onestop_id
@@ -280,7 +284,7 @@ export default {
     },
     sources () {
       const ret = []
-      const amap = {}
+      const amap = new Map()
       if (this.generatedOperator) {
         for (const ent of this.agencies) {
           ret.push({
@@ -292,7 +296,7 @@ export default {
       }
       for (const ent of this.agencies) {
         const key = `${ent.feed_onestop_id}:${ent.agency_id}`
-        amap[key] = ent
+        amap.set(key, ent)
         if (ent.feed_version && ent.feed_version.current_feed && ent.feed_version.current_feed.feed_namespace_id === this.onestopId) {
           ret.push({
             target_type: 'Feed Namespace',
@@ -313,7 +317,7 @@ export default {
             target_type: 'Associated Feed',
             target_feed: a.feed_onestop_id,
             target_id: a.gtfs_agency_id,
-            target_match: amap[key]
+            target_match: amap.get(key)
           })
         }
       }

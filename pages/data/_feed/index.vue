@@ -101,7 +101,6 @@
         :striped="true"
         :paginated="true"
         :pagination-simple="true"
-        pagination-position="top"
         sort-icon="menu-up"
       >
         <b-table-column
