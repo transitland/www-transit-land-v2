@@ -69,7 +69,7 @@
             </b-tab-item>
 
             <!-- Data sources -->
-            <b-tab-item label="Data sources">
+            <b-tab-item label="Sources">
               <b-table
                 :data="entities"
                 :striped="true"
@@ -130,7 +130,7 @@ export default {
       selectDate: null,
       tabIndex: {
         0: 'summary',
-        1: 'data-sources',
+        1: 'sources',
         2: 'demographics',
         3: 'inbound-trips',
         4: 'outbound-trips'

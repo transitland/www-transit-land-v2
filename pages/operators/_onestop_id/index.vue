@@ -69,7 +69,7 @@
         </tr>
         <tr>
           <td>
-            <b-tooltip dashed multiline label="Matched agencies; see 'Data Sources' below for full details">
+            <b-tooltip dashed multiline label="Matched agencies; see 'Sources' below for full details">
               Agencies
             </b-tooltip>
           </td>
@@ -121,7 +121,7 @@
             </ul>
           </td>
         </tr>
-        <tr v-if="operator && operator.tags">
+        <tr v-if="operator && operator.tags && Object.keys(operator.tags).length > 0">
           <td>
             <b-tooltip dashed multiline label="Links between Transitland and other catalogs and data sources on the Internet">
               ID Crosswalk
@@ -147,7 +147,7 @@
           <!-- need fvids for good index search -->
           <feed-version-map-viewer v-if="activeTab === 0" :fvids="fvids" :agency-ids="agencyIds" :overlay="true" :link-version="linkVersion" />
         </b-tab-item>
-        <b-tab-item label="Data sources">
+        <b-tab-item label="Sources">
           <b-message type="is-light" has-icon icon="information" :closable="false">
             This operator includes data from the references listed below. These references are defined in the Operator's Atlas record, and describe the GTFS Agencies that provide the routes, stops, schedules, and other information for this operator. If a reference to an agency cannot be resolved, this will be noted. Please see the <nuxt-link :to="{name:'documentation'}">
               Operator documentation
@@ -205,7 +205,7 @@ export default {
     return {
       tabIndex: {
         0: 'summary',
-        1: 'data-sources',
+        1: 'sources',
         2: 'routes',
         3: 'stops'
       }

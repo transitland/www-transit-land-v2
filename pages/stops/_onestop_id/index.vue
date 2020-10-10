@@ -58,7 +58,7 @@
             </b-tab-item>
 
             <!-- Data sources -->
-            <b-tab-item label="Data sources">
+            <b-tab-item label="Sources">
               <b-table
                 :data="entities"
                 :striped="true"
