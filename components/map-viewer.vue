@@ -188,11 +188,17 @@ export default {
     },
     updateFilters () {
       for (const v of mapLayers.routeLayers) {
-        if (v.filter) {
-          const f = v.filter.slice()
-          if (!this.showGeneratedShadow) {
+        const f = (v.filter || []).slice()
+        if (!this.showGeneratedShadow) {
+          if (f.length === 0) {
+            f.push(...['==', 'generated', false])
+          } else {
             f.push(['==', 'generated', false])
           }
+        }
+        if (f.length === 0) {
+          this.map.setFilter(v.name, null)
+        } else {
           this.map.setFilter(v.name, f)
         }
       }
