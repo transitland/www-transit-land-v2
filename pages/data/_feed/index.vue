@@ -101,65 +101,117 @@
         </tr>
       </table>
 
-      <b-table
-        :data="entity.feed_versions"
-        :striped="true"
-        :paginated="true"
-        :pagination-simple="true"
-        sort-icon="menu-up"
-      >
-        <b-table-column
-          v-slot="props"
-          :sortable="true"
-          field="fetched_at"
-          label="Fetched"
-        >
-          {{ props.row.fetched_at | moment("YYYY-MM-DD") }}
-        </b-table-column>
-        <b-table-column v-slot="props" :sortable="true" field="sha1" label="SHA1">
-          <nuxt-link
-            :to="{name: 'data-feed-versions-version', params: {feed: entity.onestop_id, version: props.row.sha1}}"
+      <br>
+
+      <b-tabs v-model="activeTab" type="is-boxed" :animated="false" @input="setTab">
+        <b-tab-item label="Versions">
+          <b-table
+            :data="entity.feed_versions"
+            :striped="true"
+            :paginated="true"
+            :pagination-simple="true"
+            sort-icon="menu-up"
           >
-            {{ props.row.sha1.substr(0,6) }}…
-          </nuxt-link>
-        </b-table-column>
-        <b-table-column
-          v-slot="props"
-          :sortable="true"
-          field="earliest_calendar_date"
-          label="Earliest date"
-        >
-          {{ props.row.earliest_calendar_date }}
-        </b-table-column>
-        <b-table-column
-          v-slot="props"
-          :sortable="true"
-          field="latest_calendar_date"
-          label="Latest date"
-        >
-          {{ props.row.latest_calendar_date }}
-        </b-table-column>
-        <b-table-column v-slot="props" field="feed_version_gtfs_import" label="Imported">
-          <template v-if="props.row.feed_version_gtfs_import">
-            <b-icon v-if="props.row.feed_version_gtfs_import.success" icon="check" />
-            <b-icon v-else-if="props.row.feed_version_gtfs_import.in_progress" icon="clock" />
-            <b-tooltip
-              v-else-if="props.row.feed_version_gtfs_import.success == false"
-              :label="props.row.feed_version_gtfs_import.exception_log"
-              position="is-top"
+            <b-table-column
+              v-slot="props"
+              :sortable="true"
+              field="fetched_at"
+              label="Fetched"
             >
-              <b-icon icon="alert" />
-            </b-tooltip>
-          </template>
-        </b-table-column>
-        <b-table-column v-slot="props" label="Active">
-          <b-icon
-            v-if="entity.feed_state && entity.feed_state.feed_version && entity.feed_state.feed_version.id === props.row.id"
-            icon="check"
-          />
-        </b-table-column>
-      </b-table>
-      </b-messagetype="is-info">
+              {{ props.row.fetched_at | moment("YYYY-MM-DD") }}
+            </b-table-column>
+            <b-table-column v-slot="props" :sortable="true" field="sha1" label="SHA1">
+              <nuxt-link
+                :to="{name: 'data-feed-versions-version', params: {feed: entity.onestop_id, version: props.row.sha1}}"
+              >
+                {{ props.row.sha1.substr(0,6) }}…
+              </nuxt-link>
+            </b-table-column>
+            <b-table-column
+              v-slot="props"
+              :sortable="true"
+              field="earliest_calendar_date"
+              label="Earliest date"
+            >
+              {{ props.row.earliest_calendar_date }}
+            </b-table-column>
+            <b-table-column
+              v-slot="props"
+              :sortable="true"
+              field="latest_calendar_date"
+              label="Latest date"
+            >
+              {{ props.row.latest_calendar_date }}
+            </b-table-column>
+            <b-table-column v-slot="props" field="feed_version_gtfs_import" label="Imported">
+              <template v-if="props.row.feed_version_gtfs_import">
+                <b-icon v-if="props.row.feed_version_gtfs_import.success" icon="check" />
+                <b-icon v-else-if="props.row.feed_version_gtfs_import.in_progress" icon="clock" />
+                <b-tooltip
+                  v-else-if="props.row.feed_version_gtfs_import.success == false"
+                  :label="props.row.feed_version_gtfs_import.exception_log"
+                  position="is-top"
+                >
+                  <b-icon icon="alert" />
+                </b-tooltip>
+              </template>
+            </b-table-column>
+            <b-table-column v-slot="props" label="Active">
+              <b-icon
+                v-if="entity.feed_state && entity.feed_state.feed_version && entity.feed_state.feed_version.id === props.row.id"
+                icon="check"
+              />
+            </b-table-column>
+          </b-table>
+        </b-tab-item>
+
+        <!-- Data sources -->
+        <b-tab-item label="Associated Operators">
+          <b-message type="is-light" has-icon icon="information" :closable="false">
+            This feed contributes data to the following Operators. These associations are a mix of references defined in each Operator's Atlas record. Additionally, GTFS Agencies that do not have defined references to any Operator record are assigned an automatically generated Operator Onestop ID. Only data from the currently active version of this feed is used. Please see the <nuxt-link :to="{name:'documentation'}">
+              Operator documentation
+            </nuxt-link> for more information on this process.
+          </b-message>
+
+          <div class="content">
+            <table class="table is-shaded">
+              <thead>
+                <tr>
+                  <th>Association type</th>
+                  <th>Operator</th>
+                  <th>OnestopID</th>
+                  <th>Source Agency ID</th>
+                  <th>Matched Agency</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(match,i) of entity.associated_operators" :key="i">
+                  <td>
+                    <span v-if="match.operator_id">Associated Feed</span>
+                    <span v-else-if="entity.feed_namespace_id === match.onestop_id">Feed Namespace</span>
+                    <span v-else>Generated</span>
+                  </td>
+                  <td>
+                    {{ match.operator_name }}
+                  </td>
+                  <td>
+                    <nuxt-link :to="{name:'operators-onestop_id', params:{onestop_id:match.onestop_id}}">
+                      {{ match.onestop_id }}
+                    </nuxt-link>
+                  </td>
+                  <td><span v-if="match.agency">{{ match.agency.agency_id }}</span></td>
+                  <td>
+                    <span v-if="match.agency">
+                      <b-icon icon="check" />
+                      {{ match.agency.agency_name }}
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </b-tab-item>
+      </b-tabs>
     </div>
   </div>
 </template>
@@ -181,6 +233,14 @@ export default {
         return {
           feed_onestop_id: this.onestopId
         }
+      }
+    }
+  },
+  data () {
+    return {
+      tabIndex: {
+        0: 'versions',
+        1: 'operators'
       }
     }
   },

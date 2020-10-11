@@ -14,6 +14,15 @@ query current_feeds($feed_onestop_id: String) {
     spec
     urls
     file
+    associated_operators(limit:1000) {
+      onestop_id
+      operator_id
+      operator_name
+      agency {
+        agency_id
+        agency_name
+      }
+    }
     feed_versions(order_by: {fetched_at: desc}) {
       id
       sha1
@@ -33,16 +42,6 @@ query current_feeds($feed_onestop_id: String) {
       last_fetch_error
       last_fetched_at
       last_successful_fetch_at
-      feed_version {
-        id
-        routes {
-          id
-          route_id
-          route_type
-          route_short_name
-          route_long_name
-        }
-      }
     }
   }
 }
