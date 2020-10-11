@@ -84,6 +84,8 @@
         </div>
         <div class="column is-one-third" style="width:400px">
           <map-viewer
+            :stop-features="stopFeatures"
+            :route-features="routeFeatures"
             :features="features"
             :auto-fit="false"
             :center="entity.geometry.coordinates"
@@ -119,31 +121,19 @@ export default {
     }
   },
   computed: {
-    features () {
+    stopFeatures () {
+      const ret = []
+      for (const i of this.entities) {
+        ret.push({ type: 'Feature', id: i.id, geometry: i.geometry, properties: { class: 'stop', id: i.id } })
+      }
+      for (const i of this.entity.children) {
+        ret.push({ type: 'Feature', id: i.id, geometry: i.geometry, properties: { class: 'stop', id: i.id } })
+      }
+      return ret
+    },
+    routeFeatures () {
       const ret = []
       let featid = 1
-      for (const i of this.entities) {
-        featid++
-        ret.push({ type: 'Feature', id: featid, geometry: i.geometry, properties: { class: 'stop', id: featid } })
-      }
-      const sg = this.entity.geometry
-      for (const i of this.entity.children) {
-        featid++
-        ret.push({ type: 'Feature', id: featid, geometry: i.geometry, properties: { class: 'stop', id: featid } })
-        featid++
-        ret.push({
-          type: 'Feature',
-          id: featid,
-          properties: { },
-          geometry: {
-            type: 'LineString',
-            coordinates: [
-              sg.coordinates,
-              i.geometry.coordinates
-            ]
-          }
-        })
-      }
       for (const rs of this.entity.route_stops) {
         featid++
         ret.push(
@@ -160,6 +150,27 @@ export default {
             }
           }
         )
+      }
+      return ret
+    },
+    features () {
+      const ret = []
+      const sg = this.entity.geometry
+      let featid = 1
+      for (const i of this.entity.children) {
+        ret.push({
+          type: 'Feature',
+          id: featid,
+          properties: { },
+          geometry: {
+            type: 'LineString',
+            coordinates: [
+              sg.coordinates,
+              i.geometry.coordinates
+            ]
+          }
+        })
+        featid++
       }
       return ret
     },

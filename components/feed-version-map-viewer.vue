@@ -4,7 +4,13 @@
       {{ error }}
     </b-message>
     <span v-else-if="$apollo.loading" class="is-loading">Loading</span>
-    <map-viewer v-else :features="mapFeatures" :overlay="overlay" :circle-radius="3" :link-version="linkVersion" />
+    <map-viewer
+      v-else
+      :route-features="routeFeatures"
+      :stop-features="stopFeatures"
+      :overlay="overlay"
+      :link-version="linkVersion"
+    />
   </div>
 </template>
 
@@ -41,7 +47,7 @@ export default {
     }
   },
   computed: {
-    mapFeatures () {
+    routeFeatures () {
       const features = []
       for (const feature of this.features) {
         if (feature.geometries && feature.geometries.length > 0) {
@@ -71,16 +77,22 @@ export default {
             },
             geometry: feature.geometries[0].geometry
           })
-          for (const rs of feature.route_stops || []) {
-            features.push({
-              id: rs.stop.id,
-              properties: {
-                class: 'stop',
-                id: rs.stop.id
-              },
-              geometry: rs.stop.geometry
-            })
-          }
+        }
+      }
+      return features
+    },
+    stopFeatures () {
+      const features = []
+      for (const feature of this.features) {
+        for (const rs of feature.route_stops || []) {
+          features.push({
+            id: rs.stop.id,
+            properties: {
+              class: 'stop',
+              id: rs.stop.id
+            },
+            geometry: rs.stop.geometry
+          })
         }
       }
       return features

@@ -63,6 +63,19 @@ const headwayLayers = [
   }
 ]
 
+const stopLayers = [
+  {
+    name: 'stops',
+    type: 'circle',
+    source: 'stops',
+    paint: {
+      'circle-color': '#000',
+      'circle-radius': 4,
+      'circle-opacity': 0.75
+    }
+  }
+]
+
 const routeLayers = [
   // hitbox / active
   {
@@ -152,4 +165,4 @@ const routeLayers = [
   }
 ]
 
-export default { headways, colors, routeLayers, headwayLayers }
+export default { headways, colors, stopLayers, routeLayers, headwayLayers }

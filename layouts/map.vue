@@ -10,16 +10,8 @@
 </template>
 
 <style scoped>
-.hero-head {
-  background: #efefef;
-}
-.hero-foot {
-  background:#efefef;
-}
-.hero {
-  height:100vh
-}
 .main {
+  height: calc(100vh - 60px);
   background:white;
   flex-grow:2;
 }

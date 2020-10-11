@@ -1,12 +1,43 @@
 <template>
   <div>
-    <div id="mapelem" ref="mapelem" />
+    <div id="mapelem" ref="mapelem" :class="mapClass" />
     <div v-if="overlay" class="is-hidden-mobile">
       <div class="map-agencies notification">
-        <p v-show="Object.keys(agencyFeatures).length == 0">
-          <strong>Use your mouse cursor</strong> to highlight routes and see their names here. <strong>Click</strong> to select for more details.
-        </p>
-        <route-select :agency-features="agencyFeatures" :collapse="true" />
+        <div v-if="showOptions" class="map-options">
+          <b-dropdown position="is-bottom-right" append-to-body aria-role="menu" trap-focus>
+            <span
+              slot="trigger"
+              class="navbar-item"
+              role="button"
+            >
+              <span>Options</span>
+              <b-icon icon="menu-down" />
+            </span>
+
+            <b-dropdown-item
+              aria-role="menu-item"
+              :focusable="false"
+              custom
+              paddingless
+            >
+              <div class="modal-card" style="width:300px;">
+                <section class="modal-card-body">
+                  <div class="field">
+                    <b-checkbox v-model="showGeneratedShadow">
+                      Show generated geometries
+                    </b-checkbox>
+                  </div>
+                </section>
+              </div>
+            </b-dropdown-item>
+          </b-dropdown>
+        </div>
+        <div style="padding-left:10px">
+          <div v-show="Object.keys(agencyFeatures).length == 0">
+            <strong>Use your mouse cursor</strong> to highlight routes and see their names here. <strong>Click</strong> to select for more details.
+          </div>
+          <route-select :agency-features="agencyFeatures" :collapse="true" />
+        </div>
       </div>
     </div>
 
@@ -37,14 +68,22 @@ const mapboxgl = require('mapbox-gl/dist/mapbox-gl.js')
 
 export default {
   props: {
+    showOptions: { type: Boolean, default: false },
+    showGenerated: { type: Boolean, default: true },
+    mapClass: { type: String, default: 'short' },
+    routeTiles: { type: Object, default () { return null } },
+    stopTiles: { type: Object, default () { return null } },
+    stopFeatures: { type: Array, default () { return [] } },
+    routeFeatures: { type: Array, default () { return [] } },
     interactive: { type: Boolean, default: true },
     overlay: { type: Boolean, default: false },
     autoFit: { type: Boolean, default: true },
-    center: { type: Array, default () { return [] } },
+    center: { type: Array, default () { return null } },
     circleRadius: { type: Number, default: 1 },
     circleColor: { type: String, default: '#f03b20' },
     linkVersion: { type: Boolean, default: false },
-    zoom: { type: Number, default: 14 },
+    zoom: { type: Number, default: 4 },
+    hash: { type: Boolean, default: false },
     features: {
       type: Array, default () { return [] }
     }
@@ -54,14 +93,18 @@ export default {
       map: null,
       hovering: [],
       agencyFeatures: {},
-      isComponentModalActive: false
+      isComponentModalActive: false,
+      showGeneratedShadow: this.showGenerated
     }
   },
   watch: {
+    showGeneratedShadow (v) {
+      this.updateFilters()
+    },
     features (v) {
       if (v) {
         this.$nextTick(() => {
-          this.redraw()
+          this.updateFeatures()
         })
       }
     }
@@ -83,10 +126,19 @@ export default {
       })
     },
     initMap () {
-      this.map = new mapboxgl.Map({
+      const opts = {
+        hash: this.hash,
         interactive: this.interactive,
         preserveDrawingBuffer: true,
         container: this.$refs.mapelem,
+        transformRequest: (url, resourceType) => {
+          if (resourceType === 'Tile' && url.startsWith('https://transit.land')) {
+            return {
+              url,
+              headers: { apikey: process.env.tileApikey }
+            }
+          }
+        },
         style: {
           version: 8,
           sources: {
@@ -107,11 +159,25 @@ export default {
             }
           ]
         }
-      })
+      }
+      if (this.center) {
+        opts.center = this.center
+      }
+      if (this.zoom) {
+        opts.zoom = this.zoom
+      }
+      this.map = new mapboxgl.Map(opts)
       this.map.addControl(new mapboxgl.FullscreenControl())
-      this.map.on('load', this.drawMap)
+      this.map.on('load', () => {
+        this.createSources()
+        this.createLayers()
+        this.fitFeatures()
+        this.map.on('mousemove', this.mapMouseMove)
+        this.map.on('click', 'route-active', this.mapClick)
+        this.map.resize()
+      })
     },
-    redraw () {
+    updateFeatures () {
       const polygons = this.features.filter((s) => { return s.geometry.type === 'MultiPolygon' || s.geometry.type === 'Polygon' })
       const points = this.features.filter((s) => { return s.geometry.type === 'Point' })
       const lines = this.features.filter((s) => { return s.geometry.type === 'LineString' })
@@ -119,48 +185,95 @@ export default {
       this.map.getSource('lines').setData({ type: 'FeatureCollection', features: lines })
       this.map.getSource('points').setData({ type: 'FeatureCollection', features: points })
     },
-    drawMap () {
-      const polygons = this.features.filter((s) => { return s.geometry.type === 'MultiPolygon' || s.geometry.type === 'Polygon' })
-      const lines = this.features.filter((s) => { return s.geometry.type === 'LineString' && s.properties.class !== 'route' })
-      const routeLines = this.features.filter((s) => { return s.geometry.type === 'LineString' && s.properties.class === 'route' })
-      const points = this.features.filter((s) => { return s.geometry.type === 'Point' && s.properties.class !== 'stop' })
-      const stopPoints = this.features.filter((s) => { return s.geometry.type === 'Point' && s.properties.class === 'stop' })
+    updateFilters () {
+      for (const v of mapLayers.routeLayers) {
+        if (v.filter) {
+          const f = v.filter.slice()
+          if (!this.showGeneratedShadow) {
+            f.push(['==', 'generated', false])
+          }
+          this.map.setFilter(v.name, f)
+        }
+      }
+    },
+    createSources () {
       this.map.addSource('polygons', {
         type: 'geojson',
-        data: { type: 'FeatureCollection', features: polygons }
-      })
-      this.map.addSource('route-lines', {
-        type: 'geojson',
-        data: { type: 'FeatureCollection', features: routeLines }
+        data: { type: 'FeatureCollection', features: [] }
       })
       this.map.addSource('lines', {
         type: 'geojson',
-        data: { type: 'FeatureCollection', features: lines }
+        data: { type: 'FeatureCollection', features: [] }
       })
       this.map.addSource('points', {
         type: 'geojson',
-        data: { type: 'FeatureCollection', features: points }
+        data: { type: 'FeatureCollection', features: [] }
       })
-      this.map.addSource('stop-points', {
-        type: 'geojson',
-        data: { type: 'FeatureCollection', features: stopPoints }
-      })
+      // Add route/stop sources, with geojson features as fallbacks
+      if (this.routeTiles) {
+        this.map.addSource('routes', {
+          type: 'vector',
+          tiles: [this.routeTiles.url],
+          minzoom: this.routeTiles.minzoom || 0,
+          maxzoom: this.routeTiles.maxzoom || 14
+        })
+      } else {
+        this.map.addSource('routes', {
+          type: 'geojson',
+          data: { type: 'FeatureCollection', features: this.routeFeatures }
+        })
+      }
+      if (this.stopTiles) {
+        this.map.addSource('stops', {
+          type: 'vector',
+          tiles: [this.stopTiles.url],
+          minzoom: this.stopTiles.minzoom || 0,
+          maxzoom: this.stopTiles.maxzoom || 14
+        })
+      } else {
+        this.map.addSource('stops', {
+          type: 'geojson',
+          data: { type: 'FeatureCollection', features: this.stopFeatures }
+        })
+      }
+    },
+    createLayers () {
+      // Route/Stop layers
       for (const v of mapLayers.routeLayers) {
-        const l = {
+        const layer = {
           id: v.name,
           type: 'line',
-          source: 'route-lines',
+          source: 'routes',
           layout: {
             'line-cap': 'round',
             'line-join': 'round'
           },
           paint: v.paint
         }
-        if (v.filter != null) {
-          l.filter = v.filter
+        if (this.routeTiles) {
+          layer['source-layer'] = this.routeTiles.id
         }
-        this.map.addLayer(l)
+        if (v.filter) {
+          layer.filter = v.filter.slice()
+        }
+        this.map.addLayer(layer)
       }
+      for (const v of mapLayers.stopLayers) {
+        const layer = {
+          id: v.name,
+          type: 'circle',
+          source: 'stops',
+          paint: v.paint
+        }
+        if (this.stopTiles) {
+          layer['source-layer'] = this.stopTiles.id
+        }
+        if (v.filter) {
+          layer.filter = v.filter.slice()
+        }
+        this.map.addLayer(layer)
+      }
+      // Other feature layers
       this.map.addLayer({
         id: 'polygons',
         type: 'fill',
@@ -193,16 +306,6 @@ export default {
         }
       })
       this.map.addLayer({
-        id: 'stop-points',
-        type: 'circle',
-        source: 'stop-points',
-        paint: {
-          'circle-color': '#0000FF',
-          'circle-radius': this.circleRadius,
-          'circle-opacity': 0.4
-        }
-      })
-      this.map.addLayer({
         id: 'lines',
         type: 'line',
         source: 'lines',
@@ -213,38 +316,42 @@ export default {
           'line-opacity': 1.0
         }
       })
-      const coordinates = stopPoints.map((s) => { return s.geometry.coordinates })
-      for (const line of routeLines) {
-        for (const c of line.geometry.coordinates) {
-          coordinates.push(c)
-        }
-      }
-      for (const polygon of polygons) {
-        for (const a of polygon.geometry.coordinates) {
-          for (const b of a) {
-            coordinates.push(b)
+    },
+    fitFeatures () {
+      const coords = []
+      for (const f of this.features) {
+        const g = f.geometry
+        if (g.type === 'Point') {
+          coords.push(g.coordinates)
+        } else if (g.type === 'LineString') {
+          for (const c of g.coordinates) {
+            coords.push(c)
+          }
+        } else if (g.type === 'Polygon') {
+          for (const a of g.coordinates) {
+            for (const b of a) {
+              coords.push(b)
+            }
           }
         }
       }
-      this.map.resize()
-      if (this.autoFit) {
-        const bounds = coordinates.reduce(function (bounds, coord) {
+      for (const f of this.stopFeatures) {
+        coords.push(f.geometry.coordinates)
+      }
+      for (const f of this.routeFeatures) {
+        for (const c of f.geometry.coordinates) {
+          coords.push(c)
+        }
+      }
+      if (this.autoFit && coords.length > 0) {
+        const bounds = coords.reduce(function (bounds, coord) {
           return bounds.extend(coord)
-        }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]))
+        }, new mapboxgl.LngLatBounds(coords[0], coords[0]))
         this.map.fitBounds(bounds, {
           duration: 0,
           padding: 20
         })
-      } else {
-        this.map.flyTo({
-          center: this.center,
-          zoom: this.zoom,
-          duration: 0
-        })
       }
-      // Click handler
-      this.map.on('mousemove', this.mapMouseMove)
-      this.map.on('click', 'route-active', this.mapClick)
     },
     mapClick (e) {
       this.isComponentModalActive = true
@@ -255,14 +362,14 @@ export default {
       map.getCanvas().style.cursor = 'pointer'
       for (const k of this.hovering) {
         map.setFeatureState(
-          { source: 'route-lines', id: k },
+          { source: 'routes', id: k, sourceLayer: this.routeTiles ? this.routeTiles.id : null },
           { hover: false }
         )
       }
       this.hovering = []
       for (const v of features) {
         this.hovering.push(v.id)
-        map.setFeatureState({ source: 'route-lines', id: v.id }, { hover: true })
+        map.setFeatureState({ source: 'routes', id: v.id, sourceLayer: this.routeTiles ? this.routeTiles.id : null }, { hover: true })
       }
       const agencyFeatures = {}
       for (const v of features) {
@@ -274,35 +381,36 @@ export default {
         agencyFeatures[agencyId][routeId] = v.properties
       }
       this.agencyFeatures = agencyFeatures
-    },
-    mapMoveEnd () {
-      const map = this.map
-      map.on('moveend', function (e) {
-        const count = {}
-        const agencies = {}
-        for (const f of map.queryRenderedFeatures({ layers: ['route-active'] })) {
-          count[f.id] = true
-          agencies[f.properties.agency_id] = true
-        }
-        document.getElementById('summary').innerHTML = `features:, ${Object.keys(count).length} agencies: ${Object.keys(agencies).length}`
-      })
     }
   }
 }
 </script>
 
 <style scoped>
-#mapelem {
-  width: 100%;
+.short {
   height: 600px;
 }
+
+.tall {
+  height: calc(100vh - 60px);
+}
+
 .map-agencies {
+  user-select:none;
   position:absolute;
+  margin:0px;
+  padding:10px;
   top:10px;
-  left:0px;
+  left:10px;
   background:#ffffff;
   width:400px;
   overflow-x:hidden;
   opacity:0.5;
 }
+
+.map-options {
+  border-bottom:solid 1px #ccc;
+  margin-bottom:20px;
+}
+
 </style>
