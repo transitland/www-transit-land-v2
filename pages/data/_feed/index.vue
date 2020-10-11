@@ -168,7 +168,7 @@
         <!-- Data sources -->
         <b-tab-item label="Associated Operators">
           <b-message type="is-light" has-icon icon="information" :closable="false">
-            This feed contributes data to the following Operators. These associations are a mix of references defined in each Operator's Atlas record. Additionally, GTFS Agencies that do not have defined references to any Operator record are assigned an automatically generated Operator Onestop ID. Only data from the currently active version of this feed is used. Please see the <nuxt-link :to="{name:'documentation'}">
+            This feed contributes data to the following Operators. These associations are based on the references defined in each Operator's Atlas record. Additionally, GTFS Agencies that do not have defined references to any Operator record are assigned an automatically generated Onestop ID. Please see the <nuxt-link :to="{name:'documentation'}">
               Operator documentation
             </nuxt-link> for more information on this process.
           </b-message>
