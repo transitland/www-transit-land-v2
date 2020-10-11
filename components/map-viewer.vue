@@ -171,6 +171,7 @@ export default {
       this.map.on('load', () => {
         this.createSources()
         this.createLayers()
+        this.updateFeatures()
         this.fitFeatures()
         this.map.on('mousemove', this.mapMouseMove)
         this.map.on('click', 'route-active', this.mapClick)
