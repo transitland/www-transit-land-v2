@@ -18,11 +18,12 @@
       @sort="onSort"
     >
       <b-table-column v-slot="props" field="agency_id" label="Agency ID">
-        <nuxt-link
+        {{ props.row.agency_id }}
+        <!-- <nuxt-link
           :to="{name:'operators-onestop_id', params:{onestop_id:'search'}, query:{feed_onestop_id:props.row.feed_onestop_id, feed_version_sha1:props.row.feed_version_sha1, agency_id:props.row.agency_id}}"
         >
           {{ props.row.agency_id }}
-        </nuxt-link>
+        </nuxt-link> -->
       </b-table-column>
       <b-table-column
         v-slot="props"
