@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import mermaid from 'mermaid'
 import RouteIcon from '~/components/route-icon'
 
 Vue.use(require('vue-moment'))
@@ -115,5 +114,3 @@ Vue.filter('prettyBytes', function (num) {
   const unit = units[exponent]
   return (neg ? '-' : '') + num + ' ' + unit
 })
-
-mermaid.initialize({ startOnLoad: false })

@@ -68,7 +68,25 @@ export default {
     '@nuxt/content'
   ],
   content: {
-
+    liveEdit: false,
+    markdown: {
+      rehypePlugins: [
+        ['rehype-wrap', {
+          selector: 'table',
+          wrapper: 'div.table-container'
+        }],
+        ['rehype-add-classes', {
+          'h1,h2,h3,h4,h5': 'title',
+          h1: 'is-1',
+          h2: 'is-2',
+          h3: 'is-3',
+          h4: 'is-4',
+          h5: 'is-5',
+          table: 'table is-striped',
+          p: 'content'
+        }]
+      ]
+    }
   },
   /* APOLLO */
   apollo: {
