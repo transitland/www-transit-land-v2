@@ -33,4 +33,7 @@ export default {
 </script>
 
 <style scoped>
+h1,h2,h3,h4,h5 {
+  float: none; /* for some reason @nuxt/content adds inline style tag */
+}
 </style>
