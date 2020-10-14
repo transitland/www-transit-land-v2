@@ -1,11 +1,11 @@
 <template>
   <div>
-    <div class="content">
+    <div>
       <div class="columns">
         <div class="column is-one-quarter">
           <doc-index />
         </div>
-        <div class="column is-three-quarters">
+        <div class="column is-three-quarters content">
           <h1 class="title is-1">
             {{ index.title }}
           </h1>
