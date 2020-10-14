@@ -43,7 +43,7 @@
           {{ props.row.last_arrival_time | formatHMS }}
         </b-table-column>
         <b-table-column v-slot="props" :sortable="true" field="trip_headsign" label="Headsign">
-          <nuxt-link :to="{name: 'data-feed-versions-version-routes-route-index-trips-trip', params:{feed:$route.params.feed, version:$route.params.version, trip: props.row.trip_id}}">
+          <nuxt-link :to="{name: 'feeds-feed-versions-version-routes-route-index-trips-trip', params:{feed:$route.params.feed, version:$route.params.version, trip: props.row.trip_id}}">
             {{ props.row.trip_short_name || props.row.trip_headsign || props.row.trip_id }}
           </nuxt-link>
         </b-table-column>

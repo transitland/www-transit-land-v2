@@ -6,7 +6,7 @@
 
     <div class="content is-medium">
       <p>
-        Transitland uses operators to group together <nuxt-link :to="{name:'data'}">
+        Transitland uses operators to group together <nuxt-link :to="{name:'feeds'}">
           source feeds
         </nuxt-link> and other relevant data. This table can be searched and sorted; click on an operator name to drill down for more information.
       </p>

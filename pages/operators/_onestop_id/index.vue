@@ -28,10 +28,10 @@
       </b-message>
       <b-message v-if="linkVersion" type="is-warning" has-icon>
         You are viewing a single GTFS Agency entity defined in source feed
-        <nuxt-link :to="{name:'data-feed', params:{feed:$route.query.feed_onestop_id}}">
+        <nuxt-link :to="{name:'feeds-feed', params:{feed:$route.query.feed_onestop_id}}">
           {{ $route.query.feed_onestop_id | shortenName }}
         </nuxt-link> version
-        <nuxt-link :to="{name:'data-feed-versions-version', params:{feed:$route.query.feed_onestop_id, version:$route.query.feed_version_sha1}}">
+        <nuxt-link :to="{name:'feeds-feed-versions-version', params:{feed:$route.query.feed_onestop_id, version:$route.query.feed_version_sha1}}">
           {{ $route.query.feed_version_sha1 | shortenName(8) }}
         </nuxt-link>.<br>
         <template v-if="!search">
@@ -163,7 +163,7 @@
               {{ props.row.target_type }}
             </b-table-column>
             <b-table-column v-slot="props" field="agency" label="Source Feed">
-              <nuxt-link :to="{name:'data-feed', params:{feed:props.row.target_feed}}">
+              <nuxt-link :to="{name:'feeds-feed', params:{feed:props.row.target_feed}}">
                 {{ props.row.target_feed }}
               </nuxt-link>
             </b-table-column>

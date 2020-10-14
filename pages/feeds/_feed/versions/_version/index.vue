@@ -8,17 +8,17 @@
       <nav class="breadcrumb">
         <ul>
           <li>
-            <nuxt-link :to="{name:'data'}">
+            <nuxt-link :to="{name:'feeds'}">
               Source Feeds
             </nuxt-link>
           </li>
           <li>
-            <nuxt-link :to="{name: 'data-feed', params:{feed:$route.params.feed}}">
+            <nuxt-link :to="{name: 'feeds-feed', params:{feed:$route.params.feed}}">
               {{ $route.params.feed }}
             </nuxt-link>
           </li>
           <li>
-            <nuxt-link :to="{name: 'data-feed-versions-version', params:{feed:$route.params.feed, version:$route.params.version}}">
+            <nuxt-link :to="{name: 'feeds-feed-versions-version', params:{feed:$route.params.feed, version:$route.params.version}}">
               {{ $route.params.version | shortenName(8) }}
             </nuxt-link>
           </li>

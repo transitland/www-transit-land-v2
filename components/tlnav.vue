@@ -55,7 +55,7 @@ export default {
         {
           title: 'Source Feeds',
           icon: 'lightbulb',
-          to: { name: 'data' }
+          to: { name: 'feeds' }
         },
         // {
         //   title: 'API',

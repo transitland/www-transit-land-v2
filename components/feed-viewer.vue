@@ -38,7 +38,7 @@
       @sort="onSort"
     >
       <b-table-column v-slot="props" field="onestop_id" label="Feed Onestop ID">
-        <nuxt-link :to="{name: 'data-feed', params: {feed: props.row.onestop_id}}">
+        <nuxt-link :to="{name: 'feeds-feed', params: {feed: props.row.onestop_id}}">
           {{ props.row.onestop_id }}
         </nuxt-link>
       </b-table-column>
@@ -133,12 +133,12 @@ export default {
   },
   methods: {
     clearQuery () {
-      this.$router.push({ path: 'data', query: { } })
+      this.$router.push({ path: 'feeds', query: { } })
     },
     onAutocomplete (a, b) {
       const q = { page: 1 }
       q[a] = b
-      this.$router.push({ path: 'data', query: q })
+      this.$router.push({ path: 'feeds', query: q })
     }
   }
 }
