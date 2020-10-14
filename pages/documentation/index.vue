@@ -21,7 +21,7 @@
 <script>
 export default {
   async asyncData ({ $content }) {
-    const index = await $content('docs/index').fetch()
+    const index = await $content('news/test').fetch()
     return {
       index
     }
