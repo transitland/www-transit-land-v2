@@ -34,7 +34,13 @@
 <script>
 export default {
   async asyncData ({ $content, params }) {
-    const index = await $content('docs', 'index').fetch()
+    let fn = params.pathMatch.replace('.html', '')
+    if (fn === '') {
+      fn = 'index'
+    } else if (fn.slice(-1) === '/') {
+      fn = fn + 'index'
+    }
+    const index = await $content('docs', fn).fetch()
     return {
       index
     }

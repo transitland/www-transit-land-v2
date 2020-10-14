@@ -19,10 +19,15 @@
       <h1 class="is-1 title">
         {{ article.title }}
       </h1>
-      <h4 class="title is-4">
-        Published {{ $route.params.year }}-{{ $route.params.month }}-{{ $route.params.day }}
-      </h4>
-      <nuxt-content :document="article" />
+      <div class="columns is-centered">
+        <div class="column is-two-thirds">
+          <h4 class="title is-4">
+            Published {{ $route.params.year }}-{{ $route.params.month }}-{{ $route.params.day }}
+          </h4>
+
+          <nuxt-content :document="article" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
