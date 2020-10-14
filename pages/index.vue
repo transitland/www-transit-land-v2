@@ -45,7 +45,7 @@
         </nuxt-link>. Use the Transitland website to browse this world of data. Or use Transitland's APIs to power your own maps, data visualizations, analyses, trip planners, or routing algorithms.
       </p>
       <p class="is-medium content">
-        This website and the APIs that power it are gradually replacing Transitland v1. For the time being, the two versions will run in parallel. For Transitland v1, see <code><a href="https://transit.land">https://transit.land</a></code> and use its API at <code><a href="https://transit.land/api/v1">https://transit.land/api/v1</a></code>. For an overview of Transitland v2, see <a href="https://transit.land/news/2019/10/17/tlv2.html">this blog post</a> and <a href="http://localhost:3000/documentation">the new documentation on this website</a>.
+        This website and the APIs that power it are gradually replacing Transitland v1. For the time being, the two versions will run in parallel. For Transitland v1, see <code><a href="https://v1.transit.land">https://transit.land</a></code> and use its API at <code><a href="https://transit.land/api/v1">https://transit.land/api/v1</a></code>. For an overview of Transitland v2, see <a href="https://v1.transit.land/news/2019/10/17/tlv2.html">this blog post</a> and <a href="/documentation">the new documentation on this website</a>.
       </p>
       <p class="is-medium content">
         Thank you to the many contributors and users who have been a part of Transitland since 2014!

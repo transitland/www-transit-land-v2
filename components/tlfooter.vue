@@ -7,7 +7,7 @@
     </p><p>
       Transitland website and platform are operated by
       <a href="https://www.interline.io">Interline Technologies</a>.
-    </p><p>See <a href="https://transit.land/transitland">github.com/transitland</a> for open-source code. Contact us at <a href="mailto:info@interline.io">info@interline.io</a>.</p>
+    </p><p>See <a href="https://github.com/transitland">github.com/transitland</a> for open-source code. Contact us at <a href="mailto:info@interline.io">info@interline.io</a>.</p>
   </footer>
 </template>
 

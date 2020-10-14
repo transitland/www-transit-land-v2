@@ -14,7 +14,7 @@
       <div class="navbar-end">
         <div class="navbar-item">
           <div class="notification is-warning content is-small">
-            Welcome to <strong>Transitland v2</strong>! We're in the process of migrating content from <a href="https://transit.land">Transitland v1</a>.
+            Welcome to <strong>Transitland v2</strong>! We're in the process of migrating content from <a href="https://v1.transit.land">Transitland v1</a>.
           </div>
         </div>
         <!-- <div class="navbar-item">
