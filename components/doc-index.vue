@@ -5,7 +5,7 @@
         <b-menu-item
           v-for="item of nav"
           :key="item.title"
-          expanded
+          :expanded="$route.path.startsWith(item.link)"
         >
           <template slot="label">
             <nuxt-link v-if="item.link" :to="item.link" exact>
@@ -41,7 +41,7 @@ export default {
       nav: [
         {
           title: 'Overview',
-          link: '/documentation/',
+          link: '/documentation/index',
           items: [
             {
               title: 'Technical Architecture',
@@ -72,10 +72,20 @@ export default {
         },
         {
           title: 'Transitland v1 Datastore API',
-          link: '/documentation/v1'
+          link: '/documentation/datastore/',
+          items: [
+            { title: 'API Endpoints', link: '/documentation/datastore/api-endpoints' },
+            { title: 'Feeds', link: '/documentation/datastore/feeds' },
+            { title: 'Routes and Route Stop Patterns', link: '/documentation/datastore/routes-and-route-stop-patterns' },
+            { title: 'Stops', link: '/documentation/datastore/stops' },
+            { title: 'Schedules', link: '/documentation/datastore/schedules' },
+            { title: 'Changesets', link: '/documentation/datastore/changesets' },
+            { title: 'Quality issues', link: '/documentation/datastore/quality_issues' }
+          ]
         },
         {
           title: 'Legal',
+          link: '/documentation/an-open-project/index',
           items: [
             {
               title: 'An Open Project',

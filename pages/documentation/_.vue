@@ -1,11 +1,11 @@
 <template>
   <div>
-    <div class="content">
+    <div>
       <div class="columns">
         <div class="column is-one-quarter">
           <doc-index />
         </div>
-        <div class="column is-three-quarters">
+        <div class="column is-three-quarters content">
           <h1 class="title is-1">
             {{ index.title }}
           </h1>
@@ -21,7 +21,7 @@
             </li>
           </ul>
           <b-message v-if="index.deprecated" type="is-warning" has-icon>
-            This documentation is for the deprecated Transitland v1 API.
+            This documentation is for the deprecated Transitland v1 platform.
           </b-message>
 
           <nuxt-content :document="index" />
