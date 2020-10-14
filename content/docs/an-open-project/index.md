@@ -1,0 +1,50 @@
+---
+layout: default
+title: An open project
+notoc: true
+---
+
+## "OPEN"- A NOUN MEANING...
+
+Transitland is an "open" project. That's a vague and overused word&mdash;still, "open" is a great goal.
+
+## Data 
+
+Data in Transitland systems are covered by a variety of terms and licenses.
+
+## Original Data in Transitland (Operators and Feeds)
+
+Original data that we curate about GTFS feeds and transit operators under the Datastore's <a href="https://transit.land/api/v1/operators">/api/v1/operators</a> and <a href="https://transit.land/api/v1/feeds">/api/v1/feeds</a> endpoints are made available under <a href="https://creativecommons.org/publicdomain/zero/1.0/legalcode">Creative Commons CC0</a> (CC0). Users contributing feed and operator information through the Feed Registry "add a feed" flow or directly through the Datastore API's changeset process agree to the <a href="/an-open-project/contributor-agreement.html">Transitland Contributor License Agreement</a>. All contributions will be released under the CC0.
+
+## Onestop IDs in Transitland
+
+All Onestop IDs in the Transitland Datastore are released under <a href="https://creativecommons.org/publicdomain/zero/1.0/legalcode">Creative Commons CC0</a> (CC0). This means that you can mix Onestop IDs into your own data sets, to allow cross-referencing with Transitland.
+
+## Data Aggregated from Authoritative Feeds (Stops, Routes, Schedules)
+
+Transitland aggregates stop, route, and schedule data from transit operators' authoritative feeds. Each of these feeds is covered by its own license and terms of service. The <a href="/feed-registry">Feed Registry</a> lists all of the feeds currently aggregated by Transitland, along with information about license restrictions, using a simple classification scheme. The ideal license allows you to:
+
+<div class="license-attr">
+<h4 style="clear: both;"><div class="not-requires-attr"></div> use the feed's data without attribution. It's up to you to decide where, whether, and how in your map, application, or service you acknowledge your data sources.</h4>
+<h4 style="clear: both;"><div class="allow-derivation"></div> create derived products from the feed. For example, you can mix the feed with other sources and share the mixed file with others.</h4>
+<h4 style="clear: both;"><div class="allow-redistribution"></div> redistribute the feed as is, under open terms.</h4>
+</div>
+
+<strong>For data consumers</strong>: Browse the <a href="/feed-registry">Feed Registry</a> and you'll see that each license allows a different combination of uses. Please note these classifications are for informational purposes but do not constitute legal advice&mdash;we make a good faith effort to ensure accuracy and <a href="mailto:hello@transit.land">welcome edits and corrections</a>, but we cannot vouch for accuracy or reliability of the Feed Registry. You are advised to click through to each feed's license, review it, and <em>consult with a lawyer if you need proper legal advice on using and consuming data from such feed</em>.
+
+<strong>For data providers</strong>: Do you work at a transit agency that is hoping to make its data more open and useful to civic-minded software developers and entrepreneurial companies? We're glad to help. Our legal staff have drafted a <a href="transitland-model-license.docx">model license</a> that transit agencies can attach to their GTFS feeds, their real-time feeds, and any other data that they'd like to share with outside consumers. This model license allows the freedoms that developers want, while also including all the protections that agencies need. Please share this model license with your legal department and <a href="mailto:hello@transit.land">contact us for more information</a>&mdash;we're glad to provide support to open-data initiatives within transit agencies. However, please note that the model license does not constitute legal advice nor create an attorney-client relationship. You are advised to consult with your own legal counsel before using or adopting the model license.
+
+---
+
+## Software
+
+Transitland is built using exclusively open-source software. When possible, we release new tools under flexible licenses like MIT that allow use in both non-commercial and commercial settings. All our code, with the exception of some server configuration, is <a href="https://github.com/transitland">publicly available on GitHub</a>.
+
+---
+
+## Direction
+
+For updates follow <a href="https://twitter.com/transitland">@transitland</a> on Twitter.
+
+Or write us with questions and ideas at <a href="mailto:hello@transit.land">hello@transit.land</a>
+

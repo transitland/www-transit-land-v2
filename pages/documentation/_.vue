@@ -9,7 +9,7 @@
           <h1 class="title is-1">
             {{ index.title }}
           </h1>
-          <ul>
+          <ul v-if="!index.notoc">
             <li
               v-for="link of index.toc || []"
               :key="link.id"

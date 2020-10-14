@@ -50,7 +50,19 @@ export default {
         },
         {
           title: 'Transitland v1 API', link: '/documentation/v1'
+        },
+        {
+          title: 'Legal',
+          items: [
+            {
+              title: 'An Open Project', link: '/documentation/an-open-project/index'
+            },
+            {
+              title: 'Contributor Agreement', link: '/documentation/an-open-project/contributor-agreement'
+            }
+          ]
         }
+
       ]
     }
   }
