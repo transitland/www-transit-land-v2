@@ -5,17 +5,17 @@ description: Documentation for the Transitland website and APIs.
 
 Transitland brings together many sources of transit data to build a directory of operators and feeds that can be edited by transit enthusiasts and developers.
 
-<div class="notification is-warning">
+<b-message type="is-warning" has-icon>
 
-  This documentation site describes Transitland v2. Some components of Transitland v1 are deprecated but still active, including the Transitland v1 Datastore API. See [Transitland v1 documentation](https://transit.land/documentation/) for more information on those components.
+  This documentation site describes Transitland v2. Some components of Transitland v1 are deprecated but still active, including the Transitland v1 Datastore API. See [Transitland v1 documentation](/documentation/v1) for more information on those components.
 
-</div>
+</b-message>
 
 ## Transitland Architecture
 
 Here is a diagram of the overall Transitland v1 and v2 technical architecture:
 
-<tlv2-architecture-diagram></tlv2-architecture-diagram>
+<img class="image" style="width:600px" src="/images/tlv2/tlv2-architecture.png" alt="diagram of Transitland v2 technical architecture">
 
 ## Comparing the APIs
 
@@ -23,23 +23,7 @@ Transitland v1 and v2 provide a range of APIs. All are powered by the same under
 
 | API                             | Status           | Root Endpoint                   | API Key Required                        | Cost                    | Uses                                                                                                                             |
 | ------------------------------- | ---------------- | ------------------------------- | --------------------------------------- | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| [Transitland v1 Datastore API](#transitland-v1-datastore-api)    | deprecated       | `https://transit.land/api/v1`   | no                                      | free (with rate limits) | Original API for exploring data and powering apps. Has some performance limitations.                                             |
-| [Transitland v2 Map Vector Tiles](#transitland-v2-map-vector-tiles) | beta             | `https://transit.land/mbtiles/` | <b-icon icon="check-bold" title="yes"/> | free (with rate limits) | Powers the [map](/map). Build your own web maps of stop locations and route geometries. In Mapbox Vector Tile (MVT) format.      |
-| [Transitland v2 REST API](#transitland-v2-rest-api)         | not yet released | to be announced                 | <b-icon icon="check-bold" title="yes"/> | free (with rate limits) | Fast and easy queries for accessing common data.                                                                                 |
-| [Transitland v2 GraphQL API](#transitland-v2-graphql-api)      | not yet released | to be announced                 | <b-icon icon="check-bold" title="yes"/> | paid                    | The most flexible API for performing a wide variety of queries and analyses. May be slower than v2 REST API for certain queries. |
-
-## Transitland v1 Datastore API
-
-See https://transit.land/documentation/datastore/api-endpoints.html
-
-## Transitland v2 Map Vector Tiles
-
-TODO
-
-## Transitland v2 REST API
-
-TODO
-
-## Transitland v2 GraphQL API
-
-TODO
+| [Transitland v1 Datastore API](/documentation/datastore/)    | deprecated       | `https://transit.land/api/v1`   | no                                      | free (with rate limits) | Original API for exploring data and powering apps. Has some performance limitations.                                             |
+| [Transitland v2 Map Vector Tiles](/documentation/vector-tiles) | beta             | `https://transit.land/mbtiles/` | <b-icon icon="check-bold" title="yes"/> | free (with rate limits) | Powers the [map](/map). Build your own web maps of stop locations and route geometries. In Mapbox Vector Tile (MVT) format.      |
+| [Transitland v2 REST API](/documentation/rest-api)         | not yet released | to be announced                 | <b-icon icon="check-bold" title="yes"/> | free (with rate limits) | Fast and easy queries for accessing common data.                                                                                 |
+| [Transitland v2 GraphQL API](/documentation/graphql-api)      | not yet released | to be announced                 | <b-icon icon="check-bold" title="yes"/> | paid                    | The most flexible API for performing a wide variety of queries and analyses. May be slower than v2 REST API for certain queries. |
