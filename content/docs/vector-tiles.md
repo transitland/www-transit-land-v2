@@ -10,7 +10,7 @@ The Transitland Vector Tiles base endpoint is:
 
     https://transit.land/mbtiles
 
-Three services are currently provided: routes, stops, and agencies.
+Two services are currently provided: routes and stops.
 
     https://transit.land/mbtiles/routes/tiles/{z}/{x}/{y}.pbf
     https://transit.land/mbtiles/stops/tiles/{z}/{x}/{y}.pbf
