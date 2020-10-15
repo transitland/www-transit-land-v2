@@ -74,7 +74,8 @@ export default {
     { from: '^/how-it-works', to: '/documentation', status: 301 },
     { from: '^/an-open-project/contributor-agreement.html', to: '/documentation/an-open-project/contributor-agreement', status: 301 },
     { from: '^/an-open-project/transitland-model-license.docx', to: '/transitland-model-license.docx', status: 302 },
-    { from: '^/an-open-project', to: '/documentation/an-open-project', status: 301 }
+    { from: '^/an-open-project', to: '/documentation/an-open-project', status: 301 },
+    { from: '^/playground', to: '/map', status: 301 }
   ],
   content: {
     liveEdit: false,
