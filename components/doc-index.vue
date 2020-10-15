@@ -88,6 +88,10 @@ export default {
           ]
         },
         {
+          title: 'transitland-lib',
+          link: '/documentation/transitland-lib'
+        },
+        {
           title: 'Legal',
           link: '/documentation/an-open-project/index',
           items: [

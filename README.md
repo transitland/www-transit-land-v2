@@ -1,6 +1,6 @@
-# gotransit-ui
+# www-transit-land-v2
 
-> My epic Nuxt.js project
+The new Transitland website. Isn't it awesome?
 
 ## Build Setup
 
