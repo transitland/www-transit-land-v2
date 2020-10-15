@@ -2,7 +2,7 @@
 title: Transitland v2 Vector Tiles
 ---
 
-Transitland publishes the current, active set of routes and stops as a set of tiles in Mapbox Vector Tile format. These provide extremely fast access to basic information such as route names, geometries, stop locations, etc. Additional details for each entity can be obtained using other Transitland APIs.
+Transitland publishes the current, active set of routes and stops as a set of tiles in Mapbox Vector Tile (MVT) format. These provide extremely fast access to basic information such as route names, geometries, stop locations, etc. Additional details for each entity can be obtained using other Transitland APIs.
 
 ## Transitland Vector Tile Endpoints
 
@@ -15,9 +15,19 @@ Three services are currently provided: routes, stops, and agencies.
     https://transit.land/mbtiles/routes/tiles/{z}/{x}/{y}.pbf
     https://transit.land/mbtiles/stops/tiles/{z}/{x}/{y}.pbf
 
+## Configuring access
+
+You will need to send your API key as part of the request to this endpoint. It can be specified through either the `apikey` query parameter or `apikey` header value.
+
+## Access considerations
+
+Transitland Vector Tiles are pre-generated and cached for performance. This is a necessity for rendering large scale maps quickly. As such, data in the tiles may lag up to a few hours behind other APIs. If your use case requires access to the most current data, finer-grained queries, or more structured results, then the REST or GraphQL APIs may be more appropriate.
+
+Route and stop tiles include both a stable, public OnestopID for each entity, as well as an internal ID value. These internal IDs are not stable and should not be used outside of the immediate context; they are provided only as a convenience for when a unique integer key is needed (e.g. GeoJSON display).
+
 ## Route tiles
 
-The following attributes are provided for each feature in the route tiles. Note that some fields may be empty or null, in particular, `headway_secs` cannot always be accurately estimated. The internal ID values should only be used for immediate queries; these change over time.
+The following attributes are provided for each feature in the route tiles. Note that some fields may be empty or null, in particular, `headway_secs` cannot always be accurately estimated.
 
 Attribute | Description | Example
 ------------------|--|--------------
@@ -52,9 +62,6 @@ location_type       | GTFS location_type | 0
 parent_station      | Internal ID for parent station | 32915959
 id                  | Internal ID | 32916008
 
-## Configuring access
-
-You will need to send your API key as part of the request to this endpoint. It can be specified through either the `apikey` query parameter or `apikey` header value.
 
 ## Mapbox GL example
 

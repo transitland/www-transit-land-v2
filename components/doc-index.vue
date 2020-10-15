@@ -59,7 +59,7 @@ export default {
           link: '/documentation/onestop-id-scheme/'
         },
         {
-          title: 'Transitland v2 Vector Tiles API',
+          title: 'Transitland v2 Vector Tiles',
           link: '/documentation/vector-tiles'
         },
         {
