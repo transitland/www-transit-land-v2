@@ -65,7 +65,16 @@ export default {
     // https://github.com/nuxt-community/apollo-module
     '@nuxtjs/apollo',
     // https://content.nuxtjs.org/
-    '@nuxt/content'
+    '@nuxt/content',
+    '@nuxtjs/redirect-module'
+  ],
+  redirect: [
+    { from: '^/feed-registry/operators/(.*)$', to: '/operators/$1', status: 301 },
+    { from: '^/feed-registry', to: '/operators', status: 301 },
+    { from: '^/how-it-works', to: '/documentation', status: 301 },
+    { from: '^/an-open-project/contributor-agreement.html', to: '/documentation/an-open-project/contributor-agreement', status: 301 },
+    { from: '^/an-open-project/transitland-model-license.docx', to: '/transitland-model-license.docx', status: 302 },
+    { from: '^/an-open-project', to: '/documentation/an-open-project', status: 301 }
   ],
   content: {
     liveEdit: false,
