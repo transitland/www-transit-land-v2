@@ -1,33 +1,25 @@
 <template>
-  <nav class="navbar has-shadow" role="navigation" aria-label="main navigation">
-    <div class="navbar-brand">
+  <b-navbar shadow>
+    <template slot="brand">
       <nuxt-link class="navbar-item" :to="{name:'index'}">
         <div class="logo-image" />
       </nuxt-link>
-    </div>
-    <div class="navbar-menu">
-      <div v-for="(item,key) in items" :key="key" class="navbar-item" :class="($route && $route.name && $route.name.startsWith(item.to.name)) ? 'is-active is-tab': ''">
+    </template>
+    <template slot="start">
+      <b-navbar-item v-for="(item,key) in items" :key="key" :class="($route && $route.name && $route.name.startsWith(item.to.name)) ? 'is-active is-tab': ''">
         <nuxt-link :to="item.to">
           {{ item.title }}
         </nuxt-link>
-      </div>
-      <div class="navbar-end">
-        <div class="navbar-item">
-          <div class="notification is-warning content is-small">
-            Welcome to <strong>Transitland v2</strong>! We're in the process of migrating content from <a href="https://v1.transit.land">Transitland v1</a>.
-          </div>
+      </b-navbar-item>
+    </template>
+    <template slot="end">
+      <b-navbar-item>
+        <div class="notification is-warning content is-small">
+          Welcome to <strong>Transitland v2</strong>! We're in the process of migrating content from <a href="https://v1.transit.land">Transitland v1</a>.
         </div>
-        <!-- <div class="navbar-item">
-          <a href="#TODO" class="button">
-            <span class="icon">
-              <b-icon icon="help-box" />
-            </span>
-            <span>Help</span>
-          </a>
-        </div> -->
-      </div>
-    </div>
-  </nav>
+      </b-navbar-item>
+    </template>
+  </b-navbar>
 </template>
 
 <script>
