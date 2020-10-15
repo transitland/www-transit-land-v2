@@ -50,6 +50,10 @@ export default {
             {
               title: 'Comparing the APIs',
               link: '/documentation/index#comparing-the-apis'
+            },
+            {
+              title: 'Signing up for an API Token',
+              link: '/documentation/index#signing-up-for-an-api-token'
             }
           ]
         },
