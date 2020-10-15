@@ -73,22 +73,22 @@
           <td>{{ entity.feed_state.last_fetched_at | formatDate }} ({{ entity.feed_state.last_fetched_at | fromNow }})</td>
         </tr>
 
-        <tr>
-          <td>
-            <b-tooltip dashed label="Last time a fetch successfully returned valid GTFS data">
-              Last Fetched OK
-            </b-tooltip>
-          </td>
-          <td>{{ entity.feed_state.last_successful_fetch_at | formatDate }} ({{ entity.feed_state.last_successful_fetch_at | fromNow }})</td>
-        </tr>
-
         <tr v-if="entity.feed_state.last_fetch_error">
           <td>
-            <b-tooltip dashed label="Error message from last failed fetch">
+            <b-tooltip dashed label="Error message from last fetch attempt">
               Fetch Error
             </b-tooltip>
           </td>
           <td>{{ entity.feed_state.last_fetch_error }}</td>
+        </tr>
+
+        <tr v-if="entity.feed_state.last_fetch_error">
+          <td>
+            <b-tooltip dashed label="Last time a fetch successfully returned valid GTFS data">
+              Last OK Fetch
+            </b-tooltip>
+          </td>
+          <td>{{ entity.feed_state.last_successful_fetch_at | formatDate }} ({{ entity.feed_state.last_successful_fetch_at | fromNow }})</td>
         </tr>
 
         <tr v-if="entity.authorization">
