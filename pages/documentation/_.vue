@@ -10,6 +10,10 @@
             {{ index.title }}
           </h1>
           <ul v-if="!index.notoc">
+            <b-message v-if="index.deprecated" type="is-warning" has-icon>
+              This documentation is for the deprecated Transitland v1 platform.
+            </b-message>
+
             <li
               v-for="link of index.toc || []"
               :key="link.id"
@@ -20,9 +24,6 @@
               </NuxtLink>
             </li>
           </ul>
-          <b-message v-if="index.deprecated" type="is-warning" has-icon>
-            This documentation is for the deprecated Transitland v1 platform.
-          </b-message>
 
           <nuxt-content :document="index" />
         </div>
