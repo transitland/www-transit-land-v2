@@ -2,8 +2,11 @@
   <div>
     <div class="content">
       <h1 class="title is-1">
-        News
+        News & Updates
       </h1>
+      <b-notification class="is-link" :closable="false">
+        <p>For shorter and more frequent updates, see also <a href="https://twitter.com/transitland">@transitland</a> on Twitter.</p>
+      </b-notification>
       <div v-for="article in filteredArticles" :key="article.slug">
         <span style="display:inline-block;width:120px"> {{ article.year }} / {{ article.month }} / {{ article.day }}</span>
         <nuxt-link

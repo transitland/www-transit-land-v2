@@ -4,13 +4,11 @@
       <ul>
         <li>
           <nuxt-link :to="{name:'news'}">
-            News
+            News & Updates
           </nuxt-link>
         </li>
         <li>
-          <nuxt-link :to="{name: 'news'}">
-            {{ article.title }}
-          </nuxt-link>
+          <a href="#">{{ article.title }}</a>
         </li>
       </ul>
     </nav>
@@ -19,15 +17,10 @@
       <h1 class="is-1 title">
         {{ article.title }}
       </h1>
-      <div class="columns is-centered">
-        <div class="column is-two-thirds">
-          <h4 class="title is-4">
-            Published {{ $route.params.year }}-{{ $route.params.month }}-{{ $route.params.day }}
-          </h4>
-
-          <nuxt-content :document="article" />
-        </div>
-      </div>
+      <h4 class="subtitle is-4">
+        Published {{ $route.params.year }}-{{ $route.params.month }}-{{ $route.params.day }}
+      </h4>
+      <nuxt-content :document="article" />
     </div>
   </div>
 </template>
