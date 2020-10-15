@@ -6,15 +6,6 @@ import { InMemoryCache } from 'apollo-cache-inmemory'
 
 Vue.use(VueApollo)
 
-// // All the graphql requests will be made at yourdomaine.com/graphql
-// const httpLink = new HttpLink({
-//     uri: 'localhost:8080/',
-// });
-
-// // We give this to the graphql client
-// const apolloClient = new ApolloClient({
-//     link: httpLink
-// });
 const cache = new InMemoryCache()
 const link = new HttpLink({
   uri: 'https://api.transit.land/api/v2/graphql'
