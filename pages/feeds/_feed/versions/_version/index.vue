@@ -83,7 +83,7 @@
       <table class="property-list">
         <tr>
           <td>Fetched</td>
-          <td>{{ entity.fetched_at | moment("dddd, MMMM Do YYYY, h:mm:ss a") }} ( {{ entity.fetched_at | moment("from","now") }})</td>
+          <td>{{ entity.fetched_at | formatDate }} ({{ entity.fetched_at | fromNow }})</td>
         </tr>
         <tr>
           <td>URL</td>

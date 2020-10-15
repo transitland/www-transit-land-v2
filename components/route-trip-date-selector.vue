@@ -3,7 +3,7 @@
     <b-message v-if="error" class="is-danger">
       {{ error }}
     </b-message>
-    <span v-else-if="$apollo.loading" class="is-loading">Loadingzzz</span>
+    <span v-else-if="$apollo.loading" class="is-loading">Loading</span>
     <b-datepicker
       v-else
       v-model="dateValue"
@@ -19,7 +19,6 @@
 
 <script>
 import gql from 'graphql-tag'
-import moment from 'moment'
 
 const q = gql`
 query ($route_id: bigint!) {
@@ -55,7 +54,7 @@ function dateSplit (value) {
 
 export default {
   props: {
-    value: { type: String, default () { return moment().format('YYYY-MM-DD') } },
+    value: { type: String, default () { return 'TODO' } },
     routeId: { type: Number, default () { return null } }
   },
   apollo: {
@@ -76,10 +75,10 @@ export default {
   computed: {
     dateValue: {
       get () {
-        return moment(this.value).toDate()
+        return 'TODO'
       },
       set (value) {
-        this.$emit('input', moment(value).format('YYYY-MM-DD'))
+        this.$emit('input', 'TODO')
       }
     },
     serviceDates () {

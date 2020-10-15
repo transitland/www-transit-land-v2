@@ -53,7 +53,7 @@
 
       <b-table-column v-slot="props" :width="150" field="last_successful_fetch_at" label="Last Fetched">
         <span v-if="props.row.last_successful_fetch_at">
-          {{ props.row.last_successful_fetch_at | moment("from","now") }}
+          {{ props.row.last_successful_fetch_at | fromNow }}
         </span>
         <span v-else>Never</span>
       </b-table-column>
@@ -66,7 +66,7 @@
 
       <b-table-column v-slot="props" :width="150" field="last_successful_import_at" label="Last Imported">
         <span v-if="props.row.last_successful_import_at">
-          {{ props.row.last_successful_import_at | moment("from","now") }}
+          {{ props.row.last_successful_import_at | fromNow }}
         </span>
         <span v-else>Never</span>
       </b-table-column>

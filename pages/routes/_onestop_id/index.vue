@@ -120,7 +120,6 @@
 </template>
 
 <script>
-import moment from 'moment'
 import EntityPageMixin from '~/components/entity-page-mixin'
 
 export default {
@@ -172,7 +171,7 @@ export default {
     },
     serviceDate: {
       get () {
-        return this.$route.query.service_date ? this.$route.query.service_date : moment().format('YYYY-MM-DD')
+        return this.$route.query.service_date ? this.$route.query.service_date : 'TODO'
       },
       set (value) {
         this.$router.push({

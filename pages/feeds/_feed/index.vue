@@ -63,6 +63,34 @@
             </ul>
           </td>
         </tr>
+
+        <tr>
+          <td>
+            <b-tooltip dashed label="Last time a fetch was attempted">
+              Fetched
+            </b-tooltip>
+          </td>
+          <td>{{ entity.feed_state.last_fetched_at | formatDate }} ({{ entity.feed_state.last_fetched_at | fromNow }})</td>
+        </tr>
+
+        <tr>
+          <td>
+            <b-tooltip dashed label="Last time a fetch successfully returned valid GTFS data">
+              Last Fetched OK
+            </b-tooltip>
+          </td>
+          <td>{{ entity.feed_state.last_successful_fetch_at | formatDate }} ({{ entity.feed_state.last_successful_fetch_at | fromNow }})</td>
+        </tr>
+
+        <tr v-if="entity.feed_state.last_fetch_error">
+          <td>
+            <b-tooltip dashed label="Error message from last failed fetch">
+              Fetch Error
+            </b-tooltip>
+          </td>
+          <td>{{ entity.feed_state.last_fetch_error }}</td>
+        </tr>
+
         <tr v-if="entity.authorization">
           <td>Authorization</td>
           <td>{{ entity.authorization }}</td>
@@ -118,7 +146,7 @@
               field="fetched_at"
               label="Fetched"
             >
-              {{ props.row.fetched_at | moment("YYYY-MM-DD") }}
+              {{ props.row.fetched_at | formatDate }} ({{ props.row.fetched_at | fromNow }})
             </b-table-column>
             <b-table-column v-slot="props" :sortable="true" field="sha1" label="SHA1">
               <nuxt-link

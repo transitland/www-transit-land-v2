@@ -1,9 +1,16 @@
 import Vue from 'vue'
+import { formatDistanceToNow, parseISO, format } from 'date-fns'
 import RouteIcon from '~/components/route-icon'
 
-Vue.use(require('vue-moment'))
-
 Vue.component('route-icon', RouteIcon)
+
+Vue.filter('fromNow', function (comparisonDate) {
+  return formatDistanceToNow(
+    parseISO(comparisonDate + 'Z'), {
+      addSuffix: true
+    }
+  ).replace('about ', '')
+})
 
 Vue.filter('formatHMS', function (value) {
   value = value % (24 * 3600)
@@ -57,12 +64,9 @@ Vue.filter('formatHeadway', function (hw, tod) {
 
 Vue.filter('formatDate',
   function formatdate (value) {
-    const v = new Date(value)
-    const y = v.getFullYear().toString()
-    const m = v.getMonth().toString()
-    const d = v.getDate().toString()
-    return `${y}-${m}-${d}`
-  })
+    return format(parseISO(value), 'yyyy-MM-dd')
+  }
+)
 
 Vue.filter('joinUnique', function (values) {
   return Array.from(new Set(values)).sort().join(', ')
