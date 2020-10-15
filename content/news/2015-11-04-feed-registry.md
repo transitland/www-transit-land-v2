@@ -65,7 +65,7 @@ We're now pleased to offer another view into Transitland's collection of data, t
 
 <!-- more -->
 
-<a href="https://transit.land/feed-registry">![screenshot of Transitland Feed Registry](https://s3.amazonaws.com/assets-staging.mapzen.com/images/feed-registry/transitland-feed-registry-screenshot.png)</a>
+<a href="https://transit.land/feed-registry">![screenshot of Transitland Feed Registry](https://www.mapzen.com/assets/images/feed-registry/transitland-feed-registry-screenshot.png)</a>
 
 ### What transit agencies offer open feeds?
 
@@ -87,7 +87,7 @@ With the [Feed Registry](https://transit.land/feed-registry), we're hoping to cl
     <p style="clear: both;"><div class="allow-redistribution"></div> can you take this feed and redistribute it to others, in a different context or embedded within a different application?</p>
 </div>
 
-<a class="license-image" href="https://transit.land/feed-registry"><img src="https://s3.amazonaws.com/assets-staging.mapzen.com/images/feed-registry/transitland-feed-registry-mouseover.png" alt="screenshot of Transitland Feed Registry: mousing over an informational license icon" width="211" height="319"/></a>
+<a class="license-image" href="https://transit.land/feed-registry"><img src="https://www.mapzen.com/assets/images/feed-registry/transitland-feed-registry-mouseover.png" alt="screenshot of Transitland Feed Registry: mousing over an informational license icon" width="211" height="319"/></a>
 Each license is summarized with three icons that are color-coded for quick reference. Hold your cursor over an icon in the Feed Registry to get more information about what that license permits, or click the question mark at the top of the "License Details" column for more information. Even with just these feeds from the San Francisco and New York regions, it's possible to see how each license is "open" in a slightly different way.
 
 Please note the Feed Registry is provided for informational purposes only and does not constitute legal advice. We make a good faith effort to ensure accuracy, but cannot guarantee the accuracy or reliability of the information provided in the Feed Registry. You are advised to click through to each feed's license, review it, and consult with a lawyer if you need proper legal advice on using and consuming the data referenced in the Feed Registry.

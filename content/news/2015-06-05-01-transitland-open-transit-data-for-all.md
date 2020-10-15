@@ -6,7 +6,7 @@ isThereTitle: true
 category: news
 ---
 
-[![Transitland: a community-edited data service aggregating transit networks across metropolitan and rural areas around the world.](https://s3.amazonaws.com/assets-staging.mapzen.com/images/transitland-open-transit-data-for-all/transitland-animated-banner.gif)](https://transit.land)
+[![Transitland: a community-edited data service aggregating transit networks across metropolitan and rural areas around the world.](https://www.mapzen.com/assets/images/transitland-open-transit-data-for-all/transitland-animated-banner.gif)](https://transit.land)
 
 Hello from the San Francisco Bay Area, where half of the ground is heading northbound and the other is inching southward. (Remember from elementary school? That's what causes earthquakes.) Also epically disjoint is our mass transit: [over 30 public agencies](http://www.spur.org/publications/spur-report/2015-03-31/seamless-transit), [an ever-increasing number of private shuttles](http://stamen.com/zero1/), not to mention [jitneys](http://www.yelp.com/biz/jess-losa-jitney-97-san-francisco) and [carpools](http://sfcasualcarpool.com/) for those in the know.
 
