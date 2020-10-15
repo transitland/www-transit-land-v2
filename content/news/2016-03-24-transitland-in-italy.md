@@ -22,7 +22,7 @@ There are certainly more trains, buses, and gondolas in Italy, and we look forwa
 
 ### _Quando parte il bus?_
 
-One of the most interesting projects to come out of International Open Data Day in Italy, at least to our eyes, was from [Francesco Piero Paolicelli](https://twitter.com/Piersoft). He built a text bot that answers the question _When is the next bus coming?_ using the [Datastore API](https://transit.land/how-it-works/#slide-3). Because it's built on Transitland, the bot works anywhere in the world where Transitland has coverage.
+One of the most interesting projects to come out of International Open Data Day in Italy, at least to our eyes, was from [Francesco Piero Paolicelli](https://twitter.com/Piersoft). He built a text bot that answers the question _When is the next bus coming?_ using the [Datastore API](/how-it-works/#slide-3). Because it's built on Transitland, the bot works anywhere in the world where Transitland has coverage.
 
 ![a screenshot of panarotrebot mobile](/images/transitland-in-italy/transporti-mobile1.png)
 

@@ -1,10 +1,8 @@
 ---
 layout: default
-title: Contributor agreement
+title: Transitland Contributor License Agreement
 notoc: true
 ---
-
-# Transitland Contributor License Agreement
 
 In order to clarify the intellectual property rights granted in contributions from any person or entity (&quot;Contribution&quot;), Transitland must have a Contributor License Agreement (the &quot;Agreement&quot;) agreed to by each contributor. The license granted hereunder is for your protection as a Contributor as well as for the protection of Transitland; it does not change your rights to use your own Contributions for any other purpose.
 
