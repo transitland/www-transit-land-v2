@@ -31,12 +31,12 @@ Transitland publishes the current, active set of routes and stops as a set of ti
 
 The Transitland Vector Tiles base endpoint is:
 
-    https://transit.land/mbtiles
+    https://transit.land/api/v2/tiles
 
 Two services are currently provided: routes and stops.
 
-    https://transit.land/mbtiles/routes/tiles/{z}/{x}/{y}.pbf
-    https://transit.land/mbtiles/stops/tiles/{z}/{x}/{y}.pbf
+    https://transit.land/api/v2/tiles/routes/tiles/{z}/{x}/{y}.pbf
+    https://transit.land/api/v2/tiles/stops/tiles/{z}/{x}/{y}.pbf
 
 ## Configuring access
 
@@ -106,7 +106,7 @@ These tiles can be consumed by any program that understands Mapbox Vector Tile f
                 routes: {
                     type: 'vector',
                     tiles: [
-                        `https://transit.land/mbtiles/routes/tiles/{z}/{x}/{y}.pbf?apikey=${apikey}`
+                        `https://transit.land/api/v2/tiles/routes/tiles/{z}/{x}/{y}.pbf?apikey=${apikey}`
                     ],
                     maxzoom: 14
                 }
