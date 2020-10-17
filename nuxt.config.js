@@ -66,7 +66,8 @@ export default {
     '@nuxtjs/apollo',
     // https://content.nuxtjs.org/
     '@nuxt/content',
-    '@nuxtjs/redirect-module'
+    '@nuxtjs/redirect-module',
+    '@nuxtjs/sitemap'
   ],
   redirect: [
     { from: '^/feed-registry/operators/(.*)$', to: '/operators/$1', status: 301 },
@@ -111,6 +112,12 @@ export default {
         }
       }
     }
+  },
+  sitemap: {
+    hostname: 'https://www.transit.land',
+    gzip: true,
+    exclude: []
+    // TODO: add docs and/or news pages
   },
   /*
   ** Build configuration
