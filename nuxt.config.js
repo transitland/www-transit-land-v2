@@ -76,7 +76,11 @@ export default {
     { from: '^/an-open-project/contributor-agreement.html', to: '/documentation/an-open-project/contributor-agreement', status: 301 },
     { from: '^/an-open-project/transitland-model-license.docx', to: '/transitland-model-license.docx', status: 302 },
     { from: '^/an-open-project', to: '/documentation/an-open-project', status: 301 },
-    { from: '^/playground', to: '/map', status: 301 }
+    { from: '^/playground', to: '/map', status: 301 },
+    { from: '^/documentation/tutorials/(.*)$', to: 'https://v1.transit.land/documentation/tutorials/$1', status: 302 },
+    { from: '^/documentation/dispatcher', to: 'https://v1.transit.land/documentation/dispatcher', status: 302 },
+    { from: '^/documentation/glossary', to: 'https://v1.transit.land/documentation/glossary', status: 302 },
+    { from: '^/documentation/feed-registry/(.*)$', to: 'https://v1.transit.land/documentation/feed-registry/$1', status: 302 }
   ],
   content: {
     liveEdit: false,
