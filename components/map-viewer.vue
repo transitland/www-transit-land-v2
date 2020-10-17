@@ -44,20 +44,22 @@
     <b-modal
       v-if="overlay"
       :active.sync="isComponentModalActive"
-      :can-cancel="true"
       has-modal-card
       full-screen
     >
-      <div v-if="isComponentModalActive" class="modal-card" style="width: auto">
-        <header class="modal-card-head">
-          <p class="modal-card-title">
-            Select Route
-          </p>
-        </header>
-        <section class="modal-card-body">
-          <route-select :agency-features="agencyFeatures" :link-version="linkVersion" />
-        </section>
-      </div>
+      <template #default="props">
+        <div v-if="isComponentModalActive" class="modal-card" style="width: auto">
+          <header class="modal-card-head">
+            <p class="modal-card-title">
+              Select Route
+            </p>
+            <button type="button" class="delete" @click="props.close"/>
+          </header>
+          <section class="modal-card-body">
+            <route-select :agency-features="agencyFeatures" :link-version="linkVersion" />
+          </section>
+        </div>
+    </template>
     </b-modal>
   </div>
 </template>
