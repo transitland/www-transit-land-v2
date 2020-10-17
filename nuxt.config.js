@@ -67,7 +67,8 @@ export default {
     // https://content.nuxtjs.org/
     '@nuxt/content',
     '@nuxtjs/redirect-module',
-    '@nuxtjs/sitemap'
+    '@nuxtjs/sitemap',
+    '@nuxtjs/robots'
   ],
   redirect: [
     { from: '^/feed-registry/operators/(.*)$', to: '/operators/$1', status: 301 },
@@ -123,6 +124,13 @@ export default {
     exclude: []
     // TODO: add docs and/or news pages
   },
+  robots: [
+    {
+      UserAgent: '*',
+      Allow: '/',
+      Sitemap: 'https://www.transit.land/sitemap.xml'
+    }
+  ],
   /*
   ** Build configuration
   */

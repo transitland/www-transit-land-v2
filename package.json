@@ -15,6 +15,7 @@
     "@nuxt/content": "^1.6.1",
     "@nuxtjs/apollo": "^v4.0.1-rc.1",
     "@nuxtjs/redirect-module": "^0.3.1",
+    "@nuxtjs/robots": "^2.4.2",
     "@nuxtjs/sitemap": "^2.4.0",
     "buefy": "~> 0.9.3",
     "core-js": "^2.6.5",
