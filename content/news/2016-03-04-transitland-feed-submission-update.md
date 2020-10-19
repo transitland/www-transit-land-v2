@@ -22,7 +22,7 @@ Here's what Rome's transit network looks like using the [Transitland Playground]
 
 If you happen to be in Italy, there are several Open Data Day hackathons -- check out [Andrea's Twitter feed](https://twitter.com/aborruso/) for a good overview of what's going on.
 
-Looking for GeoJSON for the route geometries of your favorite transit system? It's accesible through the [Transitland Datastore API](/how-it-works/#slide-3) like so:
+Looking for GeoJSON for the route geometries of your favorite transit system? It's accesible through the [Transitland Datastore API](https://transit.land/how-it-works/#slide-3) like so:
 
 `https://transit.land/api/v1/routes.geojson?operatedBy=[operator_onestop_id]`
 

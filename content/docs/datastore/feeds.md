@@ -4,7 +4,7 @@ layout: documentation
 deprecated: true
 ---
 
-Transitland is built on publicly available GTFS data [contributed](/documentation/feed-registry/add-a-feed.html) by our user community. Detailed information is kept on each Feed, and updated whenever a new version of each Feed is discovered. Feed versions are both archived for download (as `.zip` files) and imported into the Transitland Datastore for API querying by operators, stops, [routes](routes-and-route-stop-patterns.html), [schedules](schedules.html), etc.
+Transitland is built on publicly available GTFS data contributed by our user community to the [Transitland Atlas](/documentation/atlas). Detailed information is kept on each Feed, and updated whenever a new version of each Feed is discovered. Feed versions are both archived for download (as `.zip` files) and imported into the Transitland Datastore for API querying by operators, stops, [routes](routes-and-route-stop-patterns.html), [schedules](schedules.html), etc.
 
 ## Feeds
 
