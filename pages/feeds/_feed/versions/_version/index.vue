@@ -25,7 +25,7 @@
         </ul>
       </nav>
       <h1 class="title">
-        Feed version: {{ $route.params.version | shortenName(8) }}
+        Feed version from feed <code>{{ $route.params.feed }}</code> fetched {{ entity.fetched_at | fromNow }}
       </h1>
       <nav class="level">
         <div class="level-item has-text-centered">
@@ -34,7 +34,7 @@
               Agencies
             </p>
             <p class="title">
-              {{ rowCount['agency.txt'] || '-' }}
+              {{ rowCount['agency.txt'] ? rowCount['agency.txt'].toLocaleString() : '-' }}
             </p>
           </div>
         </div>
@@ -44,7 +44,7 @@
               Routes
             </p>
             <p class="title">
-              {{ rowCount['routes.txt'] || '-' }}
+              {{ rowCount['routes.txt'] ? rowCount['routes.txt'].toLocaleString() : '-' }}
             </p>
           </div>
         </div>
@@ -54,7 +54,7 @@
               Stops
             </p>
             <p class="title">
-              {{ rowCount['stops.txt'] || '-' }}
+              {{ rowCount['stops.txt'] ? rowCount['stops.txt'].toLocaleString() : '-' }}
             </p>
           </div>
         </div>
@@ -91,7 +91,7 @@
         </tr>
         <tr>
           <td>SHA1</td>
-          <td>{{ entity.sha1 }}</td>
+          <td><code>{{ entity.sha1 }}</code></td>
         </tr>
         <tr>
           <td>Status</td>
@@ -275,8 +275,17 @@ export default {
     }
   },
   head () {
+    const meta = []
+    if (this.entity) {
+      meta.push({
+        hid: 'description',
+        name: 'description',
+        content: `Feed version from the feed with a Onestop ID of ${this.$route.params.feed} fetched at ${this.entity.fetched_at} by Transitland. This feed version contains ${this.rowCount['agency.txt'] ? this.rowCount['agency.txt'].toLocaleString() : '-'} agencies, ${this.rowCount['routes.txt'] ? this.rowCount['routes.txt'].toLocaleString() : '-'} routes, and ${this.rowCount['stops.txt'] ? this.rowCount['stops.txt'].toLocaleString() : '-'} stops. The SHA1 hash for this feed version is ${this.$route.params.version}`
+      })
+    }
     return {
-      title: `${this.$route.params.feed} • ${this.$route.params.version} • Feed version`
+      title: `${this.$route.params.feed} • ${this.$route.params.version} • Feed version`,
+      meta
     }
   }
 
