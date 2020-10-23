@@ -64,7 +64,7 @@
           </td>
         </tr>
 
-        <tr>
+        <tr v-if="entity.spec == 'gtfs'">
           <td>
             <b-tooltip dashed label="Last time a fetch was attempted">
               Fetched
@@ -73,7 +73,7 @@
           <td>{{ entity.feed_state.last_fetched_at | formatDate }} ({{ entity.feed_state.last_fetched_at | fromNow }})</td>
         </tr>
 
-        <tr v-if="entity.feed_state.last_fetch_error">
+        <tr v-if="entity.spec == 'gtfs' && entity.feed_state.last_fetch_error">
           <td>
             <b-tooltip dashed label="Error message from last fetch attempt">
               Fetch Error
@@ -82,7 +82,7 @@
           <td>{{ entity.feed_state.last_fetch_error }}</td>
         </tr>
 
-        <tr v-if="entity.feed_state.last_fetch_error">
+        <tr v-if="entity.spec == 'gtfs' && entity.feed_state.last_fetch_error">
           <td>
             <b-tooltip dashed label="Last time a fetch successfully returned valid GTFS data">
               Last OK Fetch
@@ -132,7 +132,7 @@
       <br>
 
       <b-tabs v-model="activeTab" type="is-boxed" :animated="false" @input="setTab">
-        <b-tab-item label="Versions">
+        <b-tab-item label="Versions" v-if="entity.spec == 'gtfs'">
           <b-table
             :data="entity.feed_versions"
             :striped="true"
