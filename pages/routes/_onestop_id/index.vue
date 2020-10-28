@@ -43,7 +43,7 @@
         The GTFS feeds associated with this page were fetched {{ dataFreshness }} days ago; use caution or check if newer data is available.
       </b-message>
       <b-message v-if="linkVersion" type="is-warning" has-icon>
-        You are viewing a single GTFS Agency entity defined in source feed
+        You are viewing a single GTFS Route entity defined in source feed
         <nuxt-link :to="{name:'feeds-feed', params:{feed:$route.query.feed_onestop_id}}">
           {{ $route.query.feed_onestop_id | shortenName }}
         </nuxt-link> version
@@ -92,8 +92,15 @@
               </b-table>
             </b-tab-item>
 
-            <b-tab-item label="Demographics">
-              <census-viewer v-if="activeTab === 2" :route-ids="[entity.id]" />
+            <b-tab-item label="Export">
+              <route-export
+                v-if="activeTab === 2"
+                :route-name="routeName"
+                :route-features="routeFeatures"
+                :stop-features="stopFeatures"
+                :route-ids="[entity.id]"
+                @setFeatures="features = $event"
+              />
             </b-tab-item>
 
             <b-tab-item label="Inbound Trips">
@@ -112,7 +119,13 @@
           </b-tabs>
         </div>
         <div class="column is-one-third" style="width:400px">
-          <feed-version-map-viewer :route-ids="entityIds" :overlay="false" :include-stops="true" :link-version="linkVersion" />
+          <feed-version-map-viewer
+            :route-ids="entityIds"
+            :overlay="false"
+            :include-stops="true"
+            :link-version="linkVersion"
+            :features="activeTab === 2 ? features : []"
+          />
         </div>
       </div>
     </div>
@@ -126,11 +139,15 @@ export default {
   mixins: [EntityPageMixin],
   data () {
     return {
+      features: [],
+      bufferGeom: null,
+      routeGeom: null,
+      censusGeoms: null,
       selectDate: null,
       tabIndex: {
         0: 'summary',
         1: 'sources',
-        2: 'demographics',
+        2: 'export',
         3: 'inbound-trips',
         4: 'outbound-trips'
       }
@@ -152,6 +169,42 @@ export default {
     }
   },
   computed: {
+    routeFeatures () {
+      const ret = []
+      for (const f of this.entities || []) {
+        const fcopy = Object.assign({}, f)
+        delete fcopy.geometry
+        ret.push({
+          type: 'Feature',
+          geometry: f.geometry,
+          properties: fcopy,
+          id: f.id
+        })
+      }
+      return ret
+    },
+    stopFeatures () {
+      const ret = []
+      for (const f of this.entities || []) {
+        for (const g of f.route_stops || []) {
+          const fcopy = Object.assign({}, g.stop)
+          delete fcopy.geometry
+          ret.push({
+            type: 'Feature',
+            geometry: g.stop.geometry,
+            properties: fcopy,
+            id: g.stop.id
+          })
+        }
+      }
+      return ret
+    },
+    routeName () {
+      if (this.entity) {
+        return `${this.entity.agency.agency_name} - ${this.entity.route_short_name} ${this.entity.route_long_name}`
+      }
+      return 'route'
+    },
     routeNames () {
       const rs = new Map()
       for (const ent of this.entities) {
@@ -186,7 +239,7 @@ export default {
   head () {
     if (this.entity) {
       return {
-        title: `${this.entity.route_long_name} (route) • ${this.entity.agency.agency_name}`
+        title: this.routeName
       }
     }
   }

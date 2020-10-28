@@ -1,5 +1,5 @@
 query ($feed_version_ids: [bigint!], $offset: Int!, $limit: Int!, $agency_ids: [bigint!], $route_ids: [bigint!], $include_stops: Boolean!=false) {
-  features: tl_vw_gtfs_routes(limit: $limit, where: {agency_id:{_in:$agency_ids}, feed_version_id: {_in: $feed_version_ids}, id: {_in: $route_ids}}, order_by: {id: asc}, offset: $offset) {
+  routes: tl_vw_gtfs_routes(limit: $limit, where: {agency_id:{_in:$agency_ids}, feed_version_id: {_in: $feed_version_ids}, id: {_in: $route_ids}}, order_by: {id: asc}, offset: $offset) {
     id
     onestop_id
     route_id
@@ -7,16 +7,10 @@ query ($feed_version_ids: [bigint!], $offset: Int!, $limit: Int!, $agency_ids: [
     route_color
     route_short_name
     route_long_name
+    feed_version_sha1
+    feed_onestop_id
     headways_weekday {
       headway_secs
-    }
-    feed_version {
-      id
-      sha1
-      current_feed {
-        id
-        onestop_id
-      }
     }
     geometries {
       geometry

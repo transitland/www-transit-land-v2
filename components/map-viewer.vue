@@ -53,13 +53,13 @@
             <p class="modal-card-title">
               Select Route
             </p>
-            <button type="button" class="delete" @click="props.close"/>
+            <button type="button" class="delete" @click="props.close" />
           </header>
           <section class="modal-card-body">
             <route-select :agency-features="agencyFeatures" :link-version="linkVersion" />
           </section>
         </div>
-    </template>
+      </template>
     </b-modal>
   </div>
 </template>
@@ -184,6 +184,11 @@ export default {
       const polygons = this.features.filter((s) => { return s.geometry.type === 'MultiPolygon' || s.geometry.type === 'Polygon' })
       const points = this.features.filter((s) => { return s.geometry.type === 'Point' })
       const lines = this.features.filter((s) => { return s.geometry.type === 'LineString' })
+      // check if map is initialized... TODO: this could be improved to try again
+      const p = this.map.getSource('polygons')
+      if (!p) {
+        return
+      }
       this.map.getSource('polygons').setData({ type: 'FeatureCollection', features: polygons })
       this.map.getSource('lines').setData({ type: 'FeatureCollection', features: lines })
       this.map.getSource('points').setData({ type: 'FeatureCollection', features: points })
@@ -247,6 +252,49 @@ export default {
       }
     },
     createLayers () {
+      // Other feature layers
+      this.map.addLayer({
+        id: 'polygons',
+        type: 'fill',
+        source: 'polygons',
+        layout: {},
+        paint: {
+          'fill-color': '#ccc',
+          'fill-opacity': 0.2
+        }
+      })
+      this.map.addLayer({
+        id: 'polygons-outline',
+        type: 'line',
+        source: 'polygons',
+        layout: {},
+        paint: {
+          'line-width': 2,
+          'line-color': '#000',
+          'line-opacity': 0.2
+        }
+      })
+      this.map.addLayer({
+        id: 'points',
+        type: 'circle',
+        source: 'points',
+        paint: {
+          'circle-color': this.circleColor,
+          'circle-radius': this.circleRadius,
+          'circle-opacity': 0.4
+        }
+      })
+      this.map.addLayer({
+        id: 'lines',
+        type: 'line',
+        source: 'lines',
+        layout: {},
+        paint: {
+          'line-width': 2,
+          'line-color': '#000',
+          'line-opacity': 1.0
+        }
+      })
       // Route/Stop layers
       for (const v of mapLayers.routeLayers) {
         const layer = {
@@ -282,49 +330,6 @@ export default {
         }
         this.map.addLayer(layer)
       }
-      // Other feature layers
-      this.map.addLayer({
-        id: 'polygons',
-        type: 'fill',
-        source: 'polygons',
-        layout: {},
-        paint: {
-          'fill-color': '#ccc',
-          'fill-opacity': 0.4
-        }
-      })
-      this.map.addLayer({
-        id: 'polygons-outline',
-        type: 'line',
-        source: 'polygons',
-        layout: {},
-        paint: {
-          'line-width': 2,
-          'line-color': '#000',
-          'line-opacity': 1.0
-        }
-      })
-      this.map.addLayer({
-        id: 'points',
-        type: 'circle',
-        source: 'points',
-        paint: {
-          'circle-color': this.circleColor,
-          'circle-radius': this.circleRadius,
-          'circle-opacity': 0.4
-        }
-      })
-      this.map.addLayer({
-        id: 'lines',
-        type: 'line',
-        source: 'lines',
-        layout: {},
-        paint: {
-          'line-width': 2,
-          'line-color': '#000',
-          'line-opacity': 1.0
-        }
-      })
     },
     fitFeatures () {
       const coords = []

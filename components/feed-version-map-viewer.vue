@@ -6,6 +6,7 @@
     <span v-else-if="$apollo.loading" class="is-loading">Loading</span>
     <map-viewer
       v-else
+      :features="features"
       :route-features="routeFeatures"
       :stop-features="stopFeatures"
       :overlay="overlay"
@@ -17,7 +18,7 @@
 <script>
 export default {
   apollo: {
-    features: {
+    routes: {
       query: require('~/graphql/map-routes.gql'),
       error (e) { this.error = e },
       variables () {
@@ -38,18 +39,19 @@ export default {
     fvids: { type: Array, default: null },
     routeIds: { type: Array, default: null },
     agencyIds: { type: Array, default: null },
-    linkVersion: { type: Boolean, default: false }
+    linkVersion: { type: Boolean, default: false },
+    features: { type: Array, default () { return [] } }
   },
   data () {
     return {
-      features: [],
+      routes: [],
       error: null
     }
   },
   computed: {
     routeFeatures () {
       const features = []
-      for (const feature of this.features) {
+      for (const feature of this.routes) {
         if (feature.geometries && feature.geometries.length > 0) {
           let hw = 10000
           if (feature.headways_weekday && feature.headways_weekday.headway_secs) {
@@ -66,8 +68,8 @@ export default {
               id: feature.id,
               route_id: feature.route_id,
               onestop_id: feature.onestop_id,
-              feed_version_sha1: feature.feed_version.sha1,
-              feed_onestop_id: feature.feed_version.current_feed.onestop_id,
+              feed_version_sha1: feature.feed_version_sha1,
+              feed_onestop_id: feature.feed_onestop_id,
               route_short_name: feature.route_short_name,
               route_long_name: feature.route_long_name,
               route_type: feature.route_type,
@@ -83,7 +85,7 @@ export default {
     },
     stopFeatures () {
       const features = []
-      for (const feature of this.features) {
+      for (const feature of this.routes) {
         for (const rs of feature.route_stops || []) {
           features.push({
             id: rs.stop.id,

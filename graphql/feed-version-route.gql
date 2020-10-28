@@ -11,6 +11,15 @@ query ($onestop_id: String, $active_null: Boolean, $route_id: String, $feed_ones
     route_short_name
     route_type
     route_url
+    geometry
+    route_stops {
+      stop {
+        id
+        stop_id
+        stop_name
+        geometry
+      }
+    }
     agency {
       id
       agency_id

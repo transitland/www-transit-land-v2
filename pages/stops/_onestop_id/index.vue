@@ -28,7 +28,7 @@
         The GTFS feeds associated with this page were fetched {{ dataFreshness }} days ago; use caution or check if newer data is available.
       </b-message>
       <b-message v-if="linkVersion" type="is-warning" has-icon>
-        You are viewing a single GTFS Agency entity defined in source feed
+        You are viewing a single GTFS Stop entity defined in source feed
         <nuxt-link :to="{name:'feeds-feed', params:{feed:$route.query.feed_onestop_id}}">
           {{ $route.query.feed_onestop_id | shortenName }}
         </nuxt-link> version
