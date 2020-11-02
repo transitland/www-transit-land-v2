@@ -132,7 +132,7 @@
       <br>
 
       <b-tabs v-model="activeTab" type="is-boxed" :animated="false" @input="setTab">
-        <b-tab-item label="Versions" v-if="entity.spec == 'gtfs'">
+        <b-tab-item v-if="entity.spec == 'gtfs'" label="Versions">
           <b-table
             :data="entity.feed_versions"
             :striped="true"
