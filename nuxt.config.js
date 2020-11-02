@@ -39,10 +39,13 @@ const create = async (feed, args) => {
         slug
       }
     }).forEach((post) => {
+      const link = `https://www.transit.land/news/${post.year}/${post.month}/${post.day}/${post.slug}`
+      const date = new Date(post.year, post.month, post.day)
       feed.addItem({
         title: post.title,
         id: post.slug,
-        link: `https://www.transit.land/news/${post.year}/${post.month}/${post.day}/${post.slug}`
+        link,
+        date
       })
     })
 }
