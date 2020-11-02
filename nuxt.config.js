@@ -1,3 +1,51 @@
+// RSS feed
+const create = async (feed, args) => {
+  feed.options = {
+    title: 'Transitland',
+    link: 'https://www.transit.land/feed.xml',
+    description: 'News and updates from Transitland, an open platform aggregating data from thousands of transit providers throughout the world using GTFS, GTFS Realtime, and related open data feeds.'
+  }
+  const { $content } = require('@nuxt/content')
+  const posts = await $content('news')
+    .only(['title', 'published', 'slug'])
+    .sortBy('slug', 'desc')
+    .fetch()
+
+  // TODO: import this code from nuxt-content-helpers.js
+  posts
+    .filter((s) => { return s.published === true })
+    .map((s) => {
+      const split = s.slug.split('-')
+      let year = 0; let month = 0; let day = 0; let slug = ''
+      if (split.length > 0) {
+        year = split[0]
+      }
+      if (split.length > 1) {
+        month = split[1]
+      }
+      if (split.length > 2) {
+        day = split[2]
+      }
+      if (split.length > 3) {
+        slug = split.slice(3).join('-')
+      }
+      return {
+        title: s.title,
+        path: s.path,
+        body: s.body,
+        year,
+        month,
+        day,
+        slug
+      }
+    }).forEach((post) => {
+      feed.addItem({
+        title: post.title,
+        id: post.slug,
+        link: `https://www.transit.land/news/${post.year}/${post.month}/${post.day}/${post.slug}`
+      })
+    })
+}
 
 export default {
   ssr: false,
@@ -20,7 +68,8 @@ export default {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      { rel: 'stylesheet', href: 'https://api.tiles.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.css' }
+      { rel: 'stylesheet', href: 'https://api.tiles.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.css' },
+      { rel: 'alternate', type: 'application/rss+xml', title: 'Transitland News', href: '/feed.xml' }
     ]
   },
   /*
@@ -66,6 +115,7 @@ export default {
     '@nuxtjs/apollo',
     // https://content.nuxtjs.org/
     '@nuxt/content',
+    '@nuxtjs/feed',
     '@nuxtjs/sitemap',
     '@nuxtjs/robots'
   ],
@@ -115,6 +165,15 @@ export default {
       UserAgent: '*',
       Allow: '/',
       Sitemap: 'https://www.transit.land/sitemap.xml'
+    }
+  ],
+  feed: [
+    {
+      path: '/feed.xml',
+      create,
+      cacheTime: 1000 * 60 * 15,
+      type: 'rss2',
+      data: []
     }
   ],
   /*
