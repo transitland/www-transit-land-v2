@@ -135,6 +135,9 @@
               <li v-if="operator.tags.omd_provider_id">
                 OpenMobilityData Provider ID: <code>{{ operator.tags.omd_provider_id }}</code> <a target="_blank" :href="`https://openmobilitydata.org/p/${operator.tags.omd_provider_id}`"><b-icon icon="link" title="OpenMobilityData provider page" /></a>
               </li>
+              <li v-if="operator.tags.wikidata_id">
+                Wikidata Entity ID: <code>{{ operator.tags.wikidata_id }}</code> <a target="_blank" :href="`https://www.wikidata.org/wiki/${operator.tags.wikidata_id}`"><b-icon icon="link" title="Wikidata entity query page" /></a>
+              </li>
             </ul>
           </td>
         </tr>
