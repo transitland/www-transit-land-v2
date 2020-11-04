@@ -6,13 +6,12 @@
 
     <div class="content is-medium">
       <p>
-        Source feeds are the raw data sources defined in the <nuxt-link to="/documentation/atlas">
+        Source feeds are open data sources defined in the <nuxt-link to="/documentation/atlas">
           Transitland Atlas
-        </nuxt-link>. This page is for browsing current and historical GTFS data and monitoring the fetch and import processes. The <nuxt-link to="/map">
-          Map
-        </nuxt-link> and <nuxt-link :to="{name:'operators'}">
-          Operators
-        </nuxt-link> provide a more aggregated, current, and user-friendly view of the global system.
+        </nuxt-link> repository.
+      </p>
+      <p>
+        Feeds are grouped by <nuxt-link :to="{name:'operators'}">Transitland operators</nuxt-link>, which provide a richer view for browsing.
       </p>
     </div>
 

@@ -50,8 +50,8 @@
           </td>
         </tr>
         <tr>
-          <td>Format</td>
-          <td>{{ entity.spec }}</td>
+          <td>Feed <abbr title="Specification">Spec</abbr></td>
+          <td>{{ entity.spec.toUpperCase() }}</td>
         </tr>
         <tr>
           <td>URLs</td>

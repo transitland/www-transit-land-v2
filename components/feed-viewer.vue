@@ -14,10 +14,10 @@
           <b-checkbox v-model="feedSpecs" native-value="gtfs-rt">
             GTFS-RT
           </b-checkbox>
-          <!-- <b-checkbox v-model="feedSpecs" native-value="gbfs" disabled="">
+          <b-checkbox v-model="feedSpecs" native-value="gbfs">
             GBFS
           </b-checkbox>
-          <b-checkbox v-model="feedSpecs" native-value="mds" disabled="">
+          <!-- <b-checkbox v-model="feedSpecs" native-value="mds" disabled="">
             MDS
           </b-checkbox> -->
         </div>
@@ -104,7 +104,7 @@ export default {
   },
   data () {
     return {
-      feedSpecs: ['gtfs', 'gtfs-rt']
+      feedSpecs: ['gtfs', 'gtfs-rt', 'gbfs']
     }
   },
   computed: {
