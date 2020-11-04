@@ -31,7 +31,7 @@
 export default {
   head () {
     return {
-      title: 'Browse all GTFS and GTFS-RT Feeds'
+      title: 'Source Feeds: GTFS, GTFS Realtime, GBFS'
     }
   }
 }
