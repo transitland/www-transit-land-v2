@@ -11,7 +11,9 @@
         </nuxt-link> repository.
       </p>
       <p>
-        Feeds are grouped by <nuxt-link :to="{name:'operators'}">Transitland operators</nuxt-link>, which provide a richer view for browsing.
+        Feeds are grouped by <nuxt-link :to="{name:'operators'}">
+          Transitland operators
+        </nuxt-link>, which provide a richer view for browsing.
       </p>
     </div>
 
@@ -31,7 +33,10 @@
 export default {
   head () {
     return {
-      title: 'Source Feeds: GTFS, GTFS Realtime, GBFS'
+      title: 'Source Feeds: GTFS, GTFS Realtime, GBFS',
+      meta: [
+        { hid: 'description', name: 'description', content: 'GTFS, GTFS Realtime, and GBFS source feeds cataloged by the Transitland platform.' }
+      ]
     }
   }
 }

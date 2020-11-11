@@ -28,7 +28,10 @@
 export default {
   head () {
     return {
-      title: 'Browse all Operators'
+      title: 'Browse all Operators',
+      meta: [
+        { hid: 'description', name: 'description', content: 'Transitland uses operators to group together source feeds and other relevant data.' }
+      ]
     }
   }
 }

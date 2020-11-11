@@ -47,7 +47,7 @@
         <div class="column is-two-thirds">
           <b-tabs v-model="activeTab" type="is-boxed" :animated="false">
             <b-tab-item label="Summary">
-              <div>With service to:</div>
+              <div>This stop is served by the following routes:</div>
               <div v-for="rs of entity.route_stops" :key="rs.route.id">
                 <nuxt-link
                   :to="{name:'routes-onestop_id', params:{onestop_id:rs.route.onestop_id}}"
@@ -199,6 +199,16 @@ export default {
         children: Array.from(children.values())
       }
       return ent
+    }
+  },
+  head () {
+    if (this.entity) {
+      return {
+        title: this.entity.stop_name,
+        meta: [
+          { hid: 'description', name: 'description', content: `${this.entity.stop_name} is a stop ` }
+        ]
+      }
     }
   }
 }

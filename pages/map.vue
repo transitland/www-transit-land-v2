@@ -39,7 +39,10 @@ export default {
   },
   head () {
     return {
-      title: 'Global Transit Map'
+      title: 'Global Transit Map',
+      meta: [
+        { hid: 'description', name: 'description', content: 'The global transit map provides an interactive view across thousands of bus, train, ferry, cablecar, and funicular routes and the stops they serve. Powered by the Transitland v2 Vector Tiles API.' }
+      ]
     }
   }
 }
