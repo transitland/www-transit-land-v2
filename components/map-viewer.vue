@@ -209,7 +209,6 @@ export default {
         if (f.length === 0) {
           f.push('all')
         }
-        // Hide all geometries > 5000km
         f.push(['<', 'geometry_length', 5000 * 1000])
         // Hide generated geometries > 50km
         if (!this.showLongGeneratedShadow) {
@@ -217,7 +216,7 @@ export default {
         }
         // Hide generated geometries
         if (!this.showGeneratedShadow) {
-          f.push(['==', 'generated', false])
+          f.push(['any', ['==', 'generated', false], ['>', 'geometry_length', 20 * 1000]])
         }
         if (f.length > 1) {
           this.map.setFilter(v.name, f)

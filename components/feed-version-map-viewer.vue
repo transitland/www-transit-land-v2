@@ -75,7 +75,8 @@ export default {
               route_type: feature.route_type,
               route_color: routeColor,
               agency_name: feature.agency.agency_name,
-              headway_secs: hw
+              headway_secs: hw,
+              geometry_length: 0.0
             },
             geometry: feature.geometries[0].geometry
           })
