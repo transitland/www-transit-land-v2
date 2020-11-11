@@ -20,11 +20,16 @@
               custom
               paddingless
             >
-              <div class="modal-card" style="width:300px;">
+              <div class="modal-card" style="width:400px;">
                 <section class="modal-card-body">
                   <div class="field">
                     <b-checkbox v-model="showGeneratedShadow">
-                      Show generated geometries
+                      Show stop-to-stop geometries under 20km
+                    </b-checkbox>
+                  </div>
+                  <div class="field">
+                    <b-checkbox v-model="showLongGeneratedShadow">
+                      Show stop-to-stop geometries over 20km
                     </b-checkbox>
                   </div>
                 </section>
@@ -72,6 +77,7 @@ export default {
   props: {
     showOptions: { type: Boolean, default: false },
     showGenerated: { type: Boolean, default: true },
+    showLongGenerated: { type: Boolean, default: true },
     mapClass: { type: String, default: 'short' },
     routeTiles: { type: Object, default () { return null } },
     stopTiles: { type: Object, default () { return null } },
@@ -96,11 +102,15 @@ export default {
       hovering: [],
       agencyFeatures: {},
       isComponentModalActive: false,
-      showGeneratedShadow: this.showGenerated
+      showGeneratedShadow: this.showGenerated,
+      showLongGeneratedShadow: this.showLongGenerated
     }
   },
   watch: {
     showGeneratedShadow (v) {
+      this.updateFilters()
+    },
+    showLongGeneratedShadow (v) {
       this.updateFilters()
     },
     features (v) {
@@ -196,17 +206,23 @@ export default {
     updateFilters () {
       for (const v of mapLayers.routeLayers) {
         const f = (v.filter || []).slice()
-        if (!this.showGeneratedShadow) {
-          if (f.length === 0) {
-            f.push(...['==', 'generated', false])
-          } else {
-            f.push(['==', 'generated', false])
-          }
-        }
         if (f.length === 0) {
-          this.map.setFilter(v.name, null)
-        } else {
+          f.push('all')
+        }
+        // Hide all geometries > 5000km
+        f.push(['<', 'geometry_length', 5000 * 1000])
+        // Hide generated geometries > 50km
+        if (!this.showLongGeneratedShadow) {
+          f.push(['any', ['==', 'generated', false], ['<', 'geometry_length', 20 * 1000]])
+        }
+        // Hide generated geometries
+        if (!this.showGeneratedShadow) {
+          f.push(['==', 'generated', false])
+        }
+        if (f.length > 1) {
           this.map.setFilter(v.name, f)
+        } else {
+          this.map.setFilter(v.name, null)
         }
       }
     },

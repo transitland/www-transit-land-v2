@@ -1,7 +1,8 @@
 <template>
   <div style="position:relative">
     <map-viewer
-      :show-generated="false"
+      :show-generated="true"
+      :show-long-generated="false"
       :route-tiles="routeTiles"
       :stop-tiles="stopTiles"
       :overlay="true"
