@@ -1,6 +1,7 @@
 <template>
   <div style="position:relative">
     <map-viewer
+      :show-generated="false"
       :route-tiles="routeTiles"
       :stop-tiles="stopTiles"
       :overlay="true"
@@ -10,7 +11,6 @@
       :show-options="true"
       map-class="tall"
     />
-    </dikv>
   </div>
 </template>
 
