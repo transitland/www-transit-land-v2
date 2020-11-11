@@ -60,6 +60,65 @@
       <!-- Main content -->
       <div class="columns">
         <div class="column is-two-thirds">
+          <table class="property-list mb-4">
+            <tr>
+              <td>
+                <b-tooltip dashed label="A globally unique identifier for this route">
+                  Onestop ID
+                </b-tooltip>
+              </td>
+              <td>{{ entity.onestop_id }}</td>
+            </tr>
+            <tr>
+              <td>Operated by</td>
+              <td>
+                <nuxt-link v-for="operator of operators" :key="operator.id" :to="{name: 'operators-onestop_id', params:{onestop_id:operator.operator_onestop_id}}">
+                  {{ operator.operator_name || operator.agency_name || operator.onestop_id }}
+                </nuxt-link>
+              </td>
+            </tr>
+            <tr>
+              <td>GTFS ID</td>
+              <td>
+                {{ entity.route_id }}
+              </td>
+            </tr>
+            <tr>
+              <td>Name (Short)</td>
+              <td>
+                {{ entity.route_short_name }}
+              </td>
+            </tr>
+            <tr>
+              <td>Name (Long)</td>
+              <td>
+                {{ entity.route_long_name }}
+              </td>
+            </tr>
+            <tr>
+              <td>Description</td>
+              <td>
+                {{ entity.route_desc }}
+              </td>
+            </tr>
+            <tr>
+              <td>Vehicle Type</td>
+              <td>
+                <b-tooltip dashed :label="`Route with route_type = ${entity.route_type}`">
+                  {{ entity.route_type | routeTypeToWords }}
+                </b-tooltip>
+              </td>
+            </tr>
+            <tr>
+              <td>URL</td>
+              <td>
+                {{ entity.route_url }} <a :href="entity.route_url" target="_blank"><b-icon icon="link" /></a>
+              </td>
+            </tr>
+          </table>
+          <b-message class="is-info">
+            <p>Learn more about the contents of <code>routes.txt</code> on <a href="https://gtfs.org/reference/static#routestxt" target="_blank">gtfs.org</a>.</p>
+          </b-message>
           <b-tabs v-model="activeTab" type="is-boxed" :animated="false" @input="setTab">
             <b-tab-item label="Summary">
               <headway-viewer :headways="entity.headways" />
@@ -239,7 +298,10 @@ export default {
   head () {
     if (this.entity) {
       return {
-        title: this.routeName
+        title: this.routeName,
+        meta: [
+          { hid: 'description', name: 'description', content: `${this.routeName} is a route.` }
+        ]
       }
     }
   }

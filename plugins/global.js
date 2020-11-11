@@ -118,3 +118,22 @@ Vue.filter('prettyBytes', function (num) {
   const unit = units[exponent]
   return (neg ? '-' : '') + num + ' ' + unit
 })
+
+Vue.filter('routeTypeToWords', function (num) {
+  if (num >= 0 <= 12) {
+    return {
+      0: 'Tram, Streetcar, Light rail',
+      1: 'Subway, Metro',
+      2: 'Rail',
+      3: 'Bus',
+      4: 'Ferry',
+      5: 'Cable tram',
+      6: 'Aerial lift',
+      7: 'Funicular',
+      11: 'Trolleybus',
+      12: 'Monorail'
+    }[num]
+  } else {
+    return num
+  }
+})
