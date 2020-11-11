@@ -330,6 +330,8 @@ export default {
         }
         this.map.addLayer(layer)
       }
+      // Set initial show generated geometry
+      this.updateFilters()
     },
     fitFeatures () {
       const coords = []
