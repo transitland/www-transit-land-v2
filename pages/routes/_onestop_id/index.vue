@@ -193,6 +193,7 @@
 
 <script>
 import EntityPageMixin from '~/components/entity-page-mixin'
+import { routeTypeToWords } from '~/plugins/global'
 
 export default {
   mixins: [EntityPageMixin],
@@ -272,6 +273,13 @@ export default {
       }
       return Array.from(rs.values())
     },
+    routeType () {
+      if (this.entity) {
+        return routeTypeToWords(this.entity.route_type)
+      } else {
+        return ''
+      }
+    },
     operators () {
       const rs = new Map()
       for (const ent of this.entities) {
@@ -298,9 +306,9 @@ export default {
   head () {
     if (this.entity) {
       return {
-        title: this.routeName,
+        title: `${this.routeName} • ${this.routeType} route`,
         meta: [
-          { hid: 'description', name: 'description', content: `${this.routeName} is a route.` }
+          { hid: 'description', name: 'description', content: `${this.routeName} is a ${this.routeType} route available for browsing and analyzing on the Transitland platform.` }
         ]
       }
     }

@@ -119,7 +119,7 @@ Vue.filter('prettyBytes', function (num) {
   return (neg ? '-' : '') + num + ' ' + unit
 })
 
-Vue.filter('routeTypeToWords', function (num) {
+export const routeTypeToWords = (num) => {
   if (num >= 0 <= 12) {
     return {
       0: 'Tram, Streetcar, Light rail',
@@ -136,4 +136,6 @@ Vue.filter('routeTypeToWords', function (num) {
   } else {
     return num
   }
-})
+}
+
+Vue.filter('routeTypeToWords', (num) => { return routeTypeToWords(num) })
