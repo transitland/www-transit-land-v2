@@ -99,27 +99,33 @@
           <td>License</td>
           <td>
             <ul>
-              <li>License URL: {{ entity.license.url }}</li>
-              <li>License Identifier: {{ entity.license.spdx_identifier }}</li>
-              <li>
-                Attribution optional:
-                <span v-if="entity.license.share_alike_optional === 'yes'">Yes</span>
-                <span v-else-if="entity.license.share_alike_optional === 'no'">No</span>
-                <span v-else>Unknown</span>
+              <li v-if="entity.license.url">
+                License URL: {{ entity.license.url }}
               </li>
-              <li>
-                Commercial use allowed:
-                <span v-if="entity.license.commercial_use_allowed === 'yes'">Yes</span>
-                <span v-else-if="entity.license.commercial_use_allowed === 'no'">No</span>
-                <span v-else>Unknown</span>
+              <li v-if="entity.license.spdx_identifier">
+                License Identifier: {{ entity.license.spdx_identifier }}
               </li>
-              <li>
-                Derivitive use allowed:
-                <span v-if="entity.license.create_derived_product === 'yes'">Yes</span>
-                <span v-else-if="entity.license.create_derived_product === 'no'">No</span>
-                <span v-else>Unknown</span>
+              <li v-if="entity.license.use_without_attribution">
+                Use allowed without attribution: {{ entity.license.use_without_attribution | capitalize }}
               </li>
-              <li>Attribution instructions: {{ entity.license.attribution_instructions }}</li>
+              <li v-if="entity.license.share_alike_optional">
+                Share-alike optional: {{ entity.license.share_alike_optional | capitalize }}
+              </li>
+              <li v-if="entity.license.commercial_use_allowed">
+                Commercial use allowed: {{ entity.license.commercial_use_allowed | capitalize }}
+              </li>
+              <li v-if="entity.license.create_derived_product">
+                Derivitive use allowed: {{ entity.license.create_derived_product | capitalize }}
+              </li>
+              <li v-if="entity.license.redistribute">
+                Redistribution allowed: {{ entity.license.redistribute | capitalize }}
+              </li>
+              <li v-if="entity.license.attribution_text">
+                Required attribution text: {{ entity.license.attribution_text }}
+              </li>
+              <li v-if="entity.license.attribution_instructions">
+                Attribution instructions: {{ entity.license.attribution_instructions }}
+              </li>
             </ul>
           </td>
         </tr>
