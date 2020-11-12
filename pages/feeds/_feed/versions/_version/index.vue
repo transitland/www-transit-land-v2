@@ -25,7 +25,7 @@
         </ul>
       </nav>
       <h1 class="title">
-        Feed version from feed <code>{{ $route.params.feed }}</code> fetched {{ entity.fetched_at | fromNow }}
+        Feed {{ $route.params.feed }}: version fetched {{ entity.fetched_at | formatDate }} ({{ entity.fetched_at | fromNow }})
       </h1>
       <nav class="level">
         <div class="level-item has-text-centered">
