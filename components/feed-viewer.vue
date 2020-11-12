@@ -4,10 +4,23 @@
       {{ error }}
     </b-message>
 
-    <div class="form">
-      <div class="field">
-        <label class="label">Filter Feeds by Data Specification (Spec)</label>
-        <div class="control">
+    <b-field grouped group-multiline>
+      <b-field label="Fetch status">
+        <b-select v-model="fetchErrorFilter">
+          <option value="all">
+            Show all feeds
+          </option>
+          <option value="ok">
+            Show feeds without errors
+          </option>
+          <option value="error">
+            Show feeds with errors
+          </option>
+        </b-select>
+      </b-field>
+
+      <b-field label="Formats">
+        <div style="padding-top:10px">
           <b-checkbox v-model="feedSpecs" native-value="gtfs">
             GTFS
           </b-checkbox>
@@ -17,12 +30,9 @@
           <b-checkbox v-model="feedSpecs" native-value="gbfs">
             GBFS
           </b-checkbox>
-          <!-- <b-checkbox v-model="feedSpecs" native-value="mds" disabled="">
-            MDS
-          </b-checkbox> -->
         </div>
-      </div>
-    </div>
+      </b-field>
+    </b-field>
 
     <b-table
       :loading="$apollo.loading"
@@ -92,7 +102,9 @@ export default {
         return {
           offset: this.entityOffset,
           limit: this.limit,
-          specs: this.feedSpecs
+          specs: this.feedSpecs,
+          check_last_fetch_error: this.fetchErrorFilter === 'error' ? '' : null,
+          check_no_fetch_error: this.fetchErrorFilter === 'ok' ? '' : null
         }
       },
       update (data) {
@@ -103,8 +115,16 @@ export default {
     }
   },
   data () {
+    let spec = this.$route.query.feed_specs
+    if (Array.isArray(spec)) {
+    } else if (spec) {
+      spec = [spec]
+    } else {
+      spec = ['gtfs', 'gtfs-rt', 'gbfs']
+    }
     return {
-      feedSpecs: ['gtfs', 'gtfs-rt', 'gbfs']
+      feedSpecs: spec,
+      fetchErrorFilter: this.$route.query.fetch_error_filter || 'all'
     }
   },
   computed: {
@@ -129,6 +149,14 @@ export default {
           feed_version_count: feed.feed_versions_aggregate.aggregate.count
         }
       })
+    }
+  },
+  watch: {
+    fetchErrorFilter (v) {
+      this.$router.push({ path: 'feeds', query: Object.assign({}, this.$route.query, { fetch_error_filter: v }) })
+    },
+    feedSpecs (v) {
+      this.$router.push({ path: 'feeds', query: Object.assign({}, this.$route.query, { feed_specs: this.feedSpecs }) })
     }
   },
   methods: {
