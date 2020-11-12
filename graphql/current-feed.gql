@@ -42,6 +42,7 @@ query current_feeds($feed_onestop_id: String) {
       last_fetch_error
       last_fetched_at
       last_successful_fetch_at
+      feed_version_id
     }
   }
 }

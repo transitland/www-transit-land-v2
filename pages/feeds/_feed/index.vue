@@ -192,7 +192,7 @@
             </b-table-column>
             <b-table-column v-slot="props" label="Active">
               <b-icon
-                v-if="entity.feed_state && entity.feed_state.feed_version && entity.feed_state.feed_version.id === props.row.id"
+                v-if="entity.feed_state && entity.feed_state.feed_version_id === props.row.id"
                 icon="check"
               />
             </b-table-column>
