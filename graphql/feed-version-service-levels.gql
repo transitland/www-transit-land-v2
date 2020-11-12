@@ -1,0 +1,15 @@
+query($start_date:date, $end_date:date, $feed_version_id:bigint) {
+  feed_version_service_levels(limit:1000, where:{route_id:{_is_null:true}, feed_version_id:{_eq:$feed_version_id}, start_date:{_lte:$start_date}, end_date:{_gte:$end_date}}) {
+    id
+    feed_version_id
+    start_date
+    end_date
+    monday
+    tuesday
+    wednesday
+    thursday
+    friday
+    saturday
+    sunday
+  }
+}

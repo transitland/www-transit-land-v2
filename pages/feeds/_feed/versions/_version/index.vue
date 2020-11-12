@@ -115,6 +115,8 @@
 
       <br>
 
+      <service-levels :fvid="entity.id" />
+
       <b-tabs v-model="activeTab" type="is-boxed" :animated="false" @input="setTab">
         <b-tab-item label="Map">
           <feed-version-map-viewer v-if="activeTab === 0" :fvids="[entity.id]" :overlay="true" :link-version="true" />
