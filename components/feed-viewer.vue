@@ -68,12 +68,6 @@
         <span v-else>Never</span>
       </b-table-column>
 
-      <b-table-column v-slot="props" :width="60" field="last_fetch_error" label="Fetch Errors?">
-        <b-tooltip :label="props.row.last_fetch_error">
-          <b-icon v-if="props.row.last_fetch_error" icon="alert" />
-        </b-tooltip>
-      </b-table-column>
-
       <b-table-column v-slot="props" :width="150" field="last_successful_import_at" label="Last Imported">
         <span v-if="props.row.last_successful_import_at">
           {{ props.row.last_successful_import_at | fromNow }}
@@ -81,11 +75,17 @@
         <span v-else>Never</span>
       </b-table-column>
 
-      <b-table-column v-slot="props" :width="60" field="last_import_fail" label="Import Errors?">
+      <b-table-column v-slot="props" :width="60" field="last_fetch_error" label="Errors">
+        <b-tooltip :label="props.row.last_fetch_error">
+          <b-icon v-if="props.row.last_fetch_error" icon="alert" />
+        </b-tooltip>
+      </b-table-column>
+
+      <!-- <b-table-column v-slot="props" :width="60" field="last_import_fail" label="Errors">
         <b-tooltip :label="props.row.last_import_fail">
           <b-icon v-if="props.row.last_import_fail" icon="alert" />
         </b-tooltip>
-      </b-table-column>
+      </b-table-column> -->
     </b-table>
   </div>
 </template>
