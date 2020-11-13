@@ -64,22 +64,20 @@
           </td>
         </tr>
 
-        <!-- <tr v-if="entity.spec == 'gtfs'">
-          <td>
-            <b-tooltip dashed label="Last time a fetch was attempted">
-              Fetched
-            </b-tooltip>
-          </td>
-          <td>{{ entity.feed_state.last_fetched_at | formatDate }} ({{ entity.feed_state.last_fetched_at | fromNow }})</td>
-        </tr> -->
-
         <tr v-if="entity.spec == 'gtfs'">
           <td>
             <b-tooltip dashed label="Last time a fetch successfully returned valid GTFS data">
               Last Fetch
             </b-tooltip>
           </td>
-          <td>{{ entity.feed_state.last_successful_fetch_at | formatDate }} ({{ entity.feed_state.last_successful_fetch_at | fromNow }})</td>
+          <td>
+            <template v-if="entity.feed_state && entity.feed_state.last_successful_fetch_at">
+              {{ entity.feed_state.last_successful_fetch_at | formatDate }} ({{ entity.feed_state.last_successful_fetch_at | fromNow }})
+            </template>
+            <template v-else>
+              Unknown
+            </template>
+          </td>
         </tr>
 
         <tr v-if="entity.spec == 'gtfs' && entity.feed_state.last_fetch_error">
@@ -228,7 +226,12 @@
             field="fetched_at"
             label="Fetched"
           >
-            {{ props.row.fetched_at | formatDate }} ({{ props.row.fetched_at | fromNow }})
+            <template v-if="props.row.fetched_at">
+              {{ props.row.fetched_at | formatDate }} ({{ props.row.fetched_at | fromNow }})
+            </template>
+            <template v-else>
+              Unknown
+            </template>
           </b-table-column>
           <b-table-column v-slot="props" :sortable="true" field="sha1" label="SHA1">
             <nuxt-link
