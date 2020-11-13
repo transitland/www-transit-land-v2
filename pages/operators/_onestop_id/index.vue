@@ -142,49 +142,83 @@
           </td>
         </tr>
       </table>
+      <hr>
+      <h4 class="title is-4">
+        Source Feed(s)
+      </h4>
 
-      <br>
-
-      <b-tabs v-model="activeTab" type="is-boxed" :animated="false" @input="setTab">
-        <b-tab-item label="Map">
-          <!-- need fvids for good index search -->
-          <feed-version-map-viewer v-if="activeTab === 0" :fvids="fvids" :agency-ids="agencyIds" :overlay="true" :link-version="linkVersion" />
+      <b-tabs type="is-boxed" :animated="false">
+        <b-tab-item label="Source Feeds">
+          <b-message
+            v-for="feedOnestopId in new Set(sources.map(s => s.target_feed))"
+            :key="feedOnestopId"
+            type="is-success"
+            has-icon
+            icon="information"
+            :closable="false"
+          >
+            <div class="columns">
+              <div class="column is-8">
+                <p>
+                  This operator includes data from the feed record with Onestop ID of
+                  <code>{{ feedOnestopId }}</code> See the feed record for Transitland's archive of fetched versions, as well as URLs for accessing the feed. <!-- TODO: show different text depending upon feed.spec = GTFS, GTFS-RT, or GBFS -->
+                </p>
+              </div>
+              <div class="column is-4 has-text-right">
+                <nuxt-link class="button is-primary" :to="{name:'feeds-feed', params:{feed:feedOnestopId}}">
+                  View Feed Record
+                </nuxt-link>
+              </div>
+            </div>
+          </b-message>
         </b-tab-item>
-        <b-tab-item label="Sources">
+        <b-tab-item label="Source Feeds (Advanced View)">
           <b-message type="is-light" has-icon icon="information" :closable="false">
             This operator includes data from the references listed below. These references are defined in the Operator's Atlas record, and describe the GTFS Agencies that provide the routes, stops, schedules, and other information for this operator. If a reference to an agency cannot be resolved, this will be noted. Please see the <nuxt-link :to="{name:'documentation'}">
               Operator documentation
             </nuxt-link> for more information on this process.
           </b-message>
-
-          <b-table
-            :data="sources"
-            :striped="true"
-            sort-icon="menu-up"
-          >
-            <b-table-column v-slot="props" field="agency" label="Association type">
-              {{ props.row.target_type }}
-            </b-table-column>
-            <b-table-column v-slot="props" field="agency" label="Source Feed">
-              <nuxt-link :to="{name:'feeds-feed', params:{feed:props.row.target_feed}}">
-                {{ props.row.target_feed }}
-              </nuxt-link>
-            </b-table-column>
-            <b-table-column v-slot="props" field="agency" label="Source Agency ID">
-              {{ props.row.target_id }}
-            </b-table-column>
-            <b-table-column v-slot="props" field="agency" label="Matched Agency">
-              <template v-if="props.row.target_match">
-                <b-icon icon="check" />
-                {{ props.row.target_match.agency_name }}
-              </template>
-              <template v-else>
-                <b-tooltip dashed label="The active version of this source feed does not contain a matching agency">
-                  <b-icon icon="alert" />
-                </b-tooltip>
-              </template>
-            </b-table-column>
-          </b-table>
+          <div class="content">
+            <b-table
+              :data="sources"
+              :striped="true"
+              sort-icon="menu-up"
+            >
+              <b-table-column v-slot="props" field="agency" label="Association type">
+                {{ props.row.target_type }}
+              </b-table-column>
+              <!-- TODO: add a column for feed spec -->
+              <b-table-column v-slot="props" field="agency" label="Source Feed">
+                <nuxt-link :to="{name:'feeds-feed', params:{feed:props.row.target_feed}}">
+                  {{ props.row.target_feed }}
+                </nuxt-link>
+              </b-table-column>
+              <b-table-column v-slot="props" field="agency" label="Source Agency ID">
+                {{ props.row.target_id }}
+              </b-table-column>
+              <b-table-column v-slot="props" field="agency" label="Matched Agency">
+                <template v-if="props.row.target_match">
+                  <b-icon icon="check" />
+                  {{ props.row.target_match.agency_name }}
+                </template>
+                <template v-else>
+                  <b-tooltip dashed label="The active version of this source feed does not contain a matching agency">
+                    <b-icon icon="alert" />
+                  </b-tooltip>
+                </template>
+              </b-table-column>
+            </b-table>
+          </div>
+        </b-tab-item>
+      </b-tabs>
+      <hr>
+      <h4 class="title is-4">
+        Operator Service
+      </h4>
+      <b-tabs v-model="activeTab" type="is-boxed" :animated="false" @input="setTab">
+        <b-tab-item label="Map">
+          <!-- need fvids for good index search -->
+          <feed-version-map-viewer v-if="activeTab === 0" :fvids="fvids" :agency-ids="agencyIds" :overlay="true" :link-version="linkVersion" />
         </b-tab-item>
 
         <b-tab-item label="Routes">

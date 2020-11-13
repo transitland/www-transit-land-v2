@@ -134,87 +134,49 @@
           <td>{{ entity.languages }}</td>
         </tr>
       </table>
-
-      <br>
-
-      <b-tabs v-model="activeTab" type="is-boxed" :animated="false" @input="setTab">
-        <b-tab-item v-if="entity.spec == 'gtfs'" label="Versions">
-          <b-table
-            :data="entity.feed_versions"
-            :striped="true"
-            :paginated="true"
-            :pagination-simple="true"
-            sort-icon="menu-up"
+      <hr>
+      <h4 class="title is-4">
+        Operator(s) Associated with this Feed
+      </h4>
+      <b-tabs type="is-boxed" :animated="false">
+        <b-tab-item label="Operators">
+          <b-message
+            v-for="(match,i) of entity.associated_operators"
+            :key="i"
+            type="is-success"
+            has-icon
+            icon="information"
+            :closable="false"
           >
-            <b-table-column
-              v-slot="props"
-              :sortable="true"
-              field="fetched_at"
-              label="Fetched"
-            >
-              {{ props.row.fetched_at | formatDate }} ({{ props.row.fetched_at | fromNow }})
-            </b-table-column>
-            <b-table-column v-slot="props" :sortable="true" field="sha1" label="SHA1">
-              <nuxt-link
-                :to="{name: 'feeds-feed-versions-version', params: {feed: entity.onestop_id, version: props.row.sha1}}"
-              >
-                {{ props.row.sha1.substr(0,6) }}…
-              </nuxt-link>
-            </b-table-column>
-            <b-table-column
-              v-slot="props"
-              :sortable="true"
-              field="earliest_calendar_date"
-              label="Earliest date"
-            >
-              {{ props.row.earliest_calendar_date }}
-            </b-table-column>
-            <b-table-column
-              v-slot="props"
-              :sortable="true"
-              field="latest_calendar_date"
-              label="Latest date"
-            >
-              {{ props.row.latest_calendar_date }}
-            </b-table-column>
-            <b-table-column v-slot="props" field="feed_version_gtfs_import" label="Imported">
-              <template v-if="props.row.feed_version_gtfs_import">
-                <b-icon v-if="props.row.feed_version_gtfs_import.success" icon="check" />
-                <b-icon v-else-if="props.row.feed_version_gtfs_import.in_progress" icon="clock" />
-                <b-tooltip
-                  v-else-if="props.row.feed_version_gtfs_import.success == false"
-                  :label="props.row.feed_version_gtfs_import.exception_log"
-                  position="is-top"
-                >
-                  <b-icon icon="alert" />
-                </b-tooltip>
-              </template>
-            </b-table-column>
-            <b-table-column v-slot="props" label="Active">
-              <b-icon
-                v-if="entity.feed_state && entity.feed_state.feed_version_id === props.row.id"
-                icon="check"
-              />
-            </b-table-column>
-          </b-table>
+            <div class="columns">
+              <div class="column is-8">
+                <p>
+                  This feed is associated with the operator record with Onestop ID of
+                  <code>{{ match.onestop_id }}</code> See this operator for more metadata related to this feed and to explore routes, stops, and other data imported from this feed.
+                </p>
+              </div>
+              <div class="column is-4 has-text-right">
+                <nuxt-link class="button is-primary" :to="{name:'operators-onestop_id', params:{onestop_id:match.onestop_id}}">
+                  View Operator Record
+                </nuxt-link>
+              </div>
+            </div>
+          </b-message>
         </b-tab-item>
-
-        <!-- Data sources -->
-        <b-tab-item label="Associated Operators">
+        <b-tab-item label="Operators (Advanced View)">
           <b-message type="is-light" has-icon icon="information" :closable="false">
             This feed contributes data to the following Operators. These associations are based on the references defined in each Operator's Atlas record. Additionally, GTFS Agencies that do not have defined references to any Operator record are assigned an automatically generated Onestop ID. Please see the <nuxt-link :to="{name:'documentation'}">
               Operator documentation
             </nuxt-link> for more information on this process.
           </b-message>
-
           <div class="content">
             <table class="table is-shaded">
               <thead>
                 <tr>
                   <th>Association type</th>
-                  <th>Operator</th>
-                  <th>OnestopID</th>
-                  <th>Source Agency ID</th>
+                  <th>Operator Name</th>
+                  <th>Operator Onestop ID</th>
+                  <th>GTFS Agency ID in Source Feed</th>
                   <th>Matched Agency</th>
                 </tr>
               </thead>
@@ -246,6 +208,73 @@
           </div>
         </b-tab-item>
       </b-tabs>
+
+      <hr>
+
+      <div v-if="entity.spec == 'gtfs'">
+        <h4 class="title is-4">
+          Feed Versions Stored by Transitland
+        </h4>
+        <b-table
+          :data="entity.feed_versions"
+          :striped="true"
+          :paginated="true"
+          :pagination-simple="true"
+          sort-icon="menu-up"
+        >
+          <b-table-column
+            v-slot="props"
+            :sortable="true"
+            field="fetched_at"
+            label="Fetched"
+          >
+            {{ props.row.fetched_at | formatDate }} ({{ props.row.fetched_at | fromNow }})
+          </b-table-column>
+          <b-table-column v-slot="props" :sortable="true" field="sha1" label="SHA1">
+            <nuxt-link
+              :to="{name: 'feeds-feed-versions-version', params: {feed: entity.onestop_id, version: props.row.sha1}}"
+            >
+              {{ props.row.sha1.substr(0,6) }}…
+            </nuxt-link>
+          </b-table-column>
+          <b-table-column
+            v-slot="props"
+            :sortable="true"
+            field="earliest_calendar_date"
+            label="Earliest date"
+          >
+            {{ props.row.earliest_calendar_date }}
+          </b-table-column>
+          <b-table-column
+            v-slot="props"
+            :sortable="true"
+            field="latest_calendar_date"
+            label="Latest date"
+          >
+            {{ props.row.latest_calendar_date }}
+          </b-table-column>
+          <b-table-column v-slot="props" field="feed_version_gtfs_import" label="Imported">
+            <template v-if="props.row.feed_version_gtfs_import">
+              <b-icon v-if="props.row.feed_version_gtfs_import.success" icon="check" />
+              <b-icon v-else-if="props.row.feed_version_gtfs_import.in_progress" icon="clock" />
+              <b-tooltip
+                v-else-if="props.row.feed_version_gtfs_import.success == false"
+                :label="props.row.feed_version_gtfs_import.exception_log"
+                position="is-top"
+              >
+                <b-icon icon="alert" />
+              </b-tooltip>
+            </template>
+          </b-table-column>
+          <b-table-column v-slot="props" label="Active">
+            <b-icon
+              v-if="entity.feed_state && entity.feed_state.feed_version && entity.feed_state.feed_version.id === props.row.id"
+              icon="check"
+            />
+          </b-table-column>
+          <!-- TODO: add a link to download the feed version file using tlv2 REST API -->
+        </b-table>
+      </div>
     </div>
   </div>
 </template>
