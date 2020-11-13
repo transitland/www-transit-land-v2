@@ -212,6 +212,8 @@
         </b-tab-item>
       </b-tabs>
       <hr>
+      <!-- anchors for when users click between tabs -->
+      <a v-for="[, value] of Object.entries(tabIndex)" :key="value" :name="value" />
       <h4 class="title is-4">
         Operator Service
       </h4>
@@ -222,11 +224,11 @@
         </b-tab-item>
 
         <b-tab-item label="Routes">
-          <route-viewer v-if="activeTab === 2" :agency-ids="agencyIds" :fvids="fvids" :show-agency="true" />
+          <route-viewer v-if="activeTab === 1" :agency-ids="agencyIds" :fvids="fvids" :show-agency="true" />
         </b-tab-item>
 
         <b-tab-item label="Stops">
-          <stop-viewer v-if="activeTab === 3" :agency-ids="agencyIds" :fvids="fvids" />
+          <stop-viewer v-if="activeTab === 2" :agency-ids="agencyIds" :fvids="fvids" />
         </b-tab-item>
       </b-tabs>
     </div>
@@ -241,10 +243,9 @@ export default {
   data () {
     return {
       tabIndex: {
-        0: 'summary',
-        1: 'sources',
-        2: 'routes',
-        3: 'stops'
+        0: 'map',
+        1: 'routes',
+        2: 'stops'
       }
     }
   },
