@@ -213,7 +213,7 @@
 
       <div v-if="entity.spec == 'gtfs'">
         <h4 class="title is-4">
-          Feed Versions Stored by Transitland
+          Feed Versions Archived by Transitland
         </h4>
         <b-table
           :data="entity.feed_versions"
