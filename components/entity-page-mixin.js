@@ -70,7 +70,7 @@ export default {
   },
   methods: {
     setError (e) {
-      this.$nuxt.error({ statusCode: 404, message: 'failed' })
+      this.$nuxt.error({ statusCode: 404, message: 'Not found' })
     },
     setTab (value) {
       const tab = this.tabIndex[value]
