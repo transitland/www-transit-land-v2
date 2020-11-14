@@ -1,10 +1,7 @@
 <template>
   <div>
-    <b-message v-if="error" class="is-danger">
-      {{ error }}
-    </b-message>
-    <span v-else-if="$apollo.loading" class="is-loading" />
-    <div v-else>
+    <span v-if="$apollo.loading" class="is-loading" />
+    <div v-else-if="entity">
       <nav class="breadcrumb">
         <ul>
           <li>
@@ -292,9 +289,8 @@ import EntityPageMixin from '~/components/entity-page-mixin'
 export default {
   mixins: [EntityPageMixin],
   apollo: {
-    entities: {
+    query: {
       query: require('~/graphql/current-feed.gql'),
-      error (e) { this.error = e },
       variables () {
         return {
           feed_onestop_id: this.onestopId
@@ -304,6 +300,7 @@ export default {
   },
   data () {
     return {
+      error: 'ok',
       tabIndex: {
         0: 'versions',
         1: 'operators'
