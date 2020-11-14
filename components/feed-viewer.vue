@@ -153,20 +153,10 @@ export default {
   },
   watch: {
     fetchErrorFilter (v) {
-      this.$router.push({ path: 'feeds', query: Object.assign({}, this.$route.query, { fetch_error_filter: v }) })
+      this.$router.replace({ name: 'feeds', query: { ...this.$route.query, fetch_error_filter: v } })
     },
     feedSpecs (v) {
-      this.$router.push({ path: 'feeds', query: Object.assign({}, this.$route.query, { feed_specs: this.feedSpecs }) })
-    }
-  },
-  methods: {
-    clearQuery () {
-      this.$router.push({ path: 'feeds', query: { } })
-    },
-    onAutocomplete (a, b) {
-      const q = { page: 1 }
-      q[a] = b
-      this.$router.push({ path: 'feeds', query: q })
+      this.$router.replace({ name: 'feeds', query: { ...this.$route.query, fetch_specs: v } })
     }
   }
 }
