@@ -112,9 +112,20 @@
 
       <br>
 
-      <service-levels :fvid="entity.id" />
-
       <b-tabs v-model="activeTab" type="is-boxed" :animated="false" @input="setTab">
+        <b-tab-item label="Service levels">
+          <service-levels :fvid="entity.id" />
+        </b-tab-item>
+
+        <b-tab-item label="Map">
+          <template v-if="activeTab === 1">
+            <feed-version-map-viewer v-if="activeTab === 1 && fvi && fvi.success" :fvids="[entity.id]" :overlay="true" :link-version="true" />
+            <template v-else>
+              Map is only available for successfully imported feed versions.
+            </template>
+          </template>
+        </b-tab-item>
+
         <b-tab-item label="Files">
           <div class="content">
             <table class="table is-striped">
@@ -186,24 +197,15 @@
         </b-tab-item>
 
         <b-tab-item label="Agencies">
-          <agency-viewer v-if="activeTab === 2" :fvid="entity.sha1" />
+          <agency-viewer v-if="activeTab === 4" :fvid="entity.sha1" />
         </b-tab-item>
 
         <b-tab-item label="Routes">
-          <route-viewer v-if="activeTab === 3" :link-version="true" :fvids="[entity.id]" />
+          <route-viewer v-if="activeTab === 5" :link-version="true" :fvids="[entity.id]" />
         </b-tab-item>
 
         <b-tab-item label="Stops">
-          <stop-viewer v-if="activeTab === 4" :fvids="[entity.id]" />
-        </b-tab-item>
-
-        <b-tab-item label="Map">
-          <template v-if="activeTab === 5">
-            <feed-version-map-viewer v-if="activeTab === 5 && fvi && fvi.success" :fvids="[entity.id]" :overlay="true" :link-version="true" />
-            <template v-else>
-              Map is only available for successfully imported feed versions.
-            </template>
-          </template>
+          <stop-viewer v-if="activeTab === 6" :fvids="[entity.id]" />
         </b-tab-item>
       </b-tabs>
     </div>
@@ -229,12 +231,13 @@ export default {
     return {
       features: [],
       tabIndex: {
-        0: 'files',
-        1: 'import',
-        2: 'agencies',
-        3: 'routes',
-        4: 'stops',
-        5: 'map'
+        0: 'service',
+        1: 'map',
+        2: 'files',
+        3: 'import',
+        4: 'agencies',
+        5: 'routes',
+        6: 'stops'
       }
     }
   },

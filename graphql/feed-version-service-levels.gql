@@ -1,5 +1,13 @@
-query($start_date:date, $end_date:date, $feed_version_id:bigint) {
-  feed_version_service_levels(limit:1000, where:{route_id:{_is_null:true}, feed_version_id:{_eq:$feed_version_id}, start_date:{_lte:$start_date}, end_date:{_gte:$end_date}}) {
+query($start_date:date, $end_date:date, $feed_version_id:bigint, $route_id: String, $all_routes: Boolean) {
+  route_fvsl: feed_version_service_levels(limit: 1000, where: {feed_version_id: {_eq: $feed_version_id}, start_date: {_lte: $start_date}, end_date: {_gte: $end_date}}, distinct_on: route_id) {
+    id
+    feed_version_id
+    route_id
+    route_short_name
+    route_long_name
+    route_type
+  }
+  feed_version_service_levels(limit:1000, where:{route_id:{_is_null:$all_routes, _eq:$route_id}, feed_version_id:{_eq:$feed_version_id}, start_date:{_lte:$start_date}, end_date:{_gte:$end_date}}) {
     id
     feed_version_id
     start_date
