@@ -1,9 +1,6 @@
 <template>
   <div>
-    <b-message v-if="error" class="is-danger">
-      {{ error }}
-    </b-message>
-    <span v-else-if="$apollo.loading" class="is-loading" />
+    <span v-if="$apollo.loading" class="is-loading" />
     <div v-else-if="entity">
       <nav class="breadcrumb">
         <ul>
@@ -107,7 +104,7 @@ export default {
     return {}
   },
   apollo: {
-    entities: {
+    query: {
       query: require('~/graphql/feed-version-stop.gql'),
       variables () {
         return {

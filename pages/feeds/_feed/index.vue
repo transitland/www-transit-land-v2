@@ -1,10 +1,7 @@
 <template>
   <div>
-    <b-message v-if="error" class="is-danger">
-      {{ error }}
-    </b-message>
-    <span v-else-if="$apollo.loading" class="is-loading" />
-    <div v-else>
+    <span v-if="$apollo.loading" class="is-loading" />
+    <div v-else-if="entity">
       <nav class="breadcrumb">
         <ul>
           <li>
@@ -64,22 +61,20 @@
           </td>
         </tr>
 
-        <!-- <tr v-if="entity.spec == 'gtfs'">
-          <td>
-            <b-tooltip dashed label="Last time a fetch was attempted">
-              Fetched
-            </b-tooltip>
-          </td>
-          <td>{{ entity.feed_state.last_fetched_at | formatDate }} ({{ entity.feed_state.last_fetched_at | fromNow }})</td>
-        </tr> -->
-
         <tr v-if="entity.spec == 'gtfs'">
           <td>
             <b-tooltip dashed label="Last time a fetch successfully returned valid GTFS data">
               Last Fetch
             </b-tooltip>
           </td>
-          <td>{{ entity.feed_state.last_successful_fetch_at | formatDate }} ({{ entity.feed_state.last_successful_fetch_at | fromNow }})</td>
+          <td>
+            <template v-if="entity.feed_state && entity.feed_state.last_successful_fetch_at">
+              {{ entity.feed_state.last_successful_fetch_at | formatDate }} ({{ entity.feed_state.last_successful_fetch_at | fromNow }})
+            </template>
+            <template v-else>
+              Unknown
+            </template>
+          </td>
         </tr>
 
         <tr v-if="entity.spec == 'gtfs' && entity.feed_state.last_fetch_error">
@@ -228,7 +223,12 @@
             field="fetched_at"
             label="Fetched"
           >
-            {{ props.row.fetched_at | formatDate }} ({{ props.row.fetched_at | fromNow }})
+            <template v-if="props.row.fetched_at">
+              {{ props.row.fetched_at | formatDate }} ({{ props.row.fetched_at | fromNow }})
+            </template>
+            <template v-else>
+              Unknown
+            </template>
           </b-table-column>
           <b-table-column v-slot="props" :sortable="true" field="sha1" label="SHA1">
             <nuxt-link
@@ -289,9 +289,8 @@ import EntityPageMixin from '~/components/entity-page-mixin'
 export default {
   mixins: [EntityPageMixin],
   apollo: {
-    entities: {
+    query: {
       query: require('~/graphql/current-feed.gql'),
-      error (e) { this.error = e },
       variables () {
         return {
           feed_onestop_id: this.onestopId
@@ -301,6 +300,7 @@ export default {
   },
   data () {
     return {
+      error: 'ok',
       tabIndex: {
         0: 'versions',
         1: 'operators'

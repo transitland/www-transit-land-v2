@@ -54,25 +54,35 @@
       </b-table-column>
 
       <b-table-column v-slot="props" :width="100" field="spec" label="Spec">
-        {{ props.row.spec }}
+        {{ props.row.spec.toUpperCase() }}
       </b-table-column>
 
       <b-table-column v-slot="props" :width="60" numeric field="feed_version_count" label="Versions">
-        {{ props.row.feed_version_count }}
+        <span v-if="props.row.spec === 'gtfs'">
+          {{ props.row.feed_version_count }}
+        </span>
       </b-table-column>
 
       <b-table-column v-slot="props" :width="150" field="last_successful_fetch_at" label="Last Fetched">
-        <span v-if="props.row.last_successful_fetch_at">
-          {{ props.row.last_successful_fetch_at | fromNow }}
+        <span v-if="props.row.spec === 'gtfs'">
+          <template v-if="props.row.last_successful_fetch_at">
+            {{ props.row.last_successful_fetch_at | fromNow }}
+          </template>
+          <template v-else>
+            Never
+          </template>
         </span>
-        <span v-else>Never</span>
       </b-table-column>
 
       <b-table-column v-slot="props" :width="150" field="last_successful_import_at" label="Last Imported">
-        <span v-if="props.row.last_successful_import_at">
-          {{ props.row.last_successful_import_at | fromNow }}
+        <span v-if="props.row.spec === 'gtfs'">
+          <template v-if="props.row.last_successful_import_at">
+            {{ props.row.last_successful_import_at | fromNow }}
+          </template>
+          <template v-else>
+            Never
+          </template>
         </span>
-        <span v-else>Never</span>
       </b-table-column>
 
       <b-table-column v-slot="props" :width="60" field="last_fetch_error" label="Errors">
@@ -140,7 +150,7 @@ export default {
         }
         return {
           onestop_id: feed.onestop_id,
-          spec: (feed.spec || '').toUpperCase(),
+          spec: feed.spec,
           last_fetched_at: feedState.last_fetched_at,
           last_fetch_error: feedState.last_fetch_error,
           last_successful_fetch_at: feedState.last_successful_fetch_at,
@@ -153,20 +163,10 @@ export default {
   },
   watch: {
     fetchErrorFilter (v) {
-      this.$router.push({ path: 'feeds', query: Object.assign({}, this.$route.query, { fetch_error_filter: v }) })
+      this.$router.replace({ name: 'feeds', query: { ...this.$route.query, fetch_error_filter: v } })
     },
     feedSpecs (v) {
-      this.$router.push({ path: 'feeds', query: Object.assign({}, this.$route.query, { feed_specs: this.feedSpecs }) })
-    }
-  },
-  methods: {
-    clearQuery () {
-      this.$router.push({ path: 'feeds', query: { } })
-    },
-    onAutocomplete (a, b) {
-      const q = { page: 1 }
-      q[a] = b
-      this.$router.push({ path: 'feeds', query: q })
+      this.$router.replace({ name: 'feeds', query: { ...this.$route.query, fetch_specs: v } })
     }
   }
 }

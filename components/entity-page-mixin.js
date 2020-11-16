@@ -1,4 +1,17 @@
 export default {
+  apollo: {
+    $query: {
+      error (e) {
+        this.setError(e)
+      },
+      update (data) {
+        if (data.entities.length === 0) {
+          return this.setError({ statusCode: 404 })
+        }
+        this.entities = data.entities
+      }
+    }
+  },
   data () {
     return {
       entities: [],
@@ -28,7 +41,7 @@ export default {
       return this.$route.params.onestop_id === 'search'
     },
     entity () {
-      return this.entities.length > 0 ? this.entities[0] : null
+      return (this.entities && this.entities.length > 0) ? this.entities[0] : null
     },
     entityIds () {
       return this.entities.map((s) => { return s.id })
@@ -56,6 +69,9 @@ export default {
     }
   },
   methods: {
+    setError (e) {
+      this.$nuxt.error({ statusCode: 404, message: 'Not found' })
+    },
     setTab (value) {
       const tab = this.tabIndex[value]
       if (tab) {

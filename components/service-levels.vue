@@ -1,16 +1,44 @@
 <template>
-  <div>
+  <div v-if="$apollo.loading">
+    Loading
+  </div>
+  <div v-else-if="route_fvsl.length === 0">
+    No service level is currently available for this feed version.
+  </div>
+  <div v-else>
+    <b-field grouped label="Filter by route">
+      <b-select v-model="routeId">
+        <option value="">
+          All routes
+        </option>
+        <option v-for="rsl of route_fvsl" :key="rsl.id" :value="rsl.route_id">
+          {{ rsl.route_short_name }} {{ rsl.route_long_name }}
+        </option>
+      </b-select>
+      <span v-if="route_fvsl.length > 1000" class="tag">Note: only the first 1,000 routes are shown</span>
+    </b-field>
     <div class="clearfix">
+      <div class="col days">
+        <span class="cell" />
+        <span class="cell">Mon</span>
+        <span class="cell">Tue</span>
+        <span class="cell">Wed</span>
+        <span class="cell">Thu</span>
+        <span class="cell">Fri</span>
+        <span class="cell">Sat</span>
+        <span class="cell">Sun</span>
+      </div>
+
       <div v-for="sl of serviceMap" :key="sl.id">
         <div class="col">
           <span class="cell month" :title="sl.start_date">{{ formatMonth(sl.start_date) }}</span>
-          <span class="cell" :style="cmap(sl.monday)"><span class="tt">{{ formatDay(sl.start_date, 0) }}<br>{{ formatTooltip(sl.monday) }}</span></span>
-          <span class="cell" :style="cmap(sl.tuesday)"><span class="tt">{{ formatDay(sl.start_date, 1) }}<br>{{ formatTooltip(sl.tuesday) }}</span></span>
-          <span class="cell" :style="cmap(sl.wednesday)"><span class="tt">{{ formatDay(sl.start_date, 2) }}<br>{{ formatTooltip(sl.wednesday) }}</span></span>
-          <span class="cell" :style="cmap(sl.thursday)"><span class="tt">{{ formatDay(sl.start_date, 3) }}<br>{{ formatTooltip(sl.thursday) }}</span></span>
-          <span class="cell" :style="cmap(sl.friday)"><span class="tt">{{ formatDay(sl.start_date, 4) }}<br>{{ formatTooltip(sl.friday) }}</span></span>
-          <span class="cell" :style="cmap(sl.saturday)"><span class="tt">{{ formatDay(sl.start_date, 5) }}<br>{{ formatTooltip(sl.saturday) }}</span></span>
-          <span class="cell" :style="cmap(sl.sunday)"><span class="tt">{{ formatDay(sl.start_date, 6) }}<br>{{ formatTooltip(sl.sunday) }}</span></span>
+          <span class="cell day" :style="cmap(sl.monday)"><span class="tt">{{ formatDay(sl.start_date, 0) }}<br>{{ formatTooltip(sl.monday) }}</span></span>
+          <span class="cell day" :style="cmap(sl.tuesday)"><span class="tt">{{ formatDay(sl.start_date, 1) }}<br>{{ formatTooltip(sl.tuesday) }}</span></span>
+          <span class="cell day" :style="cmap(sl.wednesday)"><span class="tt">{{ formatDay(sl.start_date, 2) }}<br>{{ formatTooltip(sl.wednesday) }}</span></span>
+          <span class="cell day" :style="cmap(sl.thursday)"><span class="tt">{{ formatDay(sl.start_date, 3) }}<br>{{ formatTooltip(sl.thursday) }}</span></span>
+          <span class="cell day" :style="cmap(sl.friday)"><span class="tt">{{ formatDay(sl.start_date, 4) }}<br>{{ formatTooltip(sl.friday) }}</span></span>
+          <span class="cell day" :style="cmap(sl.saturday)"><span class="tt">{{ formatDay(sl.start_date, 5) }}<br>{{ formatTooltip(sl.saturday) }}</span></span>
+          <span class="cell day" :style="cmap(sl.sunday)"><span class="tt">{{ formatDay(sl.start_date, 6) }}<br>{{ formatTooltip(sl.sunday) }}</span></span>
         </div>
       </div>
     </div>
@@ -26,18 +54,26 @@ export default {
   },
   data () {
     return {
-      feed_version_service_levels: []
+      routeId: null,
+      feed_version_service_levels: [],
+      route_fvsl: []
     }
   },
   apollo: {
-    feed_version_service_levels: {
+    query: {
       query: require('~/graphql/feed-version-service-levels.gql'),
       variables () {
         return {
+          route_id: this.routeId,
+          all_routes: this.routeId ? null : true,
           feed_version_id: this.fvid
         }
       },
-      error (e) { this.error = e }
+      error (e) { this.error = e },
+      update (data) {
+        this.route_fvsl = data.route_fvsl
+        this.feed_version_service_levels = data.feed_version_service_levels
+      }
     }
   },
   computed: {
@@ -126,7 +162,11 @@ const months = {
     height:20px;
     border:solid 1px #fff;
 }
-.cell:hover {
+.days {
+  font-size:10pt;
+  width: 40px !important;
+}
+.cell.day:hover {
     border:solid 1px #ff0000;
 }
 .month {

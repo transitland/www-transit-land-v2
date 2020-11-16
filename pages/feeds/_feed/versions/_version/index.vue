@@ -1,9 +1,6 @@
 <template>
   <div>
-    <b-message v-if="error" class="is-danger">
-      {{ error }}
-    </b-message>
-    <span v-else-if="$apollo.loading" class="is-loading" />
+    <span v-if="$apollo.loading" class="is-loading" />
     <div v-else-if="entity">
       <nav class="breadcrumb">
         <ul>
@@ -115,11 +112,18 @@
 
       <br>
 
-      <service-levels :fvid="entity.id" />
-
       <b-tabs v-model="activeTab" type="is-boxed" :animated="false" @input="setTab">
+        <b-tab-item label="Service levels">
+          <service-levels :fvid="entity.id" />
+        </b-tab-item>
+
         <b-tab-item label="Map">
-          <feed-version-map-viewer v-if="activeTab === 0" :fvids="[entity.id]" :overlay="true" :link-version="true" />
+          <template v-if="activeTab === 1">
+            <feed-version-map-viewer v-if="activeTab === 1 && fvi && fvi.success" :fvids="[entity.id]" :overlay="true" :link-version="true" />
+            <template v-else>
+              Map is only available for successfully imported feed versions.
+            </template>
+          </template>
         </b-tab-item>
 
         <b-tab-item label="Files">
@@ -193,15 +197,15 @@
         </b-tab-item>
 
         <b-tab-item label="Agencies">
-          <agency-viewer v-if="activeTab === 3" :fvid="entity.sha1" />
+          <agency-viewer v-if="activeTab === 4" :fvid="entity.sha1" />
         </b-tab-item>
 
         <b-tab-item label="Routes">
-          <route-viewer v-if="activeTab === 4" :link-version="true" :fvids="[entity.id]" />
+          <route-viewer v-if="activeTab === 5" :link-version="true" :fvids="[entity.id]" />
         </b-tab-item>
 
         <b-tab-item label="Stops">
-          <stop-viewer v-if="activeTab === 5" :fvids="[entity.id]" />
+          <stop-viewer v-if="activeTab === 6" :fvids="[entity.id]" />
         </b-tab-item>
       </b-tabs>
     </div>
@@ -214,8 +218,7 @@ import EntityPageMixin from '~/components/entity-page-mixin'
 export default {
   mixins: [EntityPageMixin],
   apollo: {
-    entities: {
-      error (e) { this.error = e },
+    query: {
       query: require('~/graphql/feed-version.gql'),
       variables () {
         return {
@@ -228,18 +231,19 @@ export default {
     return {
       features: [],
       tabIndex: {
-        0: 'map',
-        1: 'files',
-        2: 'import',
-        3: 'agencies',
-        4: 'routes',
-        5: 'stops'
+        0: 'service',
+        1: 'map',
+        2: 'files',
+        3: 'import',
+        4: 'agencies',
+        5: 'routes',
+        6: 'stops'
       }
     }
   },
   computed: {
     fvi () {
-      return this.entity.feed_version_gtfs_import
+      return (this.entity && this.entity.feed_version_gtfs_import) ? this.entity.feed_version_gtfs_import : null
     },
     rowCount () {
       const ret = {}
