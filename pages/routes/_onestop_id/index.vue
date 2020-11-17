@@ -149,7 +149,7 @@
             </b-tab-item>
 
             <b-tab-item label="Export">
-              <route-export
+              <data-export
                 v-if="activeTab === 2"
                 :route-name="routeName"
                 :route-features="routeFeatures"
@@ -225,11 +225,14 @@ export default {
     }
   },
   computed: {
+    // routeFeatures and stopFeatures are calculated from the main
+    // graphql response so we don't need to copy in and rely on the response from the map
     routeFeatures () {
       const ret = []
       for (const f of this.entities || []) {
         const fcopy = Object.assign({}, f)
         delete fcopy.geometry
+        delete fcopy.__typename
         ret.push({
           type: 'Feature',
           geometry: f.geometry,
@@ -245,6 +248,7 @@ export default {
         for (const g of f.route_stops || []) {
           const fcopy = Object.assign({}, g.stop)
           delete fcopy.geometry
+          delete fcopy.__typename
           ret.push({
             type: 'Feature',
             geometry: g.stop.geometry,

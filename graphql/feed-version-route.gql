@@ -1,4 +1,4 @@
-query ($onestop_id: String, $active_null: Boolean, $route_id: String, $feed_onestop_id: String, $feed_version_sha1: String) {
+query ($onestop_id: String, $active_null: Boolean, $route_id: String, $feed_onestop_id: String, $feed_version_sha1: String, $include_stops: Boolean!=true) {
   entities: tl_vw_gtfs_routes(limit: 100, order_by: {id: desc}, where: {onestop_id: {_eq: $onestop_id}, feed_onestop_id:{_eq:$feed_onestop_id}, feed_version_sha1:{_eq:$feed_version_sha1}, route_id:{_eq:$route_id}, active: {_is_null: $active_null}}) {
     id
     onestop_id
@@ -12,7 +12,7 @@ query ($onestop_id: String, $active_null: Boolean, $route_id: String, $feed_ones
     route_type
     route_url
     geometry
-    route_stops {
+    route_stops @include(if: $include_stops) {
       stop {
         id
         stop_id
@@ -25,6 +25,9 @@ query ($onestop_id: String, $active_null: Boolean, $route_id: String, $feed_ones
       agency_id
       agency_name
     }
+    headways_weekday {
+      headway_secs
+    }    
     operator {
       id
       operator_name

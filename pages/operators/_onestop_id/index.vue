@@ -227,6 +227,15 @@
         <b-tab-item label="Stops">
           <stop-viewer v-if="activeTab === 2" :agency-ids="agencyIds" :fvids="fvids" />
         </b-tab-item>
+
+        <b-tab-item v-if="advancedMode" label="Export">
+          <template v-if="activeTab === 3 && agencyIds.length === 1">
+            <agency-export :agency-ids="agencyIds" />
+          </template>
+          <template v-else>
+            Currently this feature is only available when a single agency is returned for this query.
+          </template>
+        </b-tab-item>
       </b-tabs>
     </div>
   </div>
@@ -239,10 +248,12 @@ export default {
   mixins: [EntityPageMixin],
   data () {
     return {
+      features: [],
       tabIndex: {
         0: 'map',
         1: 'routes',
-        2: 'stops'
+        2: 'stops',
+        3: 'export'
       }
     }
   },

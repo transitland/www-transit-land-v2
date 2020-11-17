@@ -7,7 +7,7 @@ import gql from 'graphql-tag'
 
 const q2 = gql`
 query ($arg_agency_ids: _int8, $arg_route_ids: _int8, $arg_stop_ids: _int8, $radius: numeric) {
-  buffers: tl_calculate_buffers(args: {agency_ids: $arg_route_ids, route_ids: $arg_route_ids, stop_ids: $arg_stop_ids, radius: $radius}) {
+  buffers: tl_calculate_buffers(args: {agency_ids: $arg_agency_ids, route_ids: $arg_route_ids, stop_ids: $arg_stop_ids, radius: $radius}) {
     stop_buffer
     stop_points
     stop_convexhull

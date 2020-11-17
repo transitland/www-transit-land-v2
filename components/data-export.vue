@@ -65,7 +65,7 @@
     <div v-else>
       <b-field grouped>
         <b-field label="Download GeoJSON">
-          <geojson-downloader v-if="routeFeatures.length > 0" :features="routeFeatures" label="Route" :filename="routeName" />
+          <geojson-downloader v-if="routeFeatures.length > 0" :features="routeFeatures" label="Routes" :filename="routeName" />
           <geojson-downloader v-if="stopFeatures.length > 0" :features="stopFeatures" label="Stops" :filename="routeName + ' - Stops'" />
           <geojson-downloader v-if="bufferFeatures.length > 0" :features="bufferFeatures" label="Stop Buffer" :filename="routeName + ' - Stop Buffer'" />
           <geojson-downloader v-if="hullFeatures.length > 0" :features="hullFeatures" label="Stop Hull" :filename="routeName + '- Stop Hull'" />
@@ -76,8 +76,8 @@
 
     <br>
 
-    <buffer-viewer :route-ids="routeIds" :radius="radius" @setBufferFeatures="bufferFeatures = $event" @setHullFeatures="hullFeatures = $event" />
-    <census-viewer :route-ids="routeIds" :radius="radius" :layer="layer" @setFeatures="censusFeatures = $event" />
+    <buffer-viewer :route-ids="routeIds" :agency-ids="agencyIds" :radius="radius" @setBufferFeatures="bufferFeatures = $event" @setHullFeatures="hullFeatures = $event" />
+    <census-viewer :route-ids="routeIds" :agency-ids="agencyIds" :radius="radius" :layer="layer" @setFeatures="censusFeatures = $event" />
   </div>
 </template>
 

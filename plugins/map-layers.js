@@ -43,7 +43,7 @@ const headwayLayers = [
   },
   {
     name: 'route-headway-unknown',
-    filter: ['all', ['==', 'headway_secs', 0]],
+    filter: ['all', ['<=', 'headway_secs', 0]],
     paint: { 'line-opacity': 0.75, 'line-width': 3.0, 'line-color': hwcolors.low }
   },
   {

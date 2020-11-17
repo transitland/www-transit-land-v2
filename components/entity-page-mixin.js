@@ -22,6 +22,12 @@ export default {
     }
   },
   computed: {
+    advancedMode () {
+      if (this.$route.query && this.$route.query.advanced === 'true') {
+        return true
+      }
+      return false
+    },
     dataFreshness () {
       const daysAgo = []
       const n = new Date()
@@ -35,7 +41,9 @@ export default {
       return Math.max(...daysAgo)
     },
     linkVersion () {
-      return Object.keys(this.$route.query).length > 0
+      if (this.$route.query && this.$route.query.feed_onestop_id) {
+        return true
+      }
     },
     search () {
       return this.$route.params.onestop_id === 'search'

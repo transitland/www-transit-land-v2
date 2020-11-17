@@ -52,33 +52,24 @@ export default {
     routeFeatures () {
       const features = []
       for (const feature of this.routes) {
-        if (feature.geometries && feature.geometries.length > 0) {
-          let hw = 10000
-          if (feature.headways_weekday && feature.headways_weekday.headway_secs) {
-            hw = feature.headways_weekday.headway_secs
-          }
+        if (feature.geometry) {
           let routeColor = feature.route_color
           if (routeColor && routeColor.substr(0, 1) !== '#') {
             routeColor = '#' + routeColor
           }
+          const fcopy = Object.assign({}, feature, {
+            geometry_length: -1,
+            route_color: routeColor,
+            headway_secs: (feature.headways_weekday && feature.headways_weekday.headway_secs) ? feature.headways_weekday.headway_secs : -1,
+            agency_name: feature.agency ? feature.agency.agency_name : null
+          })
+          delete fcopy.geometry
+          delete fcopy.__typename
           features.push({
             id: feature.id,
-            properties: {
-              class: 'route',
-              id: feature.id,
-              route_id: feature.route_id,
-              onestop_id: feature.onestop_id,
-              feed_version_sha1: feature.feed_version_sha1,
-              feed_onestop_id: feature.feed_onestop_id,
-              route_short_name: feature.route_short_name,
-              route_long_name: feature.route_long_name,
-              route_type: feature.route_type,
-              route_color: routeColor,
-              agency_name: feature.agency.agency_name,
-              headway_secs: hw,
-              geometry_length: 0.0
-            },
-            geometry: feature.geometries[0].geometry
+            type: 'Feature',
+            properties: fcopy,
+            geometry: feature.geometry
           })
         }
       }
@@ -87,18 +78,27 @@ export default {
     stopFeatures () {
       const features = []
       for (const feature of this.routes) {
-        for (const rs of feature.route_stops || []) {
+        for (const g of feature.route_stops || []) {
+          const fcopy = Object.assign({}, g.stop)
+          delete fcopy.geometry
+          delete fcopy.__typename
           features.push({
-            id: rs.stop.id,
-            properties: {
-              class: 'stop',
-              id: rs.stop.id
-            },
-            geometry: rs.stop.geometry
+            type: 'Feature',
+            geometry: g.stop.geometry,
+            properties: fcopy,
+            id: g.stop.id
           })
         }
       }
       return features
+    }
+  },
+  watch: {
+    routeFeatures (v) {
+      this.$emit('setRouteFeatures', v)
+    },
+    stopFeatures (v) {
+      this.$emit('setSopFeatures', v)
     }
   }
 }
