@@ -105,7 +105,7 @@ const routeLayers = [
   // BUS LOW AND UNKNOWN
   {
     name: 'route-bus-unknown',
-    filter: ['all', ['==', 'route_type', 3], ['==', 'headway_secs', 0]],
+    filter: ['all', ['==', 'route_type', 3], ['<=', 'headway_secs', 0]],
     paint: { 'line-width': 1.5, 'line-color': colors.buslow }
   },
   {
