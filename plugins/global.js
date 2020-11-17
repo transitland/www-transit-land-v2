@@ -32,6 +32,9 @@ Vue.filter('formatHMS', function (value) {
 })
 
 Vue.filter('shortenName', function (value, len) {
+  if (!value) {
+    value = ''
+  }
   if (!len) {
     len = 24
   }

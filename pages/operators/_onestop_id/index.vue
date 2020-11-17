@@ -264,9 +264,8 @@ export default {
         return {
           onestop_id: this.linkVersion ? null : this.$route.params.onestop_id,
           feed_onestop_id: this.$route.query.feed_onestop_id,
-          feed_version_sha1: this.$route.query.feed_version_sha1,
           agency_id: this.$route.query.agency_id,
-          active_null: this.linkVersion ? null : false
+          active_null: false // this.linkVersion ? null : false // currently only active is supported for operators
         }
       }
     }

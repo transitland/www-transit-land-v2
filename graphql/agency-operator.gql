@@ -1,5 +1,5 @@
 query ($onestop_id: String, $feed_version_sha1: String, $feed_onestop_id: String, $agency_id: String, $active_null: Boolean) {
-  entities: tl_mv_active_agency_operators(limit: 100, where: {onestop_id: {_eq:$onestop_id}}) {    
+  entities: tl_mv_active_agency_operators(limit: 100, where: {feed_onestop_id: {_eq:$feed_onestop_id}, onestop_id: {_eq:$onestop_id}}) {    
     onestop_id
     agency_name
     operator_name
