@@ -19,8 +19,8 @@
         </b-select>
       </b-field>
 
-      <b-field label="Formats">
-        <div style="padding-top:10px">
+      <b-field label="Specifications">
+        <div class="pt-1">
           <b-checkbox v-model="feedSpecs" native-value="gtfs">
             GTFS
           </b-checkbox>
@@ -53,17 +53,17 @@
         </nuxt-link>
       </b-table-column>
 
-      <b-table-column v-slot="props" :width="100" field="spec" label="Spec">
+      <b-table-column v-slot="props" field="spec" label="Specification">
         {{ props.row.spec.toUpperCase() }}
       </b-table-column>
 
-      <b-table-column v-slot="props" :width="60" numeric field="feed_version_count" label="Versions">
+      <b-table-column v-slot="props" numeric field="feed_version_count" label="# of Versions Archived">
         <span v-if="props.row.spec === 'gtfs'">
           {{ props.row.feed_version_count }}
         </span>
       </b-table-column>
 
-      <b-table-column v-slot="props" :width="150" field="last_successful_fetch_at" label="Last Fetched">
+      <b-table-column v-slot="props" field="last_successful_fetch_at" label="Last Fetched">
         <span v-if="props.row.spec === 'gtfs'">
           <template v-if="props.row.last_successful_fetch_at">
             {{ props.row.last_successful_fetch_at | fromNow }}
@@ -74,7 +74,7 @@
         </span>
       </b-table-column>
 
-      <b-table-column v-slot="props" :width="150" field="last_successful_import_at" label="Last Imported">
+      <b-table-column v-slot="props" field="last_successful_import_at" label="Last Imported">
         <span v-if="props.row.spec === 'gtfs'">
           <template v-if="props.row.last_successful_import_at">
             {{ props.row.last_successful_import_at | fromNow }}
@@ -85,17 +85,22 @@
         </span>
       </b-table-column>
 
-      <b-table-column v-slot="props" :width="60" field="last_fetch_error" label="Errors">
-        <b-tooltip :label="props.row.last_fetch_error">
-          <b-icon v-if="props.row.last_fetch_error" icon="alert" />
-        </b-tooltip>
-      </b-table-column>
+      <template v-if="fetchErrorFilter !== 'ok'">
+        <b-table-column v-slot="props" field="last_fetch_error" label="Fetch Errors">
+          <code v-if="fetchErrorFilter == 'error'" class="is-danger">
+            {{ props.row.last_fetch_error }}
+          </code>
+          <b-tooltip v-else :label="props.row.last_fetch_error" multilined>
+            <b-icon v-if="props.row.last_fetch_error" icon="alert" />
+          </b-tooltip>
+        </b-table-column>
 
-      <!-- <b-table-column v-slot="props" :width="60" field="last_import_fail" label="Errors">
-        <b-tooltip :label="props.row.last_import_fail">
-          <b-icon v-if="props.row.last_import_fail" icon="alert" />
-        </b-tooltip>
-      </b-table-column> -->
+        <!-- <b-table-column v-slot="props" field="last_import_fail" label="Errors">
+          <b-tooltip :label="props.row.last_import_fail">
+            <b-icon v-if="props.row.last_import_fail" icon="alert" />
+          </b-tooltip>
+        </b-table-column> -->
+      </template>
     </b-table>
   </div>
 </template>
