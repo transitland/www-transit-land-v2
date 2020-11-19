@@ -92,13 +92,9 @@ export default {
   mixins: [TableViewerMixin],
   data () {
     return {
-      zpage: 1,
       merged: true,
       unmatched: false,
-      filterOperators: 'yes',
-      total: 0,
-      entities: [],
-      error: null
+      filterOperators: 'yes'
     }
   },
   apollo: {
@@ -148,12 +144,12 @@ export default {
   },
   methods: {
     clearQuery () {
-      this.$router.push({ path: 'operators', query: { } })
+      this.$router.push({ name: 'operators', query: { } })
     },
     onAutocomplete (a, b) {
       const q = {}
       q[a] = b
-      this.$router.push({ path: 'operators', query: q })
+      this.$router.push({ name: 'operators', query: q })
       this.page = 1
     }
   }
