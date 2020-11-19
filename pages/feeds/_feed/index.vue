@@ -110,7 +110,7 @@
                 Commercial use allowed: {{ entity.license.commercial_use_allowed | capitalize }}
               </li>
               <li v-if="entity.license.create_derived_product">
-                Derivitive use allowed: {{ entity.license.create_derived_product | capitalize }}
+                Creating derived products allowed: {{ entity.license.create_derived_product | capitalize }}
               </li>
               <li v-if="entity.license.redistribute">
                 Redistribution allowed: {{ entity.license.redistribute | capitalize }}
