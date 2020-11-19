@@ -9,6 +9,23 @@
   </div>
 </template>
 
+<script>
+export default {
+  head () {
+    if (this.$route.path) {
+      return {
+        link: [
+          {
+            rel: 'canonical',
+            href: 'https://www.transit.land' + this.$route.path
+          }
+        ]
+      }
+    }
+  }
+}
+</script>
+
 <style scoped>
 .main {
   height: calc(100vh - 60px);
