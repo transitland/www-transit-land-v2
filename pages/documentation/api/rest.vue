@@ -12,7 +12,8 @@ export default {
   mounted () {
     SwaggerUI({
       url: '/rest.swagger.json',
-      dom_id: '#swagger-ui'
+      dom_id: '#swagger-ui',
+      defaultModelRendering: 'model'
     })
   }
 }
