@@ -16,12 +16,20 @@
 <script>
 export default {
   head () {
+    let href = 'https://www.transit.land' + this.$route.path
+    if (this.$route.path.endsWith('.html')) {
+      // nothing
+    } else if (this.$route.path.endsWith('/')) {
+      // nothing
+    } else {
+      href += '/'
+    }
     if (this.$route.path) {
       return {
         link: [
           {
             rel: 'canonical',
-            href: 'https://www.transit.land' + this.$route.path
+            href
           }
         ]
       }
