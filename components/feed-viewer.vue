@@ -5,7 +5,7 @@
     </b-message>
 
     <b-field grouped group-multiline>
-      <b-field label="Fetch status">
+      <b-field label="Filty by Fetch Status">
         <b-select v-model="fetchErrorFilter">
           <option value="all">
             Show all feeds
@@ -19,22 +19,26 @@
         </b-select>
       </b-field>
 
-      <b-field label="Specifications">
-        <div class="pt-1">
-          <b-checkbox v-model="feedSpecs" native-value="gtfs">
-            GTFS
+      <b-field label="Filter by Feed Specification" class="pl-3">
+        <div class="pt-2">
+          <b-checkbox v-model="feedSpecs" native-value="gtfs" class="is-medium">
+            <abbr title="General Transit Feed Specification">GTFS</abbr>
           </b-checkbox>
-          <b-checkbox v-model="feedSpecs" native-value="gtfs-rt">
-            GTFS-RT
+          <b-checkbox v-model="feedSpecs" native-value="gtfs-rt" class="is-medium">
+            <abbr title="GTFS Realtime">GTFS-RT</abbr>
           </b-checkbox>
-          <b-checkbox v-model="feedSpecs" native-value="gbfs">
-            GBFS
+          <b-checkbox v-model="feedSpecs" native-value="gbfs" class="is-medium">
+            <abbr title="General Bikeshare Feed Specification">GBFS</abbr>
+          </b-checkbox>
+          <b-checkbox v-model="feedSpecs" native-value="mds" class="is-medium">
+            <abbr title="Mobility Data Specification">MDS</abbr>
           </b-checkbox>
         </div>
       </b-field>
     </b-field>
 
     <b-table
+      class="pt-3"
       :loading="$apollo.loading"
       :data="feedPage"
       :striped="true"
@@ -135,7 +139,7 @@ export default {
     } else if (spec) {
       spec = [spec]
     } else {
-      spec = ['gtfs', 'gtfs-rt', 'gbfs']
+      spec = ['gtfs', 'gtfs-rt', 'gbfs', 'mds']
     }
     return {
       feedSpecs: spec,

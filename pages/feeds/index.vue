@@ -4,16 +4,14 @@
       Transitland Source Feeds
     </h1>
 
-    <div class="content is-medium">
+    <div class="notification content is-info is-light">
       <p>
         Source feeds are open data sources defined in the <nuxt-link to="/documentation/atlas">
           Transitland Atlas
         </nuxt-link> repository.
       </p>
       <p>
-        Feeds are grouped by <nuxt-link :to="{name:'operators'}">
-          Transitland operators
-        </nuxt-link>, which provide a richer view for browsing.
+        See also <nuxt-link :to="{name:'operators'}">Transitland operators</nuxt-link>, which group together related feeds for a richer browsing experience.
       </p>
     </div>
 
