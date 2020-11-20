@@ -7,7 +7,6 @@ query ($onestop_id: String, $feed_version_sha1: String, $feed_onestop_id: String
     adm1name
     adm0name
     operator {
-      id
       name
       onestop_id
       associated_feeds
