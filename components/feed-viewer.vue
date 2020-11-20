@@ -5,7 +5,7 @@
     </b-message>
 
     <b-field grouped group-multiline>
-      <b-field label="Filty by Fetch Status">
+      <b-field label="Filter by Fetch Status">
         <b-select v-model="fetchErrorFilter">
           <option value="all">
             Show all feeds

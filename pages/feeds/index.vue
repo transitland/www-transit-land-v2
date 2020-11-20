@@ -11,6 +11,7 @@
         </nuxt-link> repository.
       </p>
       <p>
+        <!-- eslint-disable-next-line vue/singleline-html-element-content-newline -->
         See also <nuxt-link :to="{name:'operators'}">Transitland operators</nuxt-link>, which group together related feeds for a richer browsing experience.
       </p>
     </div>
