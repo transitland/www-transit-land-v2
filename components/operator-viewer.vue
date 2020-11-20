@@ -65,11 +65,11 @@
       @sort="onSort"
     >
       <!-- TODO: fix sorting -->
-      <b-table-column v-slot="props" field="name" label="Operator Name">
+      <b-table-column v-slot="props" field="name" label="Operator Name (Short Name)">
         <nuxt-link :to="{name: 'operators-onestop_id', params: {onestop_id: props.row.onestop_id}}">
           {{ props.row.name }}
         </nuxt-link>
-        <!-- TODO: expose operator short name <span v-if="props.row.short_name">({{ props.row.short_name }})</span> -->
+        <span v-if="props.row.short_name">({{ props.row.short_name }})</span>
       </b-table-column>
       <b-table-column v-slot="props" field="city_name" label="City" :width="200">
         {{ props.row.city_name }}
@@ -131,6 +131,7 @@ export default {
       return this.entityPage.map((s) => {
         return {
           name: (this.merged ? s.operator_name : s.agency_name) || s.agency_name || s.operator_name,
+          short_name: s.operator_short_name,
           agency: s.agency,
           operator: s.operator,
           best_place: [], // s.agency.places.length > 0 ? s.agency.places[0] : {},

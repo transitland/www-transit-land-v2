@@ -3,6 +3,7 @@ query ($merged:Boolean!, $unmerged:Boolean!, $unmatched: Boolean!, $offset: Int 
   entities: tl_mv_active_agency_operators(limit: $limit, offset: $offset, where: {agency: {agency_name: {_eq: $name}, places: {name: {_eq: $city_name}, adm0name: {_eq: $adm0name}, adm1name: {_eq: $adm1name}}}}) @include(if: $unmerged) {
     agency_name
     operator_name
+    operator_short_name
     onestop_id
     city_name
     adm1name
@@ -17,6 +18,7 @@ query ($merged:Boolean!, $unmerged:Boolean!, $unmatched: Boolean!, $offset: Int 
   entities: tl_mv_active_agency_operators_merge(limit: $limit, offset: $offset, where: {agency_operators: {agency: {agency_name: {_eq: $name}, places: {name: {_eq: $city_name}, adm0name: {_eq: $adm0name}, adm1name: {_eq: $adm1name}}}}}) @include(if: $merged) {
     agency_name
     operator_name
+    operator_short_name
     onestop_id
     city_name
     adm1name
@@ -31,6 +33,7 @@ query ($merged:Boolean!, $unmerged:Boolean!, $unmatched: Boolean!, $offset: Int 
   unmatched_entities: tl_mv_active_agency_operators_merge(limit: $limit, offset: $offset, where: {agency_id: {_is_null:true}}) @include(if: $unmatched) {
     agency_name
     operator_name
+    operator_short_name
     onestop_id
     city_name
     adm1name
