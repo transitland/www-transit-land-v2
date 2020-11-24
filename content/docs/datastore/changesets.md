@@ -86,7 +86,7 @@ Each payload can contain one or more change actions. The possible actions includ
 Payloads are validated using JSON schemas found in `/app/models/json_schemas`. Note that the API consumes and produces JSON with `"camelCaseKeysInQuotationMarks"`, while internally, the Datastore uses `ruby_symbols_with_underscores`.
 
 ## Quality checks
-The changeset application process will conduct checks on the qualitative characteristics of the incoming data. If certain standards are not met, the checks will generate [quality issues](quality_issues.md). These standards correspond to the quality issue category and type listed in on the Quality Issues page. Once quality checks are complete, the changeset application process also handles the deprecation - logging and deleting records and associations - of old issues in addition to writing the new issues.   
+The changeset application process will conduct checks on the qualitative characteristics of the incoming data. If certain standards are not met, the checks will generate [quality issues](quality_issues). These standards correspond to the quality issue category and type listed in on the Quality Issues page. Once quality checks are complete, the changeset application process also handles the deprecation - logging and deleting records and associations - of old issues in addition to writing the new issues.   
 
 ## Changesest issue resolution
 

@@ -1005,7 +1005,7 @@ deprecated: true
 
 <img alt="Threshold computation" src="/images/transitland-route-geometries/triangle.png" height="400" width="400"></a>
 
-<p>The distance calcuation is not always perfect, unfortunately. Transitland logs inaccuracies through <a href="quality_issues.html">Quality Issues.</a> If any inaccuracies are found for a particular RouteStopPattern, the <code>stop_distances</code> for that RouteStopPattern are set to null.</p>
+<p>The distance calcuation is not always perfect, unfortunately. Transitland logs inaccuracies through <a href="quality_issues">Quality Issues.</a> If any inaccuracies are found for a particular RouteStopPattern, the <code>stop_distances</code> for that RouteStopPattern are set to null.</p>
 
 <a name="before-and-after-stops"></a>
 <h5>Before and After Stops</h5>
