@@ -8,7 +8,7 @@
   <div v-else>
     <b-field grouped label="Filter by route">
       <b-select v-model="routeId">
-        <option value="">
+        <option :value="null">
           All routes
         </option>
         <option v-for="rsl of route_fvsl" :key="rsl.id" :value="rsl.route_id">
