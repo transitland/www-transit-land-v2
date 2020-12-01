@@ -114,7 +114,8 @@
 
       <b-tabs v-model="activeTab" type="is-boxed" :animated="false" @input="setTab">
         <b-tab-item label="Service levels">
-          <service-levels :fvid="entity.id" />
+          <!-- <service-levels :fvid="entity.id" /> -->
+          <multi-service-levels :fvids="[entity.id]" :week-agg="false" />
         </b-tab-item>
 
         <b-tab-item label="Map">
@@ -214,8 +215,10 @@
 
 <script>
 import EntityPageMixin from '~/components/entity-page-mixin'
+import multiServiceLevels from '~/components/multi-service-levels.vue'
 
 export default {
+  components: { multiServiceLevels },
   mixins: [EntityPageMixin],
   apollo: {
     query: {
