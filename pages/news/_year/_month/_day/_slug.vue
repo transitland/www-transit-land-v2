@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <nav class="breadcrumb">
       <ul>
         <li>

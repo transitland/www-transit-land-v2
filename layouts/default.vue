@@ -1,12 +1,11 @@
 <template>
-  <div class="outer">
+  <div>
     <tlnav />
 
-    <div class="main" style="flex:1">
-      <div class="container section">
-        <nuxt />
-      </div>
+    <div class="main">
+      <nuxt />
     </div>
+
     <simple-analytics />
 
     <tlfooter />
@@ -39,13 +38,7 @@ export default {
 </script>
 
 <style scoped>
-.outer {
-  display:flex;
-  min-height:100vh;
-  flex-direction:column;
-}
 .main {
-  background:white;
-  flex:1;
+  padding-top: 2em;
 }
 </style>
