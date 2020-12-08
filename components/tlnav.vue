@@ -6,18 +6,20 @@
       </nuxt-link>
     </template>
     <template slot="start">
-      <b-navbar-item v-for="(item,key) in items" :key="key" :class="($route && $route.name && $route.name.startsWith(item.to.name)) ? 'is-active is-tab': ''">
-        <nuxt-link :to="item.to">
+      <client-only>
+        <nuxt-link v-for="item in items" :key="item.title" :to="item.to" class="navbar-item" :class="($route && $route.name && $route.name.startsWith(item.to.name)) ? 'is-active is-tab': ''">
           {{ item.title }}
         </nuxt-link>
-      </b-navbar-item>
+        <template slot="placeholder">
+          <!-- when doing a static render, we cannot use nuxt-link or check $route, therefore we will temporarily render conventional links -->
+          <a v-for="item in items" :key="item.title" class="navbar-item" :href="item.to.name === 'index' ? '/' : `/${item.to.name}`">{{ item.title }}</a>
+        </template>
+      </client-only>
     </template>
     <template slot="end">
-      <b-navbar-item>
-        <div class="notification is-warning content is-small">
-          Welcome to <strong>Transitland v2</strong>! We're in the process of migrating content from <a href="https://v1.transit.land">Transitland v1</a>.
-        </div>
-      </b-navbar-item>
+      <div class="notification is-warning content is-small navbar-item">
+        <p>Welcome to <strong>Transitland v2</strong>! We're in the process of migrating content from <a href="https://v1.transit.land">Transitland v1</a>.</p>
+      </div>
     </template>
   </b-navbar>
 </template>
@@ -64,7 +66,6 @@ export default {
           icon: 'lightbulb',
           to: { name: 'news' }
         }
-
       ]
     }
   },
@@ -99,5 +100,11 @@ a {
 }
 .notification {
   padding: 0.6em;
+}
+.notification p {
+  display: block;
+}
+.client-only-placeholder {
+  display: flex;
 }
 </style>
