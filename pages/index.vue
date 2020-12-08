@@ -53,6 +53,7 @@
         </p>
         <ul>
           <li>
+            <!-- eslint-disable-next-line -->
             For an overview of Transitland v2, see <nuxt-link to="/news/2019/10/17/tlv2.html">this blog post</nuxt-link> and <nuxt-link to="/documentation">the new documentation on this website</nuxt-link>.
           </li>
           <li>For Transitland v1, see <code><a href="https://v1.transit.land">https://v1.transit.land</a></code> and use its API at <code><a href="https://transit.land/api/v1">https://transit.land/api/v1</a></code>. </li>
@@ -64,8 +65,8 @@
     </section>
     <section class="section">
       <h2 class="title is-2">
-          What is Transitland?
-        </h2>
+        What is Transitland?
+      </h2>
       <div class="columns has-text-centered content is-medium">
         <div class="column is-one-third">
           <h4 class="title is-4">
