@@ -1,145 +1,147 @@
 <template>
   <div>
-    <b-field grouped>
-      <b-field v-if="fvids.length < 2" label="Select routes">
-        <b-taginput
-          v-model="selectedRoutes"
-          :data="route_fvsls"
-          ellipsis
-          autocomplete
-          :open-on-focus="true"
-          field="route_id"
-          icon="label"
-          placeholder="Select routes"
-          @typing="routeFilter = $event"
-        >
-          <template slot-scope="props">
-            <strong>{{ props.option.route_short_name }}</strong>: {{ props.option.route_long_name }}
-          </template>
-          <template slot="selected" slot-scope="props">
-            <b-tag
-              v-for="(tag, index) in props.tags"
-              :key="index"
-              :tabstop="false"
-              ellipsis
-              closable
-              @close="removeSelectedRoute(index, $event)"
-            >
-              {{ tag.route_short_name || tag.route_long_name || tag.route_id }}
-            </b-tag>
-          </template>
-        </b-taginput>
+    <client-only placeholder="Loading...">
+      <b-field grouped>
+        <b-field v-if="fvids.length < 2" label="Select routes">
+          <b-taginput
+            v-model="selectedRoutes"
+            :data="route_fvsls"
+            ellipsis
+            autocomplete
+            :open-on-focus="true"
+            field="route_id"
+            icon="label"
+            placeholder="Select routes"
+            @typing="routeFilter = $event"
+          >
+            <template slot-scope="props">
+              <strong>{{ props.option.route_short_name }}</strong>: {{ props.option.route_long_name }}
+            </template>
+            <template slot="selected" slot-scope="props">
+              <b-tag
+                v-for="(tag, index) in props.tags"
+                :key="index"
+                :tabstop="false"
+                ellipsis
+                closable
+                @close="removeSelectedRoute(index, $event)"
+              >
+                {{ tag.route_short_name || tag.route_long_name || tag.route_id }}
+              </b-tag>
+            </template>
+          </b-taginput>
+        </b-field>
+
+        <b-field label="Aggregate">
+          <b-select v-model="weekAgg">
+            <option :value="true">
+              Week
+            </option>
+            <option :value="false">
+              Day
+            </option>
+          </b-select>
+        </b-field>
+
+        <b-field label="Service relative to">
+          <b-select v-model="maxAggMode">
+            <option value="all">
+              All cells
+            </option>
+            <option value="group">
+              Within group
+            </option>
+          </b-select>
+        </b-field>
+
+        <b-field label="Start date">
+          <b-datepicker
+            v-model="displayStartDate"
+            :unselectable-days-of-week="[0,2,3,4,5,6]"
+            placeholder="Click to select..."
+            icon="calendar-today"
+            trap-focus
+          />
+        </b-field>
+
+        <b-field label="End date">
+          <b-datepicker
+            v-model="displayEndDate"
+            :unselectable-days-of-week="[1,2,3,4,5,6]"
+            placeholder="Click to select..."
+            icon="calendar-today"
+            trap-focus
+          />
+        </b-field>
+
+        <!-- label is zero width joiner -->
+        <b-field label="‍">
+          <span v-if="route_fvsls.length >= 1000" class="tag">Note: only the first 1,000 routes are shown</span>
+          <span v-if="maxWeeks && displayWeeks.length >= maxWeeks" class="tag">Note: only {{ maxWeeks }} weeks are displayed</span>
+        </b-field>
       </b-field>
 
-      <b-field label="Aggregate">
-        <b-select v-model="weekAgg">
-          <option :value="true">
-            Week
-          </option>
-          <option :value="false">
-            Day
-          </option>
-        </b-select>
-      </b-field>
+      <br>
 
-      <b-field label="Service relative to">
-        <b-select v-model="maxAggMode">
-          <option value="all">
-            All cells
-          </option>
-          <option value="group">
-            Within group
-          </option>
-        </b-select>
-      </b-field>
+      <div class="clearfix">
+        <div v-if="!weekAgg" class="col daylabel">
+          <span class="cell month">&nbsp;</span>
+          <div>
+            <div v-for="(row,i) of colGroups.rowinfo" :key="i">
+              <span v-for="(dow,i) of daysOfWeek" :key="i" class="cell rowlabel">
+                <template v-if="!weekAgg">
+                  {{ dow }}
+                </template>
+              </span>
+              <span v-if="!weekAgg" class="cell break">&nbsp;</span>
+            </div>
+          </div>
+        </div>
 
-      <b-field label="Start date">
-        <b-datepicker
-          v-model="displayStartDate"
-          :unselectable-days-of-week="[0,2,3,4,5,6]"
-          placeholder="Click to select..."
-          icon="calendar-today"
-          trap-focus
-        />
-      </b-field>
+        <div v-for="col of colGroups.cols" :key="col.key" class="col">
+          <span class="cell month">{{ formatMonth(col.key) }}</span>
+          <div v-for="(cell,i) of col.rows" :key="i">
+            <span v-for="(dayval,j) of cell.vals" :key="j" class="cell value" :style="cmap(dayval / cell.max)">
+              <span v-if="cell.feed_version_id" class="tt">
+                <template v-if="weekAgg">
+                  Week of
+                </template>
+                {{ formatDay(col.key, j) }}<br>
+                <template v-if="selectedRoutes.length > 0">
+                  {{ cell.route_short_name }} {{ cell.route_long_name }}<br>
+                </template>
+                Feed: {{ cell.feed_onestop_id | shortenName(16) }} ({{ cell.feed_version_sha1 | shortenName(6) }})<br>
+                Fetched: {{ cell.fetched_at | formatDate }}<br>
+                {{ Math.ceil(dayval / 3600) }} service hours <br>
+                <template v-if="maxAggMode === 'all'">
+                  {{ Math.ceil((dayval / cell.max) * 100) }}% of max (all groups)
+                </template>
+                <template v-else-if="maxAggMode === 'group'">
+                  {{ Math.ceil((dayval / cell.max) * 100) }}% of max (within group)
+                </template>
+              </span>
+            </span>
+            <span v-if="!weekAgg" class="cell break">&nbsp;</span>
+          </div>
+        </div>
 
-      <b-field label="End date">
-        <b-datepicker
-          v-model="displayEndDate"
-          :unselectable-days-of-week="[1,2,3,4,5,6]"
-          placeholder="Click to select..."
-          icon="calendar-today"
-          trap-focus
-        />
-      </b-field>
-
-      <!-- label is zero width joiner -->
-      <b-field label="‍">
-        <span v-if="route_fvsls.length >= 1000" class="tag">Note: only the first 1,000 routes are shown</span>
-        <span v-if="maxWeeks && displayWeeks.length >= maxWeeks" class="tag">Note: only {{ maxWeeks }} weeks are displayed</span>
-      </b-field>
-    </b-field>
-
-    <br>
-
-    <div class="clearfix">
-      <div v-if="!weekAgg" class="col daylabel">
-        <span class="cell month">&nbsp;</span>
-        <div>
-          <div v-for="(row,i) of colGroups.rowinfo" :key="i">
+        <div class="col rowlabel">
+          <span class="cell month">&nbsp;</span>
+          <div v-for="(cell,i) of colGroups.rowinfo" :key="i">
             <span v-for="(dow,i) of daysOfWeek" :key="i" class="cell rowlabel">
-              <template v-if="!weekAgg">
-                {{ dow }}
+              <template v-if="i>0" />
+              <template v-else-if="cell.route_id">
+                {{ cell.route_short_name }}: {{ cell.route_long_name }}
+              </template>
+              <template v-else>
+                Version: {{ cell.feed_version_sha1 | shortenName(6) }} Fetched: {{ cell.fetched_at | formatDate }}
               </template>
             </span>
             <span v-if="!weekAgg" class="cell break">&nbsp;</span>
           </div>
         </div>
       </div>
-
-      <div v-for="col of colGroups.cols" :key="col.key" class="col">
-        <span class="cell month">{{ formatMonth(col.key) }}</span>
-        <div v-for="(cell,i) of col.rows" :key="i">
-          <span v-for="(dayval,j) of cell.vals" :key="j" class="cell value" :style="cmap(dayval / cell.max)">
-            <span v-if="cell.feed_version_id" class="tt">
-              <template v-if="weekAgg">
-                Week of
-              </template>
-              {{ formatDay(col.key, j) }}<br>
-              <template v-if="selectedRoutes.length > 0">
-                {{ cell.route_short_name }} {{ cell.route_long_name }}<br>
-              </template>
-              Feed: {{ cell.feed_onestop_id | shortenName(16) }} ({{ cell.feed_version_sha1 | shortenName(6) }})<br>
-              Fetched: {{ cell.fetched_at | formatDate }}<br>
-              {{ Math.ceil(dayval / 3600) }} service hours <br>
-              <template v-if="maxAggMode === 'all'">
-                {{ Math.ceil((dayval / cell.max) * 100) }}% of max (all groups)
-              </template>
-              <template v-else-if="maxAggMode === 'group'">
-                {{ Math.ceil((dayval / cell.max) * 100) }}% of max (within group)
-              </template>
-            </span>
-          </span>
-          <span v-if="!weekAgg" class="cell break">&nbsp;</span>
-        </div>
-      </div>
-
-      <div class="col rowlabel">
-        <span class="cell month">&nbsp;</span>
-        <div v-for="(cell,i) of colGroups.rowinfo" :key="i">
-          <span v-for="(dow,i) of daysOfWeek" :key="i" class="cell rowlabel">
-            <template v-if="i>0" />
-            <template v-else-if="cell.route_id">
-              {{ cell.route_short_name }}: {{ cell.route_long_name }}
-            </template>
-            <template v-else>
-              Version: {{ cell.feed_version_sha1 | shortenName(6) }} Fetched: {{ cell.fetched_at | formatDate }}
-            </template>
-          </span>
-          <span v-if="!weekAgg" class="cell break">&nbsp;</span>
-        </div>
-      </div>
-    </div>
+    </client-only>
   </div>
 </template>
 

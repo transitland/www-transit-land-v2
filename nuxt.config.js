@@ -51,7 +51,8 @@ const create = async (feed, args) => {
 }
 
 export default {
-  ssr: false,
+  ssr: true,
+  target: 'static',
   // https://github.com/nuxt/components
   components: true,
   server: {
@@ -117,8 +118,17 @@ export default {
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
     '@nuxtjs/eslint-module',
-    '@nuxtjs/style-resources'
+    // https://github.com/nuxt-community/style-resources-module
+    '@nuxtjs/style-resources',
+    '@nuxtjs/google-fonts'
   ],
+  googleFonts: {
+    families: {
+      Lato: true,
+      Raleway: true
+    },
+    download: true
+  },
   /*
   ** Nuxt.js modules
   */
@@ -190,6 +200,10 @@ export default {
       data: []
     }
   ],
+  generate: {
+    // NOTE: we handle these redirects in the Nginx containers that serve https://www.transit.land
+    exclude: ['/documentation/glossary', '/playground', '/feed-registry', '/an-open-project', '/feed-registry/feeds/new']
+  },
   /*
   ** Build configuration
   */
