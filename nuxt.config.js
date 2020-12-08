@@ -104,6 +104,9 @@ export default {
   router: {
     linkActiveClass: 'is-active'
   },
+  styleResources: {
+    scss: '~/assets/vars/*.scss'
+  },
   /*
   ** Plugins to load before mounting the App
   */
@@ -113,7 +116,8 @@ export default {
   */
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
-    '@nuxtjs/eslint-module'
+    '@nuxtjs/eslint-module',
+    '@nuxtjs/style-resources'
   ],
   /*
   ** Nuxt.js modules
