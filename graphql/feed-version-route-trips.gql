@@ -1,5 +1,5 @@
 query route_trips($feed_version_id: bigint!, $route_id: bigint!, $service_date: date!, $at_stop_id: bigint!) {
-  services_on_date(args: {fvid: $feed_version_id, service_date: $service_date}) {
+  tl_services_on_date(args: {fvid: $feed_version_id, service_date: $service_date}) {
     id
     trips(where: {route_id: {_eq: $route_id}}) {
       id
