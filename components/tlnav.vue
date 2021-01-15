@@ -16,11 +16,6 @@
         </template>
       </client-only>
     </template>
-    <template slot="end">
-      <div class="notification is-warning content is-small navbar-item">
-        <p>Welcome to <strong>Transitland v2</strong>! We're in the process of migrating content from <a href="https://v1.transit.land">Transitland v1</a>.</p>
-      </div>
-    </template>
   </b-navbar>
 </template>
 
