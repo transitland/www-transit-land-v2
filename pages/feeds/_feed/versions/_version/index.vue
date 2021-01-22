@@ -110,7 +110,23 @@
         </tr>
       </table>
 
-      <br>
+      <!-- TODO: check license info to make sure redistribution is allowed -->
+      <div style="margin-top:40px">
+        <b-message type="is-info" has-icon icon="information" :closable="false">
+          <div class="columns">
+            <div class="column is-8">
+              <p>
+                Want to download a copy of this feed version to process with your own software?
+              </p>
+            </div>
+            <div class="column is-4 has-text-right">
+              <a :href="`https://demo.transit.land/api/v2/rest/feed_versions/${entity.sha1}/download`" target="_blank" class="button is-primary has-addons">
+                <b-icon icon="download" title="Download" /> <span>Download</span>
+              </a>
+            </div>
+          </div>
+        </b-message>
+      </div>
 
       <b-tabs v-model="activeTab" type="is-boxed" :animated="false" @input="setTab">
         <b-tab-item label="Service levels">
