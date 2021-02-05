@@ -1,29 +1,29 @@
 query current_feeds($feed_onestop_id: String) {
-  entities: current_feeds(where: {onestop_id: {_eq: $feed_onestop_id}, deleted_at: {_is_null: true}}, limit: 1) {
+  entities: current_feeds(where: {onestop_id: $feed_onestop_id}, limit: 1) {
     id
-    auth
+    # auth
     onestop_id
-    associated_feeds
-    created_at
-    deleted_at
-    feed_namespace_id
-    languages
-    license
+    # associated_feeds
+    # created_at
+    # deleted_at
+    # feed_namespace_id
+    # languages
+    # license
     onestop_id
-    other_ids
+    # other_ids
     spec
-    urls
-    file
-    associated_operators(limit:1000) {
-      onestop_id
-      operator_id
-      operator_name
-      agency {
-        agency_id
-        agency_name
-      }
-    }
-    feed_versions(order_by: {fetched_at: desc}) {
+    # urls
+    # file
+    # associated_operators(limit:1000) {
+    #   onestop_id
+    #   operator_id
+    #   operator_name
+    #   agency {
+    #     agency_id
+    #     agency_name
+    #   }
+    # }
+    feed_versions {
       id
       sha1
       earliest_calendar_date
@@ -34,7 +34,7 @@ query current_feeds($feed_onestop_id: String) {
         id
         success
         in_progress
-        created_at
+        # created_at
       }
     }
     feed_state {
@@ -42,7 +42,9 @@ query current_feeds($feed_onestop_id: String) {
       last_fetch_error
       last_fetched_at
       last_successful_fetch_at
-      feed_version_id
+      feed_version { 
+        id
+      }
     }
   }
 }

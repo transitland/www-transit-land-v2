@@ -128,7 +128,7 @@ export default {
       },
       update (data) {
         this.entities = data.entities
-        this.total = data.count.aggregate.count
+        this.total = 100 // data.count.aggregate.count
       },
       error (e) { this.error = e }
     }
@@ -165,7 +165,7 @@ export default {
           last_successful_fetch_at: feedState.last_successful_fetch_at,
           last_successful_import_at: currentImport.created_at,
           last_import_fail: lastImportFail,
-          feed_version_count: feed.feed_versions_aggregate.aggregate.count
+          feed_version_count: 10 // feed.feed_versions_aggregate.aggregate.count
         }
       })
     }

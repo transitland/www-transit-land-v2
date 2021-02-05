@@ -52,7 +52,7 @@ const create = async (feed, args) => {
 
 export default {
   ssr: true,
-  target: 'static',
+  // target: 'static',
   // https://github.com/nuxt/components
   components: true,
   server: {
