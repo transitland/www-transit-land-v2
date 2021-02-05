@@ -175,7 +175,7 @@ export default {
       this.$router.replace({ name: 'feeds', query: { ...this.$route.query, fetch_error_filter: v } })
     },
     feedSpecs (v) {
-      this.$router.replace({ name: 'feeds', query: { ...this.$route.query, fetch_specs: v } })
+      this.$router.replace({ name: 'feeds', query: { ...this.$route.query, feed_specs: v } })
     }
   }
 }

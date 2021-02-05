@@ -275,7 +275,10 @@
               icon="check"
             />
           </b-table-column>
-          <!-- TODO: add a link to download the feed version file using tlv2 REST API -->
+          <b-table-column v-slot="props" label="Download">
+            <!-- TODO: check license info to make sure redistribution is allowed -->
+            <a :href="`https://demo.transit.land/api/v2/rest/feed_versions/${props.row.sha1}/download`" target="_blank"><b-icon icon="download" title="Download this feed version" /></a>
+          </b-table-column>
         </b-table>
       </div>
     </div>
