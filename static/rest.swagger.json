@@ -1,343 +1,48 @@
 {
-    "openapi" : "3.0.0",
-    "info" : {
-      "description" : "Transitland REST API",
-      "version" : "1.0.0-oas3",
-      "title" : "Transitland REST API",
-      "contact" : {
-        "email" : "hello@transit.land"
-      },
-      "license" : {
-        "name" : "Apache 2.0",
-        "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
-      }
+  "openapi": "3.0.0",
+  "info": {
+    "description": "Transitland REST API",
+    "version": "1.0.0-oas3",
+    "title": "Transitland REST API",
+    "contact": {
+      "email": "hello@transit.land"
     },
-    "paths" : {
-      "/feeds" : {
-        "get" : {
-          "summary" : "Feeds",
-          "description" : "Search for feeds\n",
-          "parameters" : [ {
-            "$ref" : "#/components/parameters/apikeyParam"
-          }, {
-            "$ref" : "#/components/parameters/idParam"
-          }, {
-            "$ref" : "#/components/parameters/onestopParam"
-          }, {
-            "$ref" : "#/components/parameters/limitParam"
-          }, {
-            "$ref" : "#/components/parameters/afterParam"
-          }, {
-            "$ref" : "#/components/parameters/radiusParam"
-          }, {
-            "$ref" : "#/components/parameters/latParam"
-          }, {
-            "$ref" : "#/components/parameters/lonParam"
-          }, {
-            "$ref" : "#/components/parameters/formatParam"
-          } ],
-          "responses" : {
-            "200" : {
-              "description" : "Search results matching criteria",
-              "content" : {
-                "application/json" : {
-                  "schema" : {
-                    "type" : "array",
-                    "items" : {
-                      "$ref" : "#/components/schemas/feed"
-                    }
-                  }
-                }
-              }
-            }
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "paths": {
+    "/feeds": {
+      "get": {
+        "summary": "Feeds",
+        "description": "Search for feeds\n",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/idParam"
+          },
+          {
+            "$ref": "#/components/parameters/onestopParam"
+          },
+          {
+            "$ref": "#/components/parameters/limitParam"
+          },
+          {
+            "$ref": "#/components/parameters/afterParam"
+          },
+          {
+            "$ref": "#/components/parameters/formatParam"
           }
-        }
-      },
-      "/feed_versions" : {
-        "get" : {
-          "summary" : "Feed Versions",
-          "description" : "Search for feed versions\n",
-          "parameters" : [ {
-            "$ref" : "#/components/parameters/apikeyParam"
-          }, {
-            "$ref" : "#/components/parameters/idParam"
-          }, {
-            "$ref" : "#/components/parameters/limitParam"
-          }, {
-            "$ref" : "#/components/parameters/afterParam"
-          }, {
-            "$ref" : "#/components/parameters/formatParam"
-          }, {
-            "in" : "query",
-            "name" : "feed_onestop_id",
-            "schema" : {
-              "type" : "string",
-              "description" : "Feed OnestopID"
-            }
-          } ],
-          "responses" : {
-            "200" : {
-              "description" : "Search results matching criteria",
-              "content" : {
-                "application/json" : {
-                  "schema" : {
-                    "type" : "array",
-                    "items" : {
-                      "$ref" : "#/components/schemas/feed_version"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/agencies" : {
-        "get" : {
-          "summary" : "Agencies",
-          "description" : "Search for agencies\n",
-          "parameters" : [ {
-            "$ref" : "#/components/parameters/apikeyParam"
-          }, {
-            "$ref" : "#/components/parameters/idParam"
-          }, {
-            "$ref" : "#/components/parameters/onestopParam"
-          }, {
-            "$ref" : "#/components/parameters/limitParam"
-          }, {
-            "$ref" : "#/components/parameters/afterParam"
-          }, {
-            "$ref" : "#/components/parameters/sha1Param"
-          }, {
-            "$ref" : "#/components/parameters/feedParam"
-          }, {
-            "$ref" : "#/components/parameters/radiusParam"
-          }, {
-            "$ref" : "#/components/parameters/latParam"
-          }, {
-            "$ref" : "#/components/parameters/lonParam"
-          }, {
-            "$ref" : "#/components/parameters/formatParam"
-          }, {
-            "in" : "query",
-            "name" : "agency_id",
-            "description" : "Search for records with this GTFS agency_id (string)",
-            "schema" : {
-              "type" : "string"
-            }
-          }, {
-            "in" : "query",
-            "name" : "agency_name",
-            "description" : "Search for records with this GTFS agency_name",
-            "schema" : {
-              "type" : "string"
-            }
-          } ],
-          "responses" : {
-            "200" : {
-              "description" : "Search results matching criteria",
-              "content" : {
-                "application/json" : {
-                  "schema" : {
-                    "type" : "array",
-                    "items" : {
-                      "$ref" : "#/components/schemas/agency"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/routes" : {
-        "get" : {
-          "summary" : "Routes",
-          "description" : "Search for routes\n",
-          "parameters" : [ {
-            "$ref" : "#/components/parameters/apikeyParam"
-          }, {
-            "$ref" : "#/components/parameters/idParam"
-          }, {
-            "$ref" : "#/components/parameters/onestopParam"
-          }, {
-            "$ref" : "#/components/parameters/limitParam"
-          }, {
-            "$ref" : "#/components/parameters/afterParam"
-          }, {
-            "$ref" : "#/components/parameters/sha1Param"
-          }, {
-            "$ref" : "#/components/parameters/feedParam"
-          }, {
-            "$ref" : "#/components/parameters/radiusParam"
-          }, {
-            "$ref" : "#/components/parameters/latParam"
-          }, {
-            "$ref" : "#/components/parameters/lonParam"
-          }, {
-            "$ref" : "#/components/parameters/formatParam"
-          }, {
-            "in" : "query",
-            "name" : "route_id",
-            "description" : "Search for records with this GTFS route_id",
-            "schema" : {
-              "type" : "string"
-            }
-          }, {
-            "in" : "query",
-            "name" : "route_type",
-            "description" : "Search for records with this GTFS route_type",
-            "schema" : {
-              "type" : "integer"
-            }
-          }, {
-            "in" : "query",
-            "name" : "agency_id",
-            "description" : "Search for records with this internal agency_id",
-            "schema" : {
-              "type" : "integer",
-              "format" : "int64"
-            }
-          } ],
-          "responses" : {
-            "200" : {
-              "description" : "Search results matching criteria",
-              "content" : {
-                "application/json" : {
-                  "schema" : {
-                    "type" : "array",
-                    "items" : {
-                      "$ref" : "#/components/schemas/route"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/stops" : {
-        "get" : {
-          "summary" : "Stops",
-          "description" : "Search for stops\n",
-          "parameters" : [ {
-            "$ref" : "#/components/parameters/apikeyParam"
-          }, {
-            "$ref" : "#/components/parameters/idParam"
-          }, {
-            "$ref" : "#/components/parameters/onestopParam"
-          }, {
-            "$ref" : "#/components/parameters/limitParam"
-          }, {
-            "$ref" : "#/components/parameters/afterParam"
-          }, {
-            "$ref" : "#/components/parameters/sha1Param"
-          }, {
-            "$ref" : "#/components/parameters/feedParam"
-          }, {
-            "$ref" : "#/components/parameters/radiusParam"
-          }, {
-            "$ref" : "#/components/parameters/latParam"
-          }, {
-            "$ref" : "#/components/parameters/lonParam"
-          }, {
-            "$ref" : "#/components/parameters/formatParam"
-          }, {
-            "in" : "query",
-            "name" : "stop_id",
-            "description" : "Search for records with this GTFS stop_id",
-            "schema" : {
-              "type" : "string"
-            }
-          } ],
-          "responses" : {
-            "200" : {
-              "description" : "Search results matching criteria",
-              "content" : {
-                "application/json" : {
-                  "schema" : {
-                    "type" : "array",
-                    "items" : {
-                      "$ref" : "#/components/schemas/stop"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/trips" : {
-        "get" : {
-          "summary" : "Trips",
-          "description" : "Search for trips\n",
-          "parameters" : [ {
-            "$ref" : "#/components/parameters/apikeyParam"
-          }, {
-            "$ref" : "#/components/parameters/idParam"
-          }, {
-            "$ref" : "#/components/parameters/limitParam"
-          }, {
-            "$ref" : "#/components/parameters/afterParam"
-          }, {
-            "$ref" : "#/components/parameters/formatParam"
-          } ],
-          "responses" : {
-            "200" : {
-              "description" : "Search results matching criteria",
-              "content" : {
-                "application/json" : {
-                  "schema" : {
-                    "type" : "array",
-                    "items" : {
-                      "$ref" : "#/components/schemas/trip"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/stop_times" : {
-        "get" : {
-          "summary" : "Stop times",
-          "description" : "Search for stop times\n",
-          "parameters" : [ {
-            "$ref" : "#/components/parameters/apikeyParam"
-          }, {
-            "$ref" : "#/components/parameters/idParam"
-          }, {
-            "$ref" : "#/components/parameters/limitParam"
-          }, {
-            "$ref" : "#/components/parameters/afterParam"
-          }, {
-            "in" : "query",
-            "name" : "trip_id",
-            "description" : "Stop times with this internal trip ID",
-            "schema" : {
-              "type" : "integer",
-              "format" : "int64"
-            }
-          }, {
-            "in" : "query",
-            "name" : "stop_id",
-            "description" : "Stop times with this internal stop ID",
-            "schema" : {
-              "type" : "integer",
-              "format" : "int64"
-            }
-          } ],
-          "responses" : {
-            "200" : {
-              "description" : "Search results matching criteria",
-              "content" : {
-                "application/json" : {
-                  "schema" : {
-                    "type" : "array",
-                    "items" : {
-                      "$ref" : "#/components/schemas/stop_time"
-                    }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results matching criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/feed"
                   }
                 }
               }
@@ -346,1316 +51,1620 @@
         }
       }
     },
-    "components" : {
-      "parameters" : {
-        "formatParam" : {
-          "in" : "query",
-          "name" : "format",
-          "description" : "Response format",
-          "schema" : {
-            "enum" : [ "json", "geojson" ]
-          }
-        },
-        "apikeyParam" : {
-          "in" : "query",
-          "name" : "apikey",
-          "description" : "API Key",
-          "schema" : {
-            "type" : "string"
-          }
-        },
-        "onestopParam" : {
-          "in" : "query",
-          "name" : "onestop_id",
-          "description" : "Search for a specific Onestop ID",
-          "schema" : {
-            "type" : "string"
-          }
-        },
-        "idParam" : {
-          "in" : "query",
-          "name" : "id",
-          "description" : "Search for a specific internal ID",
-          "schema" : {
-            "type" : "integer",
-            "format" : "int32",
-            "minimum" : 0
-          }
-        },
-        "limitParam" : {
-          "in" : "query",
-          "name" : "limit",
-          "description" : "Maximum number of records to return",
-          "schema" : {
-            "type" : "integer",
-            "format" : "int32",
-            "minimum" : 0,
-            "maximum" : 100,
-            "default" : 1
-          }
-        },
-        "afterParam" : {
-          "in" : "query",
-          "name" : "after",
-          "description" : "Return records past this record ID",
-          "schema" : {
-            "type" : "integer",
-            "format" : "int32"
-          }
-        },
-        "sha1Param" : {
-          "in" : "query",
-          "name" : "feed_version_sha1",
-          "description" : "Search for records in this feed version",
-          "schema" : {
-            "type" : "string"
-          }
-        },
-        "feedParam" : {
-          "in" : "query",
-          "name" : "feed_onestop_id",
-          "description" : "Search for records in this feed",
-          "schema" : {
-            "type" : "string"
-          }
-        },
-        "radiusParam" : {
-          "in" : "query",
-          "name" : "radius",
-          "description" : "Search for records within this radius of specified lat/lng (meters)",
-          "schema" : {
-            "type" : "number"
-          }
-        },
-        "latParam" : {
-          "in" : "query",
-          "name" : "lat",
-          "description" : "Search for records near this latitude",
-          "schema" : {
-            "type" : "number"
-          }
-        },
-        "lonParam" : {
-          "in" : "query",
-          "name" : "lon",
-          "description" : "Search for records near this longitude",
-          "schema" : {
-            "type" : "number"
-          }
-        }
-      },
-      "schemas" : {
-        "geometry" : {
-          "description" : "Geometry in GeoJSON format",
-          "externalDocs" : {
-            "description" : "GeoJSON specification",
-            "url" : "https://tools.ietf.org/html/rfc7946"
+    "/feed_versions": {
+      "get": {
+        "summary": "Feed Versions",
+        "description": "Search for feed versions\n",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/idParam"
           },
-          "type" : "object",
-          "properties" : {
-            "type" : {
-              "type" : "string",
-              "description" : "GeoJSON geometry type",
-              "nullable" : false,
-              "example" : "LineString"
-            },
-            "coordinates" : {
-              "type" : "array",
-              "description" : "An array of GeoJSON coordinates",
-              "nullable" : false,
-              "items" : {
-                "type" : "number"
-              }
-            }
-          }
-        },
-        "feed_state" : {
-          "type" : "object",
-          "properties" : {
-            "id" : {
-              "type" : "integer",
-              "format" : "int64",
-              "nullable" : false
-            },
-            "last_fetch_error" : {
-              "type" : "string",
-              "description" : "Error produced during the last fetch attempt. Empty string if no error.",
-              "nullable" : false
-            },
-            "last_fetched_at" : {
-              "type" : "string",
-              "description" : "Time of last attempted fetch",
-              "format" : "datetime",
-              "example" : "2019-11-15T00:45:55.409906"
-            },
-            "last_successful_fetch_at" : {
-              "type" : "string",
-              "description" : "Time of last successful fetch that returned valid data",
-              "format" : "datetime",
-              "example" : "2019-11-15T00:45:55.409906"
-            },
-            "feed_version" : {
-              "$ref" : "#/components/schemas/feed_version",
-              "nullable" : false
-            }
-          }
-        },
-        "feed" : {
-          "description" : "Distributed mobility data registry (DMFR) feed",
-          "externalDocs" : {
-            "description" : "DMFR Schema",
-            "url" : "https://dmfr.transit.land/json-schema/dmfr.schema.json"
+          {
+            "$ref": "#/components/parameters/limitParam"
           },
-          "type" : "object",
-          "properties" : {
-            "id" : {
-              "type" : "number",
-              "format" : "int64",
-              "nullable" : false
-            },
-            "onestop_id" : {
-              "type" : "string",
-              "description" : "OnestopID for this feed",
-              "nullable" : false,
-              "example" : "f-9q9-bart"
-            },
-            "spec" : {
-              "type" : "string",
-              "description" : "Type of data contained in this feed: GTFS, GTFS-RT, GBFS, or MDS",
-              "example" : "gtfs",
-              "nullable" : false,
-              "enum" : [ "gtfs", "gtfs-rt", "gbfs", "mds" ]
-            },
-            "name" : {
-              "type" : "string",
-              "description" : "A common name for this feed",
-              "example" : "Bay Area Rapid Transit"
-            },
-            "feed_namespace_id" : {
-              "type" : "string",
-              "nullable" : false,
-              "description" : "Feeds that share the same feed_namespace_id value can be combined without needing to rewrite entity IDs. (Optionally can be an operator Onestop ID)"
-            },
-            "associated_feeds" : {
-              "description" : "List of associated feeds, using IDs internal to this DMFR instance. For example to one or more GTFS feeds associated with an GTFS-RT feed.",
-              "type" : "array",
-              "nullable" : false,
-              "items" : {
-                "type" : "string"
-              }
-            },
-            "other_ids" : {
-              "type" : "object",
-              "nullable" : false,
-              "description" : "Identifiers for this feed used by other DMFR instances. Key is the DMFR instance or feed registry platform; value is the feed ID."
-            },
-            "deleted_at" : {
-              "type" : "string",
-              "format" : "datetime",
-              "description" : "Time this feed was soft-deleted (if non-null)"
-            },
-            "urls" : {
-              "type" : "object",
-              "nullable" : false,
-              "properties" : {
-                "static_current" : {
-                  "description" : "URL for the static feed that represents today's service",
-                  "type" : "string"
-                },
-                "static_hstoric" : {
-                  "description" : "URLs for static feeds that represent past service that is no longer in effect",
-                  "type" : "array",
-                  "items" : {
-                    "type" : "string"
-                  }
-                },
-                "static_planned" : {
-                  "description" : "URLs for static feeds that represent service planned for upcoming dates. Typically used to represent calendar/service changes that will take effect few weeks or months in the future.",
-                  "type" : "string"
-                },
-                "realtime_vehicle_positions" : {
-                  "type" : "string",
-                  "description" : "URL for GTFS Realtime VehiclePosition messages"
-                },
-                "realtime_trip_updates" : {
-                  "type" : "string",
-                  "description" : "URL for GTFS Realtime TripUpdate messages"
-                },
-                "realtime_alerts" : {
-                  "type" : "string",
-                  "description" : "URL for GTFS Realtime Alert messages"
-                }
-              }
-            },
-            "languages" : {
-              "type" : "array",
-              "nullable" : false,
-              "description" : "Language(s) included in this feed",
-              "items" : {
-                "type" : "string"
-              }
-            },
-            "license" : {
-              "type" : "object",
-              "nullable" : false,
-              "properties" : {
-                "spdx_identifier" : {
-                  "type" : "string",
-                  "description" : "SPDX identifier for a common license. See https://spdx.org/licenses/"
-                },
-                "url" : {
-                  "type" : "string",
-                  "description" : "URL for a custom license"
-                },
-                "use_without_attribution" : {
-                  "type" : "string",
-                  "description" : "Are feed consumers allowed to use the feed contents without including attribution text in their app or map?",
-                  "enum" : [ "yes", "no", "unknown" ]
-                },
-                "create_derived_product" : {
-                  "type" : "string",
-                  "description" : "Are feed consumers allowed to create and share derived products from the feed?",
-                  "enum" : [ "yes", "no", "unknown" ]
-                },
-                "redistribution_allowed" : {
-                  "type" : "string",
-                  "description" : "Are feed consumers allowed to redistribute the feed in its entirety?",
-                  "enum" : [ "yes", "no", "unknown" ]
-                },
-                "commercial_use_allowed" : {
-                  "type" : "string",
-                  "description" : "Are feed consumers allowed to use the feed for commercial purposes?",
-                  "enum" : [ "yes", "no", "unknown" ]
-                },
-                "share_alike_optional" : {
-                  "type" : "string",
-                  "description" : "Are feed consumers allowed to keep their modifications of this feed private?",
-                  "enum" : [ "yes", "no", "unknown" ]
-                },
-                "attribution_text" : {
-                  "type" : "string",
-                  "description" : "Feed consumers must include this particular text when using this feed."
-                },
-                "attribution_instructions" : {
-                  "type" : "string",
-                  "description" : "Feed consumers must follow these instructions for how to provide attribution."
-                }
-              }
-            },
-            "auth" : {
-              "type" : "object",
-              "nullable" : false,
-              "properties" : {
-                "type" : {
-                  "type" : "string",
-                  "description" : "Authorization approach: HTTP header, basic authentication, query parameter, or path segment in a Transitland Extended URL.",
-                  "enum" : [ "header", "basic_auth", "query_param", "path_segment" ]
-                },
-                "param_name" : {
-                  "type" : "string",
-                  "description" : "When type=query_param, this specifies the name of the query parameter"
-                },
-                "info_url" : {
-                  "type" : "string",
-                  "description" : "Website to visit to sign up for an account"
-                }
-              }
-            },
-            "geometry" : {
-              "$ref" : "#/components/schemas/geometry"
-            },
-            "feed_state" : {
-              "nullable" : false,
-              "$ref" : "#/components/schemas/feed_state"
-            },
-            "feed_versions" : {
-              "nullable" : false,
-              "type" : "array",
-              "items" : {
-                "$ref" : "#/components/schemas/feed_version"
-              }
-            }
-          }
-        },
-        "feed_version" : {
-          "type" : "object",
-          "properties" : {
-            "id" : {
-              "type" : "number",
-              "format" : "int64",
-              "nullable" : false
-            },
-            "sha1" : {
-              "type" : "string",
-              "description" : "SHA1 hash of the zip file",
-              "example" : "ab5bdc8b6cedd06792d42186a9b542504c5eef9a",
-              "nullable" : false
-            },
-            "fetched_at" : {
-              "type" : "string",
-              "description" : "Time when the file was fetched from the url",
-              "format" : "datetime",
-              "nullable" : false
-            },
-            "url" : {
-              "description" : "URL used to fetch the file",
-              "type" : "string",
-              "format" : "datetime",
-              "example" : "2020-01-01T02:03:04.569789Z",
-              "nullable" : false
-            },
-            "earliest_calendar_date" : {
-              "type" : "string",
-              "format" : "date",
-              "description" : "The earliest date with scheduled service",
-              "example" : "2020-01-01",
-              "nullable" : false
-            },
-            "latest_calendar_date" : {
-              "type" : "string",
-              "format" : "date",
-              "description" : "The latest date with scheduled service",
-              "example" : "2020-12-31",
-              "nullable" : false
-            },
-            "geometry" : {
-              "type" : "object",
-              "properties" : {
-                "geometry" : {
-                  "$ref" : "#/components/schemas/geometry"
-                }
-              }
-            },
-            "files" : {
-              "type" : "array",
-              "nullable" : false,
-              "items" : {
-                "$ref" : "#/components/schemas/feed_version_file_info"
-              }
-            },
-            "feed_version_gtfs_import" : {
-              "$ref" : "#/components/schemas/feed_version_gtfs_import"
-            },
-            "current_feed" : {
-              "nullable" : false,
-              "$ref" : "#/components/schemas/feed"
-            }
-          }
-        },
-        "feed_version_gtfs_import" : {
-          "type" : "object",
-          "properties" : {
-            "id" : {
-              "type" : "number",
-              "format" : "int64",
-              "nullable" : false
-            },
-            "in_progress" : {
-              "type" : "boolean",
-              "description" : "True if the feed is currently being imported",
-              "nullable" : false
-            },
-            "success" : {
-              "type" : "boolean",
-              "description" : "True if the feed has been successfully imported",
-              "nullable" : false
-            },
-            "exception_log" : {
-              "type" : "string",
-              "description" : "An error message returned from a failed feed import. An empty string if no error.",
-              "nullable" : false
-            },
-            "generated_count" : {
-              "type" : "object",
-              "description" : "The number of generated entities per file, if any"
-            },
-            "warning_count" : {
-              "type" : "object",
-              "description" : "The number of warnings generated per file, if any"
-            },
-            "skip_entity_error_count" : {
-              "type" : "object",
-              "description" : "The number of entities skipped due to entity errors per file, if any"
-            },
-            "skip_entity_filter_count" : {
-              "type" : "object",
-              "description" : "The number of entities skipped by a filter per file, if any"
-            },
-            "skip_entity_marked_count" : {
-              "type" : "object",
-              "description" : "The number of entities skipped by a marker per file, if any"
-            },
-            "interpolated_stop_time_count" : {
-              "type" : "integer",
-              "description" : "The number of stop_time records where an interpolated arrival or departure time was set during import"
-            }
-          }
-        },
-        "feed_version_service_level" : {
-          "type" : "object",
-          "properties" : {
-            "id" : {
-              "type" : "integer",
-              "format" : "int64"
-            },
-            "start_date" : {
-              "type" : "string",
-              "format" : "date",
-              "description" : "The first date of this service level block (always a Monday)"
-            },
-            "end_date" : {
-              "type" : "string",
-              "format" : "date",
-              "description" : "The last date of this service level block (always Sunday)"
-            },
-            "monday" : {
-              "type" : "integer",
-              "format" : "int64",
-              "description" : "The number of seconds of service scheduled on the Mondays in this service block"
-            },
-            "tuesday" : {
-              "type" : "integer",
-              "format" : "int64",
-              "description" : "The number of seconds of service scheduled on the Tuesdays in this service block"
-            },
-            "wednesday" : {
-              "type" : "integer",
-              "format" : "int64",
-              "description" : "The number of seconds of service scheduled on the Wednesdays in this service block"
-            },
-            "thursday" : {
-              "type" : "integer",
-              "format" : "int64",
-              "description" : "The number of seconds of service scheduled on the Thursdays in this service block"
-            },
-            "friday" : {
-              "type" : "integer",
-              "format" : "int64",
-              "description" : "The number of seconds of service scheduled on the Fridays in this service block"
-            },
-            "saturday" : {
-              "type" : "integer",
-              "format" : "int64",
-              "description" : "The number of seconds of service scheduled on the Saturdays in this service block"
-            },
-            "sunday" : {
-              "type" : "integer",
-              "format" : "int64",
-              "description" : "The number of seconds of service scheduled on the Sundays in this service block"
-            },
-            "route_id" : {
-              "type" : "string",
-              "description" : "GTFS route_id for this service block. Null when the block is the feed aggregate."
-            },
-            "route_short_name" : {
-              "type" : "string",
-              "description" : "GTFS route_short_name for the route"
-            },
-            "route_long_name" : {
-              "type" : "string",
-              "description" : "GTFS route_long_name for the route"
-            },
-            "route_type" : {
-              "type" : "integer",
-              "description" : "GTFS route_type for the route"
-            },
-            "agency_name" : {
-              "type" : "string",
-              "description" : "GTFS agency_name for the agency associated with this route"
-            }
-          }
-        },
-        "feed_version_file_info" : {
-          "type" : "object",
-          "properties" : {
-            "id" : {
-              "type" : "integer",
-              "format" : "int64",
-              "nullable" : false
-            },
-            "name" : {
-              "type" : "string",
-              "description" : "File name"
-            },
-            "rows" : {
-              "type" : "integer",
-              "description" : "Number of rows, not including header",
-              "minimum" : 0
-            },
-            "sha1" : {
-              "type" : "string",
-              "description" : "SHA1 of this file"
-            },
-            "header" : {
-              "type" : "string",
-              "description" : "Header row, as a comma-separated string. This value may be filtered and cleaned up from the source file."
-            },
-            "csv_like" : {
-              "type" : "boolean",
-              "description" : "True if the file appears to be a valid CSV file"
-            },
-            "size" : {
-              "type" : "integer",
-              "format" : "int64",
-              "minimum" : 0,
-              "description" : "File size, in bytes"
-            }
-          }
-        },
-        "route" : {
-          "type" : "object",
-          "externalDocs" : {
-            "description" : "GTFS specification for routes.txt",
-            "url" : "https://gtfs.org/reference/static/#routestxt"
+          {
+            "$ref": "#/components/parameters/afterParam"
           },
-          "properties" : {
-            "id" : {
-              "type" : "integer",
-              "format" : "int64",
-              "nullable" : false
-            },
-            "onestop_id" : {
-              "type" : "string",
-              "description" : "OnestopID for this route, if available"
-            },
-            "route_id" : {
-              "type" : "string",
-              "example" : "orange",
-              "description" : "GTFS route_id",
-              "nullable" : false
-            },
-            "route_type" : {
-              "type" : "integer",
-              "example" : 3,
-              "description" : "GTFS route_type",
-              "minimum" : 0,
-              "nullable" : false
-            },
-            "route_short_name" : {
-              "type" : "string",
-              "description" : "GTFS route_short_name",
-              "example" : "Orange",
-              "nullable" : false
-            },
-            "route_long_name" : {
-              "type" : "string",
-              "description" : "GTFS route_long_name",
-              "example" : "Richmond - Warm Springs",
-              "nullable" : false
-            },
-            "route_color" : {
-              "type" : "string",
-              "format" : "color",
-              "description" : "GTFS route_color",
-              "example" : null,
-              "nullable" : false
-            },
-            "route_text_color" : {
-              "type" : "string",
-              "format" : "color",
-              "description" : "GTFS route_text_color",
-              "example" : null,
-              "nullable" : false
-            },
-            "route_sort_order" : {
-              "type" : "integer",
-              "description" : "GTFS route_sort_order"
-            },
-            "agency" : {
-              "$ref" : "#/components/schemas/agency",
-              "nullable" : false
-            },
-            "feed_version" : {
-              "$ref" : "#/components/schemas/feed_version",
-              "nullable" : false
-            },
-            "geometry" : {
-              "$ref" : "#/components/schemas/geometry"
-            },
-            "route_stops" : {
-              "type" : "array",
-              "items" : {
-                "type" : "object",
-                "properties" : {
-                  "route" : {
-                    "$ref" : "#/components/schemas/stop"
+          {
+            "$ref": "#/components/parameters/formatParam"
+          },
+          {
+            "in": "query",
+            "name": "feed_onestop_id",
+            "schema": {
+              "type": "string",
+              "description": "Feed OnestopID"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results matching criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/feed_version"
                   }
                 }
               }
-            }
-          }
-        },
-        "stop" : {
-          "type" : "object",
-          "externalDocs" : {
-            "description" : "GTFS specification for stops.txt",
-            "url" : "https://gtfs.org/reference/static/#stopstxt"
-          },
-          "properties" : {
-            "id" : {
-              "type" : "integer",
-              "format" : "int64",
-              "nullable" : false
-            },
-            "onestop_id" : {
-              "type" : "string",
-              "description" : "OnestopID for this stop, if available"
-            },
-            "stop_id" : {
-              "type" : "string",
-              "description" : "GTFS stop_id",
-              "nullable" : false
-            },
-            "stop_name" : {
-              "type" : "string",
-              "description" : "GTFS stop_name",
-              "nullable" : false
-            },
-            "stop_desc" : {
-              "type" : "string",
-              "description" : "GTFS stop_desc",
-              "nullable" : false
-            },
-            "stop_url" : {
-              "type" : "string",
-              "format" : "uri",
-              "description" : "GTFS stop_url",
-              "nullable" : false
-            },
-            "stop_timezone" : {
-              "type" : "string",
-              "format" : "timezone",
-              "description" : "GTFS stop_timezone",
-              "nullable" : false
-            },
-            "stop_code" : {
-              "type" : "string",
-              "description" : "GTFS stop_code",
-              "nullable" : false
-            },
-            "zone_id" : {
-              "type" : "string",
-              "description" : "GTFS zone_id",
-              "nullable" : false
-            },
-            "wheelchair_boarding" : {
-              "type" : "integer",
-              "minimum" : 0,
-              "description" : "GTFS wheelchair_boarding",
-              "nullable" : false
-            },
-            "location_type" : {
-              "type" : "integer",
-              "minimum" : 0,
-              "description" : "GTFS location_type",
-              "nullable" : false
-            },
-            "feed_version" : {
-              "$ref" : "#/components/schemas/feed_version",
-              "nullable" : false
-            },
-            "level" : {
-              "$ref" : "#/components/schemas/level",
-              "nullable" : true
-            },
-            "parent" : {
-              "description" : "Parent station",
-              "$ref" : "#/components/schemas/stop",
-              "nullable" : true
-            },
-            "route_stops" : {
-              "type" : "object",
-              "description" : "Routes associated with this stop",
-              "nullable" : false,
-              "properties" : {
-                "route" : {
-                  "$ref" : "#/components/schemas/route"
-                }
-              }
-            },
-            "geometry" : {
-              "$ref" : "#/components/schemas/geometry",
-              "nullable" : false
-            }
-          }
-        },
-        "agency" : {
-          "type" : "object",
-          "externalDocs" : {
-            "description" : "GTFS specification for agencies.txt",
-            "url" : "https://gtfs.org/reference/static/#agenciesstxt"
-          },
-          "properties" : {
-            "id" : {
-              "type" : "number",
-              "format" : "int64"
-            },
-            "onestop_id" : {
-              "type" : "string",
-              "description" : "OnestopID for this agency, if available"
-            },
-            "agency_id" : {
-              "type" : "string",
-              "description" : "GTFS agency_id",
-              "example" : "BART"
-            },
-            "agency_name" : {
-              "type" : "string",
-              "description" : "GTFS agency_name",
-              "example" : "Bay Area Rapid Transit"
-            },
-            "agency_url" : {
-              "type" : "string",
-              "format" : "uri",
-              "description" : "GTFS agency_url"
-            },
-            "agency_timezone" : {
-              "type" : "string",
-              "format" : "timezone",
-              "description" : "GTFS agency_timezone"
-            },
-            "agency_lang" : {
-              "type" : "string",
-              "description" : "GTFS agency_lang"
-            },
-            "agency_phone" : {
-              "type" : "string",
-              "description" : "GTFS agency_phone"
-            },
-            "agency_fare_url" : {
-              "type" : "string",
-              "format" : "uri",
-              "description" : "GTFS agency_fare_url"
-            },
-            "agency_email" : {
-              "type" : "string",
-              "description" : "GTFS agency_email"
-            },
-            "geometry" : {
-              "$ref" : "#/components/schemas/geometry"
-            },
-            "feed_version" : {
-              "$ref" : "#/components/schemas/feed_version"
-            },
-            "routes" : {
-              "type" : "array",
-              "items" : {
-                "$ref" : "#/components/schemas/route"
-              }
-            }
-          }
-        },
-        "trip" : {
-          "type" : "object",
-          "externalDocs" : {
-            "description" : "GTFS specification for trips.txt",
-            "url" : "https://gtfs.org/reference/static/#tripstxt"
-          },
-          "properties" : {
-            "id" : {
-              "type" : "integer",
-              "format" : "int64"
-            },
-            "trip_id" : {
-              "type" : "string",
-              "description" : "GTFS trip_id"
-            },
-            "trip_headsign" : {
-              "type" : "string",
-              "description" : "GTFS trip_headsign"
-            },
-            "trip_short_name" : {
-              "type" : "string",
-              "description" : "GTFS trip_short_name"
-            },
-            "direction_id" : {
-              "type" : "integer",
-              "description" : "GTFS direction_id"
-            },
-            "block_id" : {
-              "type" : "string",
-              "description" : "GTFS block_id"
-            },
-            "wheelchair_accessible" : {
-              "type" : "integer",
-              "description" : "GTFS wheelchair_accessible"
-            },
-            "bikes_allowed" : {
-              "type" : "integer",
-              "description" : "GTFS bikes_allowed"
-            },
-            "stop_pattern_id" : {
-              "type" : "integer",
-              "description" : "Pattern of stops for this trip; values are unique within the feed version."
-            },
-            "shape" : {
-              "$ref" : "#/components/schemas/shape"
-            },
-            "calendar" : {
-              "$ref" : "#/components/schemas/calendar"
-            },
-            "frequencies" : {
-              "type" : "array",
-              "items" : {
-                "$ref" : "#/components/schemas/frequency"
-              }
-            },
-            "route" : {
-              "$ref" : "#/components/schemas/route"
-            },
-            "stop_times" : {
-              "type" : "array",
-              "items" : {
-                "$ref" : "#/components/schemas/stop_time"
-              }
-            },
-            "feed_version" : {
-              "$ref" : "#/components/schemas/feed_version"
-            }
-          }
-        },
-        "stop_time" : {
-          "type" : "object",
-          "externalDocs" : {
-            "description" : "GTFS specification for trips.txt",
-            "url" : "https://gtfs.org/reference/static/#tripstxt"
-          },
-          "properties" : {
-            "id" : {
-              "type" : "integer",
-              "format" : "int64"
-            },
-            "arrival_time" : {
-              "type" : "integer",
-              "format" : "seconds",
-              "description" : "Arrival time, in seconds since midnight"
-            },
-            "departure_time" : {
-              "type" : "integer",
-              "format" : "seconds",
-              "description" : "Departure time, in seconds since midnight"
-            },
-            "stop_sequence" : {
-              "type" : "integer",
-              "description" : "GTFS stop_sequence"
-            },
-            "stop_headsign" : {
-              "type" : "string",
-              "description" : "GTFS stop_headsign"
-            },
-            "pickup_type" : {
-              "type" : "integer",
-              "description" : "GTFS pickup_type"
-            },
-            "drop_off_type" : {
-              "type" : "integer",
-              "description" : "GTFS drop_off_type"
-            },
-            "timepoint" : {
-              "type" : "integer",
-              "description" : "GTFS timepoint"
-            },
-            "shape_dist_traveled" : {
-              "type" : "number",
-              "description" : "GTFS shape_dist_traveled"
-            },
-            "interpolated" : {
-              "type" : "integer",
-              "description" : "Non-zero if interpolated time values were set during import"
-            },
-            "trip" : {
-              "$ref" : "#/components/schemas/trip"
-            },
-            "stop" : {
-              "$ref" : "#/components/schemas/stop"
-            },
-            "feed_version" : {
-              "$ref" : "#/components/schemas/feed_version"
-            }
-          }
-        },
-        "level" : {
-          "type" : "object",
-          "externalDocs" : {
-            "description" : "GTFS specification for levels.txt",
-            "url" : "https://gtfs.org/reference/static/#levelstxt"
-          },
-          "properties" : {
-            "id" : {
-              "type" : "integer",
-              "format" : "int64"
-            },
-            "level_id" : {
-              "type" : "string",
-              "description" : "GTFS level_id"
-            },
-            "level_name" : {
-              "type" : "string",
-              "description" : "GTFS level_name"
-            },
-            "level_index" : {
-              "type" : "integer",
-              "description" : "GTFS level_index"
-            },
-            "feed_version" : {
-              "$ref" : "#/components/schemas/feed_version"
-            }
-          }
-        },
-        "shape" : {
-          "type" : "object",
-          "externalDocs" : {
-            "description" : "GTFS specification for shapes.txt",
-            "url" : "https://gtfs.org/reference/static/#shapestxt"
-          },
-          "properties" : {
-            "id" : {
-              "type" : "integer",
-              "format" : "int64"
-            },
-            "shape_id" : {
-              "type" : "string"
-            },
-            "generated" : {
-              "type" : "boolean"
-            },
-            "geometry" : {
-              "$ref" : "#/components/schemas/geometry"
-            },
-            "feed_version" : {
-              "$ref" : "#/components/schemas/feed_version"
-            }
-          }
-        },
-        "calendar" : {
-          "type" : "object",
-          "externalDocs" : {
-            "description" : "GTFS specification for calendar.txt",
-            "url" : "https://gtfs.org/reference/static/#calendartxt"
-          },
-          "properties" : {
-            "id" : {
-              "type" : "integer",
-              "format" : "int64"
-            },
-            "service_id" : {
-              "type" : "string",
-              "description" : "GTFS service_id"
-            },
-            "start_date" : {
-              "type" : "string",
-              "format" : "date",
-              "description" : "GTFS start_date"
-            },
-            "end_date" : {
-              "type" : "string",
-              "format" : "date",
-              "description" : "GTFS end_date"
-            },
-            "added_dates" : {
-              "type" : "array",
-              "description" : "An array of dates where service is added (exception_type=1)",
-              "items" : {
-                "type" : "string",
-                "format" : "date"
-              }
-            },
-            "removed_dates" : {
-              "type" : "array",
-              "description" : "An array of dates where service is added (exception_type=2)",
-              "items" : {
-                "type" : "string",
-                "format" : "date"
-              }
-            },
-            "generated" : {
-              "type" : "boolean",
-              "description" : "True if this calendar is generated to represent calendar_date entries"
-            },
-            "monday" : {
-              "type" : "integer",
-              "description" : "GTFS monday"
-            },
-            "tuesday" : {
-              "type" : "integer",
-              "description" : "GTFS tuesday"
-            },
-            "wednesday" : {
-              "type" : "integer",
-              "description" : "GTFS wednesday"
-            },
-            "thursday" : {
-              "type" : "integer",
-              "description" : "GTFS thursday"
-            },
-            "friday" : {
-              "type" : "integer",
-              "description" : "GTFS friday"
-            },
-            "saturday" : {
-              "type" : "integer",
-              "description" : "GTFS saturday"
-            },
-            "sunday" : {
-              "type" : "integer",
-              "description" : "GTFS sunday"
-            },
-            "feed_version" : {
-              "$ref" : "#/components/schemas/feed_version"
-            }
-          }
-        },
-        "frequency" : {
-          "type" : "object",
-          "externalDocs" : {
-            "description" : "GTFS specification for frequencies.txt",
-            "url" : "https://gtfs.org/reference/static/#frequenciestxt"
-          },
-          "properties" : {
-            "id" : {
-              "type" : "integer",
-              "format" : "int64"
-            },
-            "start_time" : {
-              "type" : "integer",
-              "format" : "seconds"
-            },
-            "end_time" : {
-              "type" : "integer",
-              "format" : "seconds"
-            },
-            "headway_secs" : {
-              "type" : "integer"
-            },
-            "exact_times" : {
-              "type" : "integer"
-            },
-            "trip" : {
-              "$ref" : "#/components/schemas/trip"
-            },
-            "feed_version" : {
-              "$ref" : "#/components/schemas/feed_version"
-            }
-          }
-        },
-        "pathway" : {
-          "type" : "object",
-          "externalDocs" : {
-            "description" : "GTFS specification for pathways.txt",
-            "url" : "https://gtfs.org/reference/static/#pathwaystxt"
-          },
-          "properties" : {
-            "id" : {
-              "type" : "integer",
-              "format" : "int64"
-            },
-            "pathway_id" : {
-              "type" : "string",
-              "description" : "GTFS pathway_id"
-            },
-            "pathway_mode" : {
-              "type" : "integer",
-              "description" : "GTFS pathway_mode"
-            },
-            "is_bidirectional" : {
-              "type" : "integer",
-              "description" : "GTFS is_bidirectional"
-            },
-            "length" : {
-              "type" : "number",
-              "description" : "GTFS length"
-            },
-            "traversal_time" : {
-              "type" : "integer",
-              "description" : "GTFS traversal_time"
-            },
-            "stair_count" : {
-              "type" : "integer",
-              "description" : "GTFS stair_count"
-            },
-            "max_slope" : {
-              "type" : "number",
-              "description" : "GTFS max_slope"
-            },
-            "min_width" : {
-              "type" : "number",
-              "description" : "GTFS min_width"
-            },
-            "signposted_as" : {
-              "type" : "string",
-              "description" : "GTFS signposted_as"
-            },
-            "reverse_signposted_as" : {
-              "type" : "string",
-              "description" : "GTFS reverse_signposted_as"
-            },
-            "from_stop" : {
-              "$ref" : "#/components/schemas/stop"
-            },
-            "to_stop" : {
-              "$ref" : "#/components/schemas/stop"
-            },
-            "feed_version" : {
-              "$ref" : "#/components/schemas/feed_version"
-            }
-          }
-        },
-        "transfer" : {
-          "type" : "object",
-          "externalDocs" : {
-            "description" : "GTFS specification for transfers.txt",
-            "url" : "https://gtfs.org/reference/static/#transferstxt"
-          },
-          "properties" : {
-            "id" : {
-              "type" : "integer",
-              "format" : "int64"
-            },
-            "transfer_type" : {
-              "type" : "integer",
-              "description" : "GTFS transfer_type"
-            },
-            "min_transfer_time" : {
-              "type" : "integer",
-              "description" : "GTFS min_transfer_time"
-            },
-            "from_stop" : {
-              "$ref" : "#/components/schemas/stop"
-            },
-            "to_stop" : {
-              "$ref" : "#/components/schemas/stop"
-            },
-            "feed_version" : {
-              "$ref" : "#/components/schemas/feed_version"
-            }
-          }
-        },
-        "feed_info" : {
-          "type" : "object",
-          "externalDocs" : {
-            "description" : "GTFS specification for feed_info.txt",
-            "url" : "https://gtfs.org/reference/static/#feed_infotxt"
-          },
-          "properties" : {
-            "id" : {
-              "type" : "integer",
-              "format" : "int64"
-            },
-            "feed_publisher_name" : {
-              "type" : "string",
-              "description" : "GTFS feed_publisher_name"
-            },
-            "feed_publisher_url" : {
-              "type" : "string",
-              "description" : "GTFS feed_publisher_url"
-            },
-            "feed_lang" : {
-              "type" : "string",
-              "description" : "GTFS feed_lang"
-            },
-            "feed_start_date" : {
-              "type" : "string",
-              "description" : "GTFS feed_start_date"
-            },
-            "feed_end_date" : {
-              "type" : "string",
-              "description" : "GTFS feed_end_date"
-            },
-            "feed_version_name" : {
-              "type" : "string",
-              "description" : "GTFS feed_version_name"
-            },
-            "feed_version" : {
-              "$ref" : "#/components/schemas/feed_version"
-            }
-          }
-        },
-        "fare_rule" : {
-          "type" : "object",
-          "externalDocs" : {
-            "description" : "GTFS specification for fare_rules.txt",
-            "url" : "https://gtfs.org/reference/static/#fare_rulestxt"
-          },
-          "properties" : {
-            "id" : {
-              "type" : "integer",
-              "format" : "int64"
-            },
-            "origin_id" : {
-              "type" : "string",
-              "description" : "GTFS origin_id"
-            },
-            "destination_id" : {
-              "type" : "string",
-              "description" : "GTFS destination_id"
-            },
-            "contains_id" : {
-              "type" : "string",
-              "description" : "GTFS contains_id"
-            },
-            "fare_attribute" : {
-              "$ref" : "#/components/schemas/fare_attribute"
-            },
-            "route" : {
-              "$ref" : "#/components/schemas/route"
-            },
-            "feed_version" : {
-              "$ref" : "#/components/schemas/feed_version"
-            }
-          }
-        },
-        "fare_attribute" : {
-          "type" : "object",
-          "externalDocs" : {
-            "description" : "GTFS specification for fare_attributes.txt",
-            "url" : "https://gtfs.org/reference/static/#fare_attributestxt"
-          },
-          "properties" : {
-            "id" : {
-              "type" : "integer",
-              "format" : "int64"
-            },
-            "fare_id" : {
-              "type" : "string",
-              "description" : "GTFS fare_id"
-            },
-            "price" : {
-              "type" : "number",
-              "description" : "GTFS price"
-            },
-            "currency_type" : {
-              "type" : "string",
-              "description" : "GTFS currency_type"
-            },
-            "payment_method" : {
-              "type" : "integer",
-              "description" : "GTFS payment_method"
-            },
-            "transfer_duration" : {
-              "type" : "integer",
-              "description" : "GTFS transfer_duration"
-            },
-            "transfers" : {
-              "type" : "integer",
-              "description" : "GTFS transfers"
-            },
-            "agency" : {
-              "$ref" : "#/components/schemas/agency"
-            },
-            "fare_rules" : {
-              "type" : "array",
-              "items" : {
-                "$ref" : "#/components/schemas/fare_rule"
-              }
-            },
-            "feed_version" : {
-              "$ref" : "#/components/schemas/feed_version"
             }
           }
         }
       }
     },
-    "servers" : [ {
-      "url" : "https://demo.transit.land/api/v2/rest"
-    } ]
-  }
+    "/agencies": {
+      "get": {
+        "summary": "Agencies",
+        "description": "Search for agencies\n",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/idParam"
+          },
+          {
+            "$ref": "#/components/parameters/onestopParam"
+          },
+          {
+            "$ref": "#/components/parameters/limitParam"
+          },
+          {
+            "$ref": "#/components/parameters/afterParam"
+          },
+          {
+            "$ref": "#/components/parameters/sha1Param"
+          },
+          {
+            "$ref": "#/components/parameters/feedParam"
+          },
+          {
+            "$ref": "#/components/parameters/formatParam"
+          },
+          {
+            "in": "query",
+            "name": "agency_id",
+            "description": "Search for records with this GTFS agency_id (string)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "agency_name",
+            "description": "Search for records with this GTFS agency_name",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results matching criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/agency"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/routes": {
+      "get": {
+        "summary": "Routes",
+        "description": "Search for routes\n",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/idParam"
+          },
+          {
+            "$ref": "#/components/parameters/onestopParam"
+          },
+          {
+            "$ref": "#/components/parameters/limitParam"
+          },
+          {
+            "$ref": "#/components/parameters/afterParam"
+          },
+          {
+            "$ref": "#/components/parameters/sha1Param"
+          },
+          {
+            "$ref": "#/components/parameters/feedParam"
+          },
+          {
+            "$ref": "#/components/parameters/formatParam"
+          },
+          {
+            "in": "query",
+            "name": "route_id",
+            "description": "Search for records with this GTFS route_id",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "route_type",
+            "description": "Search for records with this GTFS route_type",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results matching criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/route"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stops": {
+      "get": {
+        "summary": "Stops",
+        "description": "Search for stops\n",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/idParam"
+          },
+          {
+            "$ref": "#/components/parameters/onestopParam"
+          },
+          {
+            "$ref": "#/components/parameters/limitParam"
+          },
+          {
+            "$ref": "#/components/parameters/afterParam"
+          },
+          {
+            "$ref": "#/components/parameters/sha1Param"
+          },
+          {
+            "$ref": "#/components/parameters/feedParam"
+          },
+          {
+            "$ref": "#/components/parameters/formatParam"
+          },
+          {
+            "in": "query",
+            "name": "stop_id",
+            "description": "Search for records with this GTFS stop_id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results matching criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/stop"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/trips": {
+      "get": {
+        "summary": "Trips",
+        "description": "Search for trips\n",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/idParam"
+          },
+          {
+            "$ref": "#/components/parameters/limitParam"
+          },
+          {
+            "$ref": "#/components/parameters/afterParam"
+          },
+          {
+            "$ref": "#/components/parameters/formatParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results matching criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/trip"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stop_times": {
+      "get": {
+        "summary": "Stop times",
+        "description": "Search for stop times\n",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/idParam"
+          },
+          {
+            "$ref": "#/components/parameters/limitParam"
+          },
+          {
+            "$ref": "#/components/parameters/afterParam"
+          },
+          {
+            "in": "query",
+            "name": "trip_id",
+            "description": "Stop times with this internal trip ID",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "in": "query",
+            "name": "stop_id",
+            "description": "Stop times with this internal stop ID",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results matching criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/stop_time"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "formatParam": {
+        "in": "query",
+        "name": "format",
+        "description": "Response format",
+        "schema": {
+          "enum": [
+            "json",
+            "geojson"
+          ]
+        }
+      },
+      "onestopParam": {
+        "in": "query",
+        "name": "onestop_id",
+        "description": "Search for a specific Onestop ID",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "idParam": {
+        "in": "query",
+        "name": "id",
+        "description": "Search for a specific internal ID",
+        "schema": {
+          "type": "integer",
+          "format": "int32",
+          "minimum": 0
+        }
+      },
+      "limitParam": {
+        "in": "query",
+        "name": "limit",
+        "description": "Maximum number of records to return",
+        "schema": {
+          "type": "integer",
+          "format": "int32",
+          "minimum": 0,
+          "maximum": 100,
+          "default": 1
+        }
+      },
+      "afterParam": {
+        "in": "query",
+        "name": "after",
+        "description": "Return records past this record ID",
+        "schema": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "sha1Param": {
+        "in": "query",
+        "name": "feed_version_sha1",
+        "description": "Search for records in this feed version",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "feedParam": {
+        "in": "query",
+        "name": "feed_onestop_id",
+        "description": "Search for records in this feed",
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "schemas": {
+      "geometry": {
+        "description": "Geometry in GeoJSON format",
+        "externalDocs": {
+          "description": "GeoJSON specification",
+          "url": "https://tools.ietf.org/html/rfc7946"
+        },
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "GeoJSON geometry type",
+            "nullable": false,
+            "example": "LineString"
+          },
+          "coordinates": {
+            "type": "array",
+            "description": "An array of GeoJSON coordinates",
+            "nullable": false,
+            "items": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "feed_state": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": false
+          },
+          "last_fetch_error": {
+            "type": "string",
+            "description": "Error produced during the last fetch attempt. Empty string if no error.",
+            "nullable": false
+          },
+          "last_fetched_at": {
+            "type": "string",
+            "description": "Time of last attempted fetch",
+            "format": "datetime",
+            "example": "2019-11-15T00:45:55.409906"
+          },
+          "last_successful_fetch_at": {
+            "type": "string",
+            "description": "Time of last successful fetch that returned valid data",
+            "format": "datetime",
+            "example": "2019-11-15T00:45:55.409906"
+          },
+          "feed_version": {
+            "$ref": "#/components/schemas/feed_version",
+            "nullable": false
+          }
+        }
+      },
+      "feed": {
+        "description": "Distributed mobility data registry (DMFR) feed",
+        "externalDocs": {
+          "description": "DMFR Schema",
+          "url": "https://dmfr.transit.land/json-schema/dmfr.schema.json"
+        },
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "format": "int64",
+            "nullable": false
+          },
+          "onestop_id": {
+            "type": "string",
+            "description": "OnestopID for this feed",
+            "nullable": false,
+            "example": "f-9q9-bart"
+          },
+          "spec": {
+            "type": "string",
+            "description": "Type of data contained in this feed: GTFS, GTFS-RT, GBFS, or MDS",
+            "example": "gtfs",
+            "nullable": false,
+            "enum": [
+              "gtfs",
+              "gtfs-rt",
+              "gbfs",
+              "mds"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "description": "A common name for this feed",
+            "example": "Bay Area Rapid Transit"
+          },
+          "feed_namespace_id": {
+            "type": "string",
+            "nullable": false,
+            "description": "Feeds that share the same feed_namespace_id value can be combined without needing to rewrite entity IDs. (Optionally can be an operator Onestop ID)"
+          },
+          "associated_feeds": {
+            "description": "List of associated feeds, using IDs internal to this DMFR instance. For example to one or more GTFS feeds associated with an GTFS-RT feed.",
+            "type": "array",
+            "nullable": false,
+            "items": {
+              "type": "string"
+            }
+          },
+          "other_ids": {
+            "type": "object",
+            "nullable": false,
+            "description": "Identifiers for this feed used by other DMFR instances. Key is the DMFR instance or feed registry platform; value is the feed ID."
+          },
+          "deleted_at": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Time this feed was soft-deleted (if non-null)"
+          },
+          "urls": {
+            "type": "object",
+            "nullable": false,
+            "properties": {
+              "static_current": {
+                "description": "URL for the static feed that represents today's service",
+                "type": "string"
+              },
+              "static_hstoric": {
+                "description": "URLs for static feeds that represent past service that is no longer in effect",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "static_planned": {
+                "description": "URLs for static feeds that represent service planned for upcoming dates. Typically used to represent calendar/service changes that will take effect few weeks or months in the future.",
+                "type": "string"
+              },
+              "realtime_vehicle_positions": {
+                "type": "string",
+                "description": "URL for GTFS Realtime VehiclePosition messages"
+              },
+              "realtime_trip_updates": {
+                "type": "string",
+                "description": "URL for GTFS Realtime TripUpdate messages"
+              },
+              "realtime_alerts": {
+                "type": "string",
+                "description": "URL for GTFS Realtime Alert messages"
+              }
+            }
+          },
+          "languages": {
+            "type": "array",
+            "nullable": false,
+            "description": "Language(s) included in this feed",
+            "items": {
+              "type": "string"
+            }
+          },
+          "license": {
+            "type": "object",
+            "nullable": false,
+            "properties": {
+              "spdx_identifier": {
+                "type": "string",
+                "description": "SPDX identifier for a common license. See https://spdx.org/licenses/"
+              },
+              "url": {
+                "type": "string",
+                "description": "URL for a custom license"
+              },
+              "use_without_attribution": {
+                "type": "string",
+                "description": "Are feed consumers allowed to use the feed contents without including attribution text in their app or map?",
+                "enum": [
+                  "yes",
+                  "no",
+                  "unknown"
+                ]
+              },
+              "create_derived_product": {
+                "type": "string",
+                "description": "Are feed consumers allowed to create and share derived products from the feed?",
+                "enum": [
+                  "yes",
+                  "no",
+                  "unknown"
+                ]
+              },
+              "redistribution_allowed": {
+                "type": "string",
+                "description": "Are feed consumers allowed to redistribute the feed in its entirety?",
+                "enum": [
+                  "yes",
+                  "no",
+                  "unknown"
+                ]
+              },
+              "commercial_use_allowed": {
+                "type": "string",
+                "description": "Are feed consumers allowed to use the feed for commercial purposes?",
+                "enum": [
+                  "yes",
+                  "no",
+                  "unknown"
+                ]
+              },
+              "share_alike_optional": {
+                "type": "string",
+                "description": "Are feed consumers allowed to keep their modifications of this feed private?",
+                "enum": [
+                  "yes",
+                  "no",
+                  "unknown"
+                ]
+              },
+              "attribution_text": {
+                "type": "string",
+                "description": "Feed consumers must include this particular text when using this feed."
+              },
+              "attribution_instructions": {
+                "type": "string",
+                "description": "Feed consumers must follow these instructions for how to provide attribution."
+              }
+            }
+          },
+          "auth": {
+            "type": "object",
+            "nullable": false,
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "Authorization approach: HTTP header, basic authentication, query parameter, or path segment in a Transitland Extended URL.",
+                "enum": [
+                  "header",
+                  "basic_auth",
+                  "query_param",
+                  "path_segment"
+                ]
+              },
+              "param_name": {
+                "type": "string",
+                "description": "When type=query_param, this specifies the name of the query parameter"
+              },
+              "info_url": {
+                "type": "string",
+                "description": "Website to visit to sign up for an account"
+              }
+            }
+          },
+          "geometry": {
+            "$ref": "#/components/schemas/geometry"
+          },
+          "feed_state": {
+            "nullable": false,
+            "$ref": "#/components/schemas/feed_state"
+          },
+          "feed_versions": {
+            "nullable": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/feed_version"
+            }
+          }
+        }
+      },
+      "feed_version": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "format": "int64",
+            "nullable": false
+          },
+          "sha1": {
+            "type": "string",
+            "description": "SHA1 hash of the zip file",
+            "example": "ab5bdc8b6cedd06792d42186a9b542504c5eef9a",
+            "nullable": false
+          },
+          "fetched_at": {
+            "type": "string",
+            "description": "Time when the file was fetched from the url",
+            "format": "datetime",
+            "nullable": false
+          },
+          "url": {
+            "description": "URL used to fetch the file",
+            "type": "string",
+            "format": "datetime",
+            "example": "2020-01-01T02:03:04.569789Z",
+            "nullable": false
+          },
+          "earliest_calendar_date": {
+            "type": "string",
+            "format": "date",
+            "description": "The earliest date with scheduled service",
+            "example": "2020-01-01",
+            "nullable": false
+          },
+          "latest_calendar_date": {
+            "type": "string",
+            "format": "date",
+            "description": "The latest date with scheduled service",
+            "example": "2020-12-31",
+            "nullable": false
+          },
+          "geometry": {
+            "type": "object",
+            "properties": {
+              "geometry": {
+                "$ref": "#/components/schemas/geometry"
+              }
+            }
+          },
+          "files": {
+            "type": "array",
+            "nullable": false,
+            "items": {
+              "$ref": "#/components/schemas/feed_version_file_info"
+            }
+          },
+          "feed_version_gtfs_import": {
+            "$ref": "#/components/schemas/feed_version_gtfs_import"
+          },
+          "current_feed": {
+            "nullable": false,
+            "$ref": "#/components/schemas/feed"
+          }
+        }
+      },
+      "feed_version_gtfs_import": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "format": "int64",
+            "nullable": false
+          },
+          "in_progress": {
+            "type": "boolean",
+            "description": "True if the feed is currently being imported",
+            "nullable": false
+          },
+          "success": {
+            "type": "boolean",
+            "description": "True if the feed has been successfully imported",
+            "nullable": false
+          },
+          "exception_log": {
+            "type": "string",
+            "description": "An error message returned from a failed feed import. An empty string if no error.",
+            "nullable": false
+          },
+          "generated_count": {
+            "type": "object",
+            "description": "The number of generated entities per file, if any"
+          },
+          "warning_count": {
+            "type": "object",
+            "description": "The number of warnings generated per file, if any"
+          },
+          "skip_entity_error_count": {
+            "type": "object",
+            "description": "The number of entities skipped due to entity errors per file, if any"
+          },
+          "skip_entity_filter_count": {
+            "type": "object",
+            "description": "The number of entities skipped by a filter per file, if any"
+          },
+          "skip_entity_marked_count": {
+            "type": "object",
+            "description": "The number of entities skipped by a marker per file, if any"
+          },
+          "interpolated_stop_time_count": {
+            "type": "integer",
+            "description": "The number of stop_time records where an interpolated arrival or departure time was set during import"
+          }
+        }
+      },
+      "feed_version_service_level": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date",
+            "description": "The first date of this service level block (always a Monday)"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date",
+            "description": "The last date of this service level block (always Sunday)"
+          },
+          "monday": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The number of seconds of service scheduled on the Mondays in this service block"
+          },
+          "tuesday": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The number of seconds of service scheduled on the Tuesdays in this service block"
+          },
+          "wednesday": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The number of seconds of service scheduled on the Wednesdays in this service block"
+          },
+          "thursday": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The number of seconds of service scheduled on the Thursdays in this service block"
+          },
+          "friday": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The number of seconds of service scheduled on the Fridays in this service block"
+          },
+          "saturday": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The number of seconds of service scheduled on the Saturdays in this service block"
+          },
+          "sunday": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The number of seconds of service scheduled on the Sundays in this service block"
+          },
+          "route_id": {
+            "type": "string",
+            "description": "GTFS route_id for this service block. Null when the block is the feed aggregate."
+          },
+          "route_short_name": {
+            "type": "string",
+            "description": "GTFS route_short_name for the route"
+          },
+          "route_long_name": {
+            "type": "string",
+            "description": "GTFS route_long_name for the route"
+          },
+          "route_type": {
+            "type": "integer",
+            "description": "GTFS route_type for the route"
+          },
+          "agency_name": {
+            "type": "string",
+            "description": "GTFS agency_name for the agency associated with this route"
+          }
+        }
+      },
+      "feed_version_file_info": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": false
+          },
+          "name": {
+            "type": "string",
+            "description": "File name"
+          },
+          "rows": {
+            "type": "integer",
+            "description": "Number of rows, not including header",
+            "minimum": 0
+          },
+          "sha1": {
+            "type": "string",
+            "description": "SHA1 of this file"
+          },
+          "header": {
+            "type": "string",
+            "description": "Header row, as a comma-separated string. This value may be filtered and cleaned up from the source file."
+          },
+          "csv_like": {
+            "type": "boolean",
+            "description": "True if the file appears to be a valid CSV file"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0,
+            "description": "File size, in bytes"
+          }
+        }
+      },
+      "route": {
+        "type": "object",
+        "externalDocs": {
+          "description": "GTFS specification for routes.txt",
+          "url": "https://gtfs.org/reference/static/#routestxt"
+        },
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": false
+          },
+          "onestop_id": {
+            "type": "string",
+            "description": "OnestopID for this route, if available"
+          },
+          "route_id": {
+            "type": "string",
+            "example": "orange",
+            "description": "GTFS route_id",
+            "nullable": false
+          },
+          "route_type": {
+            "type": "integer",
+            "example": 3,
+            "description": "GTFS route_type",
+            "minimum": 0,
+            "nullable": false
+          },
+          "route_short_name": {
+            "type": "string",
+            "description": "GTFS route_short_name",
+            "example": "Orange",
+            "nullable": false
+          },
+          "route_long_name": {
+            "type": "string",
+            "description": "GTFS route_long_name",
+            "example": "Richmond - Warm Springs",
+            "nullable": false
+          },
+          "route_color": {
+            "type": "string",
+            "format": "color",
+            "description": "GTFS route_color",
+            "example": null,
+            "nullable": false
+          },
+          "route_text_color": {
+            "type": "string",
+            "format": "color",
+            "description": "GTFS route_text_color",
+            "example": null,
+            "nullable": false
+          },
+          "route_sort_order": {
+            "type": "integer",
+            "description": "GTFS route_sort_order"
+          },
+          "agency": {
+            "$ref": "#/components/schemas/agency",
+            "nullable": false
+          },
+          "feed_version": {
+            "$ref": "#/components/schemas/feed_version",
+            "nullable": false
+          },
+          "geometry": {
+            "$ref": "#/components/schemas/geometry"
+          },
+          "route_stops": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "route": {
+                  "$ref": "#/components/schemas/stop"
+                }
+              }
+            }
+          }
+        }
+      },
+      "stop": {
+        "type": "object",
+        "externalDocs": {
+          "description": "GTFS specification for stops.txt",
+          "url": "https://gtfs.org/reference/static/#stopstxt"
+        },
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": false
+          },
+          "onestop_id": {
+            "type": "string",
+            "description": "OnestopID for this stop, if available"
+          },
+          "stop_id": {
+            "type": "string",
+            "description": "GTFS stop_id",
+            "nullable": false
+          },
+          "stop_name": {
+            "type": "string",
+            "description": "GTFS stop_name",
+            "nullable": false
+          },
+          "stop_desc": {
+            "type": "string",
+            "description": "GTFS stop_desc",
+            "nullable": false
+          },
+          "stop_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "GTFS stop_url",
+            "nullable": false
+          },
+          "stop_timezone": {
+            "type": "string",
+            "format": "timezone",
+            "description": "GTFS stop_timezone",
+            "nullable": false
+          },
+          "stop_code": {
+            "type": "string",
+            "description": "GTFS stop_code",
+            "nullable": false
+          },
+          "zone_id": {
+            "type": "string",
+            "description": "GTFS zone_id",
+            "nullable": false
+          },
+          "wheelchair_boarding": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "GTFS wheelchair_boarding",
+            "nullable": false
+          },
+          "location_type": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "GTFS location_type",
+            "nullable": false
+          },
+          "feed_version": {
+            "$ref": "#/components/schemas/feed_version",
+            "nullable": false
+          },
+          "level": {
+            "$ref": "#/components/schemas/level",
+            "nullable": true
+          },
+          "parent": {
+            "description": "Parent station",
+            "$ref": "#/components/schemas/stop",
+            "nullable": true
+          },
+          "route_stops": {
+            "type": "object",
+            "description": "Routes associated with this stop",
+            "nullable": false,
+            "properties": {
+              "route": {
+                "$ref": "#/components/schemas/route"
+              }
+            }
+          },
+          "geometry": {
+            "$ref": "#/components/schemas/geometry",
+            "nullable": false
+          }
+        }
+      },
+      "agency": {
+        "type": "object",
+        "externalDocs": {
+          "description": "GTFS specification for agencies.txt",
+          "url": "https://gtfs.org/reference/static/#agenciesstxt"
+        },
+        "properties": {
+          "id": {
+            "type": "number",
+            "format": "int64"
+          },
+          "onestop_id": {
+            "type": "string",
+            "description": "OnestopID for this agency, if available"
+          },
+          "agency_id": {
+            "type": "string",
+            "description": "GTFS agency_id",
+            "example": "BART"
+          },
+          "agency_name": {
+            "type": "string",
+            "description": "GTFS agency_name",
+            "example": "Bay Area Rapid Transit"
+          },
+          "agency_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "GTFS agency_url"
+          },
+          "agency_timezone": {
+            "type": "string",
+            "format": "timezone",
+            "description": "GTFS agency_timezone"
+          },
+          "agency_lang": {
+            "type": "string",
+            "description": "GTFS agency_lang"
+          },
+          "agency_phone": {
+            "type": "string",
+            "description": "GTFS agency_phone"
+          },
+          "agency_fare_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "GTFS agency_fare_url"
+          },
+          "agency_email": {
+            "type": "string",
+            "description": "GTFS agency_email"
+          },
+          "geometry": {
+            "$ref": "#/components/schemas/geometry"
+          },
+          "feed_version": {
+            "$ref": "#/components/schemas/feed_version"
+          },
+          "routes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/route"
+            }
+          }
+        }
+      },
+      "trip": {
+        "type": "object",
+        "externalDocs": {
+          "description": "GTFS specification for trips.txt",
+          "url": "https://gtfs.org/reference/static/#tripstxt"
+        },
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "trip_id": {
+            "type": "string",
+            "description": "GTFS trip_id"
+          },
+          "trip_headsign": {
+            "type": "string",
+            "description": "GTFS trip_headsign"
+          },
+          "trip_short_name": {
+            "type": "string",
+            "description": "GTFS trip_short_name"
+          },
+          "direction_id": {
+            "type": "integer",
+            "description": "GTFS direction_id"
+          },
+          "block_id": {
+            "type": "string",
+            "description": "GTFS block_id"
+          },
+          "wheelchair_accessible": {
+            "type": "integer",
+            "description": "GTFS wheelchair_accessible"
+          },
+          "bikes_allowed": {
+            "type": "integer",
+            "description": "GTFS bikes_allowed"
+          },
+          "stop_pattern_id": {
+            "type": "integer",
+            "description": "Pattern of stops for this trip; values are unique within the feed version."
+          },
+          "shape": {
+            "$ref": "#/components/schemas/shape"
+          },
+          "calendar": {
+            "$ref": "#/components/schemas/calendar"
+          },
+          "frequencies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/frequency"
+            }
+          },
+          "route": {
+            "$ref": "#/components/schemas/route"
+          },
+          "stop_times": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/stop_time"
+            }
+          },
+          "feed_version": {
+            "$ref": "#/components/schemas/feed_version"
+          }
+        }
+      },
+      "stop_time": {
+        "type": "object",
+        "externalDocs": {
+          "description": "GTFS specification for trips.txt",
+          "url": "https://gtfs.org/reference/static/#tripstxt"
+        },
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "arrival_time": {
+            "type": "integer",
+            "format": "seconds",
+            "description": "Arrival time, in seconds since midnight"
+          },
+          "departure_time": {
+            "type": "integer",
+            "format": "seconds",
+            "description": "Departure time, in seconds since midnight"
+          },
+          "stop_sequence": {
+            "type": "integer",
+            "description": "GTFS stop_sequence"
+          },
+          "stop_headsign": {
+            "type": "string",
+            "description": "GTFS stop_headsign"
+          },
+          "pickup_type": {
+            "type": "integer",
+            "description": "GTFS pickup_type"
+          },
+          "drop_off_type": {
+            "type": "integer",
+            "description": "GTFS drop_off_type"
+          },
+          "timepoint": {
+            "type": "integer",
+            "description": "GTFS timepoint"
+          },
+          "shape_dist_traveled": {
+            "type": "number",
+            "description": "GTFS shape_dist_traveled"
+          },
+          "interpolated": {
+            "type": "integer",
+            "description": "Non-zero if interpolated time values were set during import"
+          },
+          "trip": {
+            "$ref": "#/components/schemas/trip"
+          },
+          "stop": {
+            "$ref": "#/components/schemas/stop"
+          },
+          "feed_version": {
+            "$ref": "#/components/schemas/feed_version"
+          }
+        }
+      },
+      "level": {
+        "type": "object",
+        "externalDocs": {
+          "description": "GTFS specification for levels.txt",
+          "url": "https://gtfs.org/reference/static/#levelstxt"
+        },
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "level_id": {
+            "type": "string",
+            "description": "GTFS level_id"
+          },
+          "level_name": {
+            "type": "string",
+            "description": "GTFS level_name"
+          },
+          "level_index": {
+            "type": "integer",
+            "description": "GTFS level_index"
+          },
+          "feed_version": {
+            "$ref": "#/components/schemas/feed_version"
+          }
+        }
+      },
+      "shape": {
+        "type": "object",
+        "externalDocs": {
+          "description": "GTFS specification for shapes.txt",
+          "url": "https://gtfs.org/reference/static/#shapestxt"
+        },
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "shape_id": {
+            "type": "string"
+          },
+          "generated": {
+            "type": "boolean"
+          },
+          "geometry": {
+            "$ref": "#/components/schemas/geometry"
+          },
+          "feed_version": {
+            "$ref": "#/components/schemas/feed_version"
+          }
+        }
+      },
+      "calendar": {
+        "type": "object",
+        "externalDocs": {
+          "description": "GTFS specification for calendar.txt",
+          "url": "https://gtfs.org/reference/static/#calendartxt"
+        },
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "service_id": {
+            "type": "string",
+            "description": "GTFS service_id"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date",
+            "description": "GTFS start_date"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date",
+            "description": "GTFS end_date"
+          },
+          "added_dates": {
+            "type": "array",
+            "description": "An array of dates where service is added (exception_type=1)",
+            "items": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          "removed_dates": {
+            "type": "array",
+            "description": "An array of dates where service is added (exception_type=2)",
+            "items": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          "generated": {
+            "type": "boolean",
+            "description": "True if this calendar is generated to represent calendar_date entries"
+          },
+          "monday": {
+            "type": "integer",
+            "description": "GTFS monday"
+          },
+          "tuesday": {
+            "type": "integer",
+            "description": "GTFS tuesday"
+          },
+          "wednesday": {
+            "type": "integer",
+            "description": "GTFS wednesday"
+          },
+          "thursday": {
+            "type": "integer",
+            "description": "GTFS thursday"
+          },
+          "friday": {
+            "type": "integer",
+            "description": "GTFS friday"
+          },
+          "saturday": {
+            "type": "integer",
+            "description": "GTFS saturday"
+          },
+          "sunday": {
+            "type": "integer",
+            "description": "GTFS sunday"
+          },
+          "feed_version": {
+            "$ref": "#/components/schemas/feed_version"
+          }
+        }
+      },
+      "frequency": {
+        "type": "object",
+        "externalDocs": {
+          "description": "GTFS specification for frequencies.txt",
+          "url": "https://gtfs.org/reference/static/#frequenciestxt"
+        },
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "start_time": {
+            "type": "integer",
+            "format": "seconds"
+          },
+          "end_time": {
+            "type": "integer",
+            "format": "seconds"
+          },
+          "headway_secs": {
+            "type": "integer"
+          },
+          "exact_times": {
+            "type": "integer"
+          },
+          "trip": {
+            "$ref": "#/components/schemas/trip"
+          },
+          "feed_version": {
+            "$ref": "#/components/schemas/feed_version"
+          }
+        }
+      },
+      "pathway": {
+        "type": "object",
+        "externalDocs": {
+          "description": "GTFS specification for pathways.txt",
+          "url": "https://gtfs.org/reference/static/#pathwaystxt"
+        },
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "pathway_id": {
+            "type": "string",
+            "description": "GTFS pathway_id"
+          },
+          "pathway_mode": {
+            "type": "integer",
+            "description": "GTFS pathway_mode"
+          },
+          "is_bidirectional": {
+            "type": "integer",
+            "description": "GTFS is_bidirectional"
+          },
+          "length": {
+            "type": "number",
+            "description": "GTFS length"
+          },
+          "traversal_time": {
+            "type": "integer",
+            "description": "GTFS traversal_time"
+          },
+          "stair_count": {
+            "type": "integer",
+            "description": "GTFS stair_count"
+          },
+          "max_slope": {
+            "type": "number",
+            "description": "GTFS max_slope"
+          },
+          "min_width": {
+            "type": "number",
+            "description": "GTFS min_width"
+          },
+          "signposted_as": {
+            "type": "string",
+            "description": "GTFS signposted_as"
+          },
+          "reverse_signposted_as": {
+            "type": "string",
+            "description": "GTFS reverse_signposted_as"
+          },
+          "from_stop": {
+            "$ref": "#/components/schemas/stop"
+          },
+          "to_stop": {
+            "$ref": "#/components/schemas/stop"
+          },
+          "feed_version": {
+            "$ref": "#/components/schemas/feed_version"
+          }
+        }
+      },
+      "transfer": {
+        "type": "object",
+        "externalDocs": {
+          "description": "GTFS specification for transfers.txt",
+          "url": "https://gtfs.org/reference/static/#transferstxt"
+        },
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "transfer_type": {
+            "type": "integer",
+            "description": "GTFS transfer_type"
+          },
+          "min_transfer_time": {
+            "type": "integer",
+            "description": "GTFS min_transfer_time"
+          },
+          "from_stop": {
+            "$ref": "#/components/schemas/stop"
+          },
+          "to_stop": {
+            "$ref": "#/components/schemas/stop"
+          },
+          "feed_version": {
+            "$ref": "#/components/schemas/feed_version"
+          }
+        }
+      },
+      "feed_info": {
+        "type": "object",
+        "externalDocs": {
+          "description": "GTFS specification for feed_info.txt",
+          "url": "https://gtfs.org/reference/static/#feed_infotxt"
+        },
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "feed_publisher_name": {
+            "type": "string",
+            "description": "GTFS feed_publisher_name"
+          },
+          "feed_publisher_url": {
+            "type": "string",
+            "description": "GTFS feed_publisher_url"
+          },
+          "feed_lang": {
+            "type": "string",
+            "description": "GTFS feed_lang"
+          },
+          "feed_start_date": {
+            "type": "string",
+            "description": "GTFS feed_start_date"
+          },
+          "feed_end_date": {
+            "type": "string",
+            "description": "GTFS feed_end_date"
+          },
+          "feed_version_name": {
+            "type": "string",
+            "description": "GTFS feed_version_name"
+          },
+          "feed_version": {
+            "$ref": "#/components/schemas/feed_version"
+          }
+        }
+      },
+      "fare_rule": {
+        "type": "object",
+        "externalDocs": {
+          "description": "GTFS specification for fare_rules.txt",
+          "url": "https://gtfs.org/reference/static/#fare_rulestxt"
+        },
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "origin_id": {
+            "type": "string",
+            "description": "GTFS origin_id"
+          },
+          "destination_id": {
+            "type": "string",
+            "description": "GTFS destination_id"
+          },
+          "contains_id": {
+            "type": "string",
+            "description": "GTFS contains_id"
+          },
+          "fare_attribute": {
+            "$ref": "#/components/schemas/fare_attribute"
+          },
+          "route": {
+            "$ref": "#/components/schemas/route"
+          },
+          "feed_version": {
+            "$ref": "#/components/schemas/feed_version"
+          }
+        }
+      },
+      "fare_attribute": {
+        "type": "object",
+        "externalDocs": {
+          "description": "GTFS specification for fare_attributes.txt",
+          "url": "https://gtfs.org/reference/static/#fare_attributestxt"
+        },
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "fare_id": {
+            "type": "string",
+            "description": "GTFS fare_id"
+          },
+          "price": {
+            "type": "number",
+            "description": "GTFS price"
+          },
+          "currency_type": {
+            "type": "string",
+            "description": "GTFS currency_type"
+          },
+          "payment_method": {
+            "type": "integer",
+            "description": "GTFS payment_method"
+          },
+          "transfer_duration": {
+            "type": "integer",
+            "description": "GTFS transfer_duration"
+          },
+          "transfers": {
+            "type": "integer",
+            "description": "GTFS transfers"
+          },
+          "agency": {
+            "$ref": "#/components/schemas/agency"
+          },
+          "fare_rules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/fare_rule"
+            }
+          },
+          "feed_version": {
+            "$ref": "#/components/schemas/feed_version"
+          }
+        }
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.transit.land/api/v2.1/rest"
+    }
+  ]
+}
