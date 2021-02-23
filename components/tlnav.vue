@@ -15,6 +15,9 @@
           <a v-for="item in items" :key="item.title" class="navbar-item" :href="item.to.name === 'index' ? '/' : `/${item.to.name}`">{{ item.title }}</a>
         </template>
       </client-only>
+      <div class="navbar-item" style="width:400px">
+        <nav-search-bar @selected="searchBarSelected" />
+      </div>
     </template>
   </b-navbar>
 </template>
@@ -72,6 +75,9 @@ export default {
     logout () {
       localStorage.removeItem('apikey')
       location.reload()
+    },
+    searchBarSelected (route, entity) {
+
     }
   }
 }

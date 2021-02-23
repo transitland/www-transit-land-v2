@@ -1,14 +1,16 @@
 <template>
   <div>
     <!-- This component is to glue together a map and data exporter -->
-    <feed-version-map-viewer
-      :features="features"
-      :agency-ids="agencyIds"
-      :overlay="true"
-      :link-version="linkVersion"
-      @setRouteFeatures="routeFeatures = $event"
-      @setStopFeatures="stopFeatures = $event"
-    />
+    <client-only>
+      <feed-version-map-viewer
+        :features="features"
+        :agency-ids="agencyIds"
+        :overlay="true"
+        :link-version="linkVersion"
+        @setRouteFeatures="routeFeatures = $event"
+        @setStopFeatures="stopFeatures = $event"
+      />
+    </client-only>
 
     <br>
 

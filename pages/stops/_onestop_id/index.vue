@@ -79,7 +79,7 @@
             </b-tab-item>
           </b-tabs>
         </div>
-        <div class="column is-one-third" style="width:400px">
+        <div class="column is-one-third" style="width:400px;position:relative">
           <map-viewer
             :stop-features="stopFeatures"
             :route-features="routeFeatures"
@@ -88,6 +88,7 @@
             :center="entity.geometry.coordinates"
             :circle-radius="20"
             :zoom="14"
+            :overlay="true"
           />
         </div>
       </div>
@@ -96,23 +97,79 @@
 </template>
 
 <script>
+import gql from 'graphql-tag'
 import EntityPageMixin from '~/components/entity-page-mixin'
+
+const q = gql`
+fragment rs on RouteStop {
+  route {
+    id
+    onestop_id
+    route_long_name
+    route_short_name
+    route_type
+    route_url
+    route_id
+    route_color
+    geometry
+    agency {
+      agency_name
+      id
+    }
+  }
+}
+
+query ($onestop_id: String, $stop_id: String, $feed_onestop_id: String, $feed_version_sha1: String) {
+  entities: stops(limit: 100, where: {onestop_id: $onestop_id, feed_onestop_id:$feed_onestop_id, feed_version_sha1:$feed_version_sha1, stop_id:$stop_id}) {
+    id
+    feed_version_sha1
+    feed_onestop_id
+    onestop_id
+    stop_id
+    stop_name
+    stop_timezone
+    stop_url
+    location_type
+    parent {
+      id
+      stop_id
+      stop_name
+    }
+    wheelchair_boarding
+    zone_id
+    geometry
+    children {
+      id
+      stop_id
+      stop_name
+      geometry
+      route_stops {
+        ...rs
+      }
+    }
+    route_stops {
+      ...rs
+    }
+    feed_version {
+      id
+      fetched_at
+    }
+  }
+}
+`
 
 export default {
   mixins: [EntityPageMixin],
-  data () {
-    return {}
-  },
   apollo: {
-    query: {
-      query: require('~/graphql/feed-version-stop.gql'),
+    entities: {
+      query: q,
+      skip () { return this.checkSearchSkip(this.$route.query.stop_id) },
       variables () {
         return {
           onestop_id: this.$route.params.onestop_id,
           feed_onestop_id: this.$route.query.feed_onestop_id,
           feed_version_sha1: this.$route.query.feed_version_sha1,
-          stop_id: this.$route.query.stop_id,
-          inactive: false
+          stop_id: this.$route.query.stop_id
         }
       }
     }
@@ -123,7 +180,7 @@ export default {
       for (const i of this.entities) {
         ret.push({ type: 'Feature', id: i.id, geometry: i.geometry, properties: { class: 'stop', id: i.id } })
       }
-      for (const i of this.entity.children) {
+      for (const i of this.entity.children || []) {
         ret.push({ type: 'Feature', id: i.id, geometry: i.geometry, properties: { class: 'stop', id: i.id } })
       }
       return ret
@@ -141,9 +198,16 @@ export default {
             properties: {
               class: 'route',
               id: featid,
-              route_type: rs.route.route_type,
               generated: false,
-              headway_secs: 60
+              geometry_length: -1,
+              headway_secs: 60,
+              route_color: rs.route.route_color,
+              route_long_name: rs.route.route_long_name,
+              route_short_name: rs.route.route_short_name,
+              route_type: rs.route.route_type,
+              route_url: rs.route.route_url,
+              route_id: rs.route.route_id,
+              agency_name: rs.route.agency.agency_name
             }
           }
         )
@@ -176,16 +240,21 @@ export default {
         return null
       }
       const b = this.entities[0]
-      const rs = new Map()
-      for (const ent of this.entities) {
-        for (const i of ent.route_stops) {
-          rs.set(i.route.onestop_id, i)
-        }
-      }
       const children = new Map()
       for (const ent of this.entities) {
-        for (const i of ent.children) {
+        for (const i of ent.children || []) {
           children.set(i.id, i)
+        }
+      }
+      const rs = new Map()
+      for (const ent of this.entities) {
+        for (const i of ent.route_stops || []) {
+          rs.set(i.route.onestop_id, i)
+        }
+        for (const c of ent.children || []) {
+          for (const i of c.route_stops || []) {
+            rs.set(i.route.onestop_id, i)
+          }
         }
       }
       const ent = {

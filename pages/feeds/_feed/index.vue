@@ -47,15 +47,37 @@
           </td>
         </tr>
         <tr>
-          <td>Feed <abbr title="Specification">Spec</abbr></td>
+          <td>
+            <b-tooltip dashed label="Data specification or format for this feed">
+              Format
+            </b-tooltip>
+          </td>
           <td>{{ entity.spec.toUpperCase() }}</td>
         </tr>
-        <tr>
+
+        <tr v-if="displayUrls">
           <td>URLs</td>
           <td>
             <ul>
-              <li v-for="(url,key) in entity.urls" :key="key">
-                {{ key }}: {{ url }}
+              <li v-if="entity.urls.static_current">
+                Current Static GTFS: {{ entity.urls.static_current }}
+              </li>
+              <li v-if="entity.urls.static_planned && entity.urls.static_planned.length > 0">
+                Future Static GTFS: {{ entity.urls.static_planned }}
+              </li>
+              <li v-if="entity.urls.static_historic">
+                <div v-for="(k,i) of entity.urls.static_historic" :key="i">
+                  Historic GTFS: {{ k }}
+                </div>
+              </li>
+              <li v-if="entity.urls.realtime_vehicle_positions">
+                GTFS-RealTime Vehicle Positions: {{ entity.urls.static_planned }}
+              </li>
+              <li v-if="entity.urls.realtime_trip_updates">
+                GTFS-RealTime Trip Updates: {{ entity.urls.static_planned }}
+              </li>
+              <li v-if="entity.urls.realtime_alerts">
+                GTFS RealTime Alerts: {{ entity.urls.static_planned }}
               </li>
             </ul>
           </td>
@@ -83,14 +105,31 @@
               Fetch Error
             </b-tooltip>
           </td>
-          <td>{{ entity.feed_state.last_fetch_error }}</td>
+          <td>
+            Failed
+            <b-message class="is-danger" has-icon>
+              {{ entity.feed_state.last_fetch_error }}
+            </b-message>
+          </td>
         </tr>
 
-        <tr v-if="entity.authorization">
+        <tr v-if="entity.authorization && entity.authorization.type">
           <td>Authorization</td>
-          <td>{{ entity.authorization }}</td>
+          <td>
+            <ul>
+              <li v-if="entity.authorization.type">
+                Type: {{ entity.authorization.type }}
+              </li>
+              <li v-if="entity.authorization.param_name">
+                Parameter Name: {{ entity.authorization.param_name }}
+              </li>
+              <li v-if="entity.authorization.info_url">
+                Info URL: {{ entity.authorization.info_url }}
+              </li>
+            </ul>
+          </td>
         </tr>
-        <tr v-if="entity.license">
+        <tr v-if="displayLicense">
           <td>License</td>
           <td>
             <ul>
@@ -211,75 +250,85 @@
           Feed Versions Archived by Transitland
         </h4>
 
-        <multi-service-levels :max-weeks="52" :week-agg="true" :fvids="entity.feed_versions.map((s)=>{return s.id}).slice(0,20)" />
-
-        <b-table
-          :data="entity.feed_versions"
-          :striped="true"
-          :paginated="true"
-          :pagination-simple="true"
-          sort-icon="menu-up"
-        >
-          <b-table-column
-            v-slot="props"
-            :sortable="true"
-            field="fetched_at"
-            label="Fetched"
-          >
-            <template v-if="props.row.fetched_at">
-              {{ props.row.fetched_at | formatDate }} ({{ props.row.fetched_at | fromNow }})
-            </template>
-            <template v-else>
-              Unknown
-            </template>
-          </b-table-column>
-          <b-table-column v-slot="props" :sortable="true" field="sha1" label="SHA1">
-            <nuxt-link
-              :to="{name: 'feeds-feed-versions-version', params: {feed: entity.onestop_id, version: props.row.sha1}}"
+        <b-tabs v-model="activeTab" type="is-boxed" :animated="false" @input="setTab">
+          <b-tab-item label="Versions">
+            <b-table
+              :data="entity.feed_versions"
+              :striped="true"
+              :paginated="true"
+              :pagination-simple="true"
+              sort-icon="menu-up"
             >
-              {{ props.row.sha1.substr(0,6) }}…
-            </nuxt-link>
-          </b-table-column>
-          <b-table-column
-            v-slot="props"
-            :sortable="true"
-            field="earliest_calendar_date"
-            label="Earliest date"
-          >
-            {{ props.row.earliest_calendar_date }}
-          </b-table-column>
-          <b-table-column
-            v-slot="props"
-            :sortable="true"
-            field="latest_calendar_date"
-            label="Latest date"
-          >
-            {{ props.row.latest_calendar_date }}
-          </b-table-column>
-          <b-table-column v-slot="props" field="feed_version_gtfs_import" label="Imported">
-            <template v-if="props.row.feed_version_gtfs_import">
-              <b-icon v-if="props.row.feed_version_gtfs_import.success" icon="check" />
-              <b-icon v-else-if="props.row.feed_version_gtfs_import.in_progress" icon="clock" />
-              <b-tooltip
-                v-else-if="props.row.feed_version_gtfs_import.success == false"
-                :label="props.row.feed_version_gtfs_import.exception_log"
-                position="is-top"
+              <b-table-column
+                v-slot="props"
+                :sortable="true"
+                field="fetched_at"
+                label="Fetched"
               >
-                <b-icon icon="alert" />
-              </b-tooltip>
-            </template>
-          </b-table-column>
-          <b-table-column v-slot="props" label="Active">
-            <b-icon
-              v-if="entity.feed_state && entity.feed_state.feed_version && entity.feed_state.feed_version.id === props.row.id"
-              icon="check"
-            />
-          </b-table-column>
-          <b-table-column v-slot="props" label="Download">
-            <!-- TODO: check license info to make sure redistribution is allowed -->
-            <a :href="`https://demo.transit.land/api/v2/rest/feed_versions/${props.row.sha1}/download`" target="_blank"><b-icon icon="download" title="Download this feed version" /></a>
-          </b-table-column>
-        </b-table>
+                <template v-if="props.row.fetched_at">
+                  {{ props.row.fetched_at | formatDate }} ({{ props.row.fetched_at | fromNow }})
+                </template>
+                <template v-else>
+                  Unknown
+                </template>
+              </b-table-column>
+              <b-table-column v-slot="props" :sortable="true" field="sha1" label="SHA1">
+                <nuxt-link
+                  :to="{name: 'feeds-feed-versions-version', params: {feed: entity.onestop_id, version: props.row.sha1}}"
+                >
+                  {{ props.row.sha1.substr(0,6) }}…
+                </nuxt-link>
+              </b-table-column>
+              <b-table-column
+                v-slot="props"
+                :sortable="true"
+                field="earliest_calendar_date"
+                label="Earliest date"
+              >
+                {{ props.row.earliest_calendar_date.substr(0,10) }}
+              </b-table-column>
+              <b-table-column
+                v-slot="props"
+                :sortable="true"
+                field="latest_calendar_date"
+                label="Latest date"
+              >
+                {{ props.row.latest_calendar_date.substr(0,10) }}
+              </b-table-column>
+              <b-table-column v-slot="props" field="feed_version_gtfs_import" label="Imported">
+                <template v-if="props.row.feed_version_gtfs_import">
+                  <b-icon v-if="props.row.feed_version_gtfs_import.success" icon="check" />
+                  <b-icon v-else-if="props.row.feed_version_gtfs_import.in_progress" icon="clock" />
+                  <b-tooltip
+                    v-else-if="props.row.feed_version_gtfs_import.success == false"
+                    :label="props.row.feed_version_gtfs_import.exception_log"
+                    position="is-top"
+                  >
+                    <b-icon icon="alert" />
+                  </b-tooltip>
+                </template>
+              </b-table-column>
+              <b-table-column v-slot="props" label="Active">
+                <b-icon
+                  v-if="entity.feed_state && entity.feed_state.feed_version && entity.feed_state.feed_version.id === props.row.id"
+                  icon="check"
+                />
+              </b-table-column>
+              <b-table-column v-slot="props" label="Download">
+                <!-- TODO: check license info to make sure redistribution is allowed -->
+                <a :href="`https://demo.transit.land/api/v2/rest/feed_versions/${props.row.sha1}/download`" target="_blank"><b-icon icon="download" title="Download this feed version" /></a>
+              </b-table-column>
+            </b-table>
+          </b-tab-item>
+
+          <b-tab-item label="Service Levels">
+            <div v-if="activeTab === 1">
+              <client-only placeholder="Service">
+                <multi-service-levels :max-weeks="52" :week-agg="true" :fvids="entity.feed_versions.map((s)=>{return s.id}).slice(0,20)" />
+              </client-only>
+            </div>
+          </b-tab-item>
+        </b-tabs>
       </div>
     </div>
   </div>
@@ -290,13 +339,94 @@
 </template>
 
 <script>
+import gql from 'graphql-tag'
 import EntityPageMixin from '~/components/entity-page-mixin'
+
+const q = gql`
+query($feed_onestop_id: String) {
+  entities: feeds(where: {onestop_id: $feed_onestop_id}, limit: 1) {
+    id
+    onestop_id
+    languages
+    spec
+    file
+    feed_namespace_id
+    authorization {
+      type
+      info_url
+      param_name
+    }
+    license {
+      spdx_identifier
+      url
+      use_without_attribution
+      create_derived_product
+      redistribution_allowed
+      commercial_use_allowed
+      share_alike_optional
+      attribution_text
+      attribution_instructions
+    }
+    urls {
+      static_current
+      static_historic
+      static_planned
+    }
+    # other_ids
+    # associated_feeds
+    associated_operators {
+      onestop_id
+      operator_id
+      operator_name
+      agency {
+        agency_id
+        agency_name
+      }
+    }
+    feed_versions {
+      id
+      sha1
+      earliest_calendar_date
+      latest_calendar_date
+      fetched_at
+      url
+      feed_version_gtfs_import {
+        id
+        success
+        in_progress
+        exception_log
+        # created_at
+      }
+    }
+    feed_state {
+      id
+      last_fetch_error
+      last_fetched_at
+      last_successful_fetch_at
+      feed_version {
+        sha1
+        id
+      }
+    }
+  }
+}
+`
+
+function isEmpty (obj) {
+  if (!obj) { return false }
+  for (const [k, v] of Object.entries(obj)) {
+    if (k && k[0] !== '_' && v && v.length > 0) {
+      return true
+    }
+  }
+  return false
+}
 
 export default {
   mixins: [EntityPageMixin],
   apollo: {
-    query: {
-      query: require('~/graphql/current-feed.gql'),
+    entities: {
+      query: q,
       variables () {
         return {
           feed_onestop_id: this.onestopId
@@ -309,10 +439,11 @@ export default {
       error: 'ok',
       tabIndex: {
         0: 'versions',
-        1: 'operators'
+        1: 'service'
       }
     }
   },
+
   computed: {
     newLink () {
       return ''
@@ -322,6 +453,16 @@ export default {
     },
     onestopId () {
       return this.$route.params.feed
+    },
+    displayLicense () {
+      if (this.entity) {
+        return isEmpty(this.entity.license)
+      }
+      return false
+    },
+    displayUrls () {
+      if (this.entity) { return isEmpty(this.entity.urls) }
+      return false
     }
   },
   head () {

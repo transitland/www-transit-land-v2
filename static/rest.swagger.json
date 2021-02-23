@@ -731,6 +731,13 @@
               "geometry": {
                 "$ref": "#/components/schemas/geometry"
               }
+            },
+            "feed_version_gtfs_import" : {
+              "$ref" : "#/components/schemas/feed_version_gtfs_import"
+            },
+            "feed" : {
+              "nullable" : false,
+              "$ref" : "#/components/schemas/feed"
             }
           },
           "files": {

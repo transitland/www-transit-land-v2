@@ -47,7 +47,7 @@
           </div>
           <div class="column is-4 has-text-right">
             <b-tooltip label="Create or edit an associated operator metadata file in the Transitland Atlas repository">
-              <a v-if="operator" class="button is-primary" :href="editLink" target="_blank"><b-icon icon="pencil" size="is-small" /> &nbsp; Edit Operator Record</a>
+              <a v-if="!generatedOperator" class="button is-primary" :href="editLink" target="_blank"><b-icon icon="pencil" size="is-small" /> &nbsp; Edit Operator Record</a>
               <a v-else class="button is-primary" :href="newLink" target="_blank"><b-icon icon="pencil" size="is-small" /> &nbsp; Create Operator Record</a>
             </b-tooltip>
           </div>
@@ -118,7 +118,7 @@
             </ul>
           </td>
         </tr>
-        <tr v-if="operator && operator.tags && Object.keys(operator.tags).length > 0">
+        <tr v-if="entity && entity.operator_tags && Object.keys(entity.operator_tags).length > 0">
           <td>
             <b-tooltip dashed multiline label="Links between Transitland and other catalogs and data sources on the Internet">
               ID Crosswalk
@@ -126,14 +126,14 @@
           </td>
           <td>
             <ul>
-              <li v-if="operator.tags.us_ntd_id">
-                US National Transit Database (NTD) ID: <code>{{ operator.tags.us_ntd_id }}</code> <a target="_blank" href="https://www.transit.dot.gov/ntd/"><b-icon icon="link" title="US National Transit Database website" /></a>
+              <li v-if="entity.operator_tags.us_ntd_id">
+                US National Transit Database (NTD) ID: <code>{{ entity.operator_tags.us_ntd_id }}</code> <a target="_blank" href="https://www.transit.dot.gov/ntd/"><b-icon icon="link" title="US National Transit Database website" /></a>
               </li>
-              <li v-if="operator.tags.omd_provider_id">
-                OpenMobilityData Provider ID: <code>{{ operator.tags.omd_provider_id }}</code> <a target="_blank" :href="`https://openmobilitydata.org/p/${operator.tags.omd_provider_id}`"><b-icon icon="link" title="OpenMobilityData provider page" /></a>
+              <li v-if="entity.operator_tags.omd_provider_id">
+                OpenMobilityData Provider ID: <code>{{ entity.operator_tags.omd_provider_id }}</code> <a target="_blank" :href="`https://openmobilitydata.org/p/${entity.operator_tags.omd_provider_id}`"><b-icon icon="link" title="OpenMobilityData provider page" /></a>
               </li>
-              <li v-if="operator.tags.wikidata_id">
-                Wikidata Entity ID: <code>{{ operator.tags.wikidata_id }}</code> <a target="_blank" :href="`https://www.wikidata.org/wiki/${operator.tags.wikidata_id}`"><b-icon icon="link" title="Wikidata entity query page" /></a>
+              <li v-if="entity.operator_tags.wikidata_id">
+                Wikidata Entity ID: <code>{{ entity.operator_tags.wikidata_id }}</code> <a target="_blank" :href="`https://www.wikidata.org/wiki/${entity.operator_tags.wikidata_id}`"><b-icon icon="link" title="Wikidata entity query page" /></a>
               </li>
             </ul>
           </td>
@@ -210,40 +210,84 @@
       </b-tabs>
       <hr>
       <!-- anchors for when users click between tabs -->
-      <a v-for="[, value] of Object.entries(tabIndex)" :key="value" :name="value" />
-      <h4 class="title is-4">
-        Operator Service
-      </h4>
-      <b-tabs v-model="activeTab" type="is-boxed" :animated="false" @input="setTab">
-        <b-tab-item label="Map">
-          <!-- need fvids for good index search -->
-          <feed-version-map-viewer v-if="activeTab === 0" :fvids="fvids" :agency-ids="agencyIds" :overlay="true" :link-version="linkVersion" />
-        </b-tab-item>
+      <div v-if="agencyIds.length > 0">
+        <a v-for="[, value] of Object.entries(tabIndex)" :key="value" :name="value" />
+        <h4 class="title is-4">
+          Operator Service
+        </h4>
+        <b-tabs v-model="activeTab" type="is-boxed" :animated="false" @input="setTab">
+          <b-tab-item label="Map">
+            <client-only placeholder="Map">
+              <feed-version-map-viewer v-if="activeTab === 0" :agency-ids="agencyIds" :overlay="true" :link-version="linkVersion" />
+            </client-only>
+          </b-tab-item>
 
-        <b-tab-item label="Routes">
-          <route-viewer v-if="activeTab === 1" :agency-ids="agencyIds" :fvids="fvids" :show-agency="true" />
-        </b-tab-item>
+          <b-tab-item label="Routes">
+            <route-viewer v-if="activeTab === 1" :agency-ids="agencyIds" :show-agency="true" />
+          </b-tab-item>
 
-        <b-tab-item label="Stops">
-          <stop-viewer v-if="activeTab === 2" :agency-ids="agencyIds" :fvids="fvids" />
-        </b-tab-item>
+          <b-tab-item label="Stops">
+            <stop-viewer v-if="activeTab === 2" :agency-ids="agencyIds" />
+          </b-tab-item>
 
-        <b-tab-item v-if="advancedMode" label="Export">
-          <template v-if="activeTab === 3 && agencyIds.length === 1">
-            <agency-export :agency-ids="agencyIds" />
-          </template>
-          <template v-else>
-            Currently this feature is only available when a single agency is returned for this query.
-          </template>
-        </b-tab-item>
-      </b-tabs>
+          <b-tab-item v-if="advancedMode" label="Export">
+            <template v-if="activeTab === 3 && agencyIds.length === 1">
+              <agency-export :agency-ids="agencyIds" />
+            </template>
+            <template v-else>
+              Currently this feature is only available when a single agency is returned for this query.
+            </template>
+          </b-tab-item>
+        </b-tabs>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import gql from 'graphql-tag'
 import EntityPageMixin from '~/components/entity-page-mixin'
 
+const q = gql`
+query ($onestop_id: String, $feed_onestop_id: String) {
+  entities: operators(limit: 100, where: {feed_onestop_id: $feed_onestop_id, onestop_id: $onestop_id}) {    
+    onestop_id
+    agency_name
+    operator_name
+    city_name
+    adm1name
+    adm0name
+    operator_id
+    operator_name
+    operator_short_name
+    operator_tags
+    operator_associated_feeds
+    agency {
+      id
+      feed_version_sha1
+      feed_onestop_id
+      agency_id
+      agency_name
+      agency_url
+      agency_phone
+      feed_version {
+        id
+        fetched_at
+        feed {
+          id
+          onestop_id
+          feed_namespace_id
+        }
+      }
+      places(where: {min_rank: 0.2}) {
+        name
+        adm0name
+        adm1name
+      }
+    }
+  }
+}
+`
 export default {
   mixins: [EntityPageMixin],
   data () {
@@ -258,8 +302,9 @@ export default {
     }
   },
   apollo: {
-    query: {
-      query: require('~/graphql/agency-operator.gql'),
+    entities: {
+      query: q,
+      skip () { return this.checkSearchSkip(this.$route.query.agency_id) }, // skip if search and no agency_id
       variables () {
         return {
           onestop_id: this.linkVersion ? null : this.$route.params.onestop_id,
@@ -293,6 +338,7 @@ export default {
     locations () {
       const ret = new Map()
       for (const ent of this.agencies) {
+        if (!ent) { continue }
         for (const p of ent.places || []) {
           const key = `{p.adm0name} / ${p.adm1name} - ${p.name}`
           ret.set(key, p)
@@ -300,18 +346,10 @@ export default {
       }
       return Array.from(ret.values()).sort()
     },
-    operators () {
-      const rs = new Map()
-      for (const ent of this.entities) {
-        if (ent.operator) {
-          rs.set(ent.operator.id, ent.operator)
-        }
-      }
-      return Array.from(rs.values())
-    },
+
     agencies () {
       const rs = new Map()
-      for (const ent of this.entities) {
+      for (const ent of this.entities || []) {
         if (ent.agency) {
           rs.set(ent.agency.id, ent.agency)
         }
@@ -327,18 +365,15 @@ export default {
     agencyURLs () {
       return [...new Set(this.agencies.map((s) => { return s.agency_url }))]
     },
-    operator () {
-      if (this.operators && this.operators.length > 0) {
-        return this.operators[0]
-      }
-      return null
-    },
     generatedOperator () {
-      return this.operators.length === 0
+      for (const ent of this.entities || []) {
+        if (ent.operator_id) { return false }
+      }
+      return true // return !this.entity.operator_id
     },
     operatorName () {
-      if (this.operator) {
-        return this.operator.name
+      if (this.entity && this.entity.operator_name) {
+        return this.entity.operator_name || this.entity.operator_short_name
       } else if (this.agencies && this.agencies.length > 0) {
         return this.agencies[0].agency_name
       } else {
@@ -360,7 +395,7 @@ export default {
       for (const ent of this.agencies) {
         const key = `${ent.feed_onestop_id}:${ent.agency_id}`
         amap.set(key, ent)
-        if (ent.feed_version && ent.feed_version.current_feed && ent.feed_version.current_feed.feed_namespace_id === this.onestopId) {
+        if (ent.feed_version && ent.feed_version.feed && ent.feed_version.feed.feed_namespace_id === this.onestopId) {
           ret.push({
             target_type: 'Feed Namespace',
             target_feed: ent.feed_onestop_id,
@@ -368,9 +403,9 @@ export default {
           })
         }
       }
-      for (const ent of this.operators || []) {
+      for (const ent of this.entities || []) {
         // check if the json column value is an array
-        const af = ent.associated_feeds || []
+        const af = ent.operator_associated_feeds || []
         if (!Array.isArray(af)) {
           continue
         }

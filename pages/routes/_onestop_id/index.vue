@@ -10,13 +10,16 @@
             </nuxt-link>
           </li>
           <li>
-            <nuxt-link v-for="operator of operators" :key="operator.id" :to="{name: 'operators-onestop_id', params:{onestop_id:operator.operator_onestop_id}}">
-              {{ operator.operator_name || operator.agency_name || operator.onestop_id }}
+            <!-- TODO: this is not ideal... it links only to the auto-generated onestop_id, and not the resolved, cached tl_mv_active_agencies lookup. -->
+            <nuxt-link :to="{name: 'operators-onestop_id', params:{onestop_id:entity.agency.onestop_id}}">
+              {{ entity.agency.agency_name }}
             </nuxt-link>
           </li>
           <li>
             <nuxt-link :to="{name: 'routes-onestop_id', params:{onestop_id:$route.params.onestop_id}}">
-              {{ entity.route_short_name }} {{ entity.route_long_name }}
+              {{ entity.route_short_name }} <template v-if="entity.route_short_name != entity.route_long_name">
+                {{ entity.route_long_name }}
+              </template>
             </nuxt-link>
           </li>
         </ul>
@@ -69,8 +72,8 @@
             <tr>
               <td>Operated by</td>
               <td>
-                <nuxt-link v-for="operator of operators" :key="operator.id" :to="{name: 'operators-onestop_id', params:{onestop_id:operator.operator_onestop_id}}">
-                  {{ operator.operator_name || operator.agency_name || operator.onestop_id }}
+                <nuxt-link :to="{name: 'operators-onestop_id', params:{onestop_id:entity.agency.onestop_id}}">
+                  {{ entity.agency.agency_name }}
                 </nuxt-link>
               </td>
             </tr>
@@ -175,13 +178,15 @@
           </b-tabs>
         </div>
         <div class="column is-one-third" style="width:400px">
-          <feed-version-map-viewer
-            :route-ids="entityIds"
-            :overlay="false"
-            :include-stops="true"
-            :link-version="linkVersion"
-            :features="activeTab === 2 ? features : []"
-          />
+          <client-only>
+            <feed-version-map-viewer
+              :route-ids="entityIds"
+              :overlay="false"
+              :include-stops="true"
+              :link-version="linkVersion"
+              :features="activeTab === 2 ? features : []"
+            />
+          </client-only>
         </div>
       </div>
     </div>
@@ -189,8 +194,71 @@
 </template>
 
 <script>
+import gql from 'graphql-tag'
 import EntityPageMixin from '~/components/entity-page-mixin'
 import { routeTypeToWords } from '~/plugins/global'
+
+const q = gql`
+query ($onestop_id: String, $route_id: String, $feed_onestop_id: String, $feed_version_sha1: String, $include_stops: Boolean! = true) {
+  entities: routes(limit: 100, where: {onestop_id: $onestop_id, feed_onestop_id: $feed_onestop_id, feed_version_sha1: $feed_version_sha1, route_id: $route_id}) {
+    id
+    onestop_id
+    feed_onestop_id
+    feed_version_sha1
+    route_id
+    route_color
+    route_desc
+    route_long_name
+    route_short_name
+    route_type
+    route_url
+    geometry
+    route_stops @include(if: $include_stops) {
+      stop {
+        id
+        stop_id
+        stop_name
+        geometry
+      }
+    }
+    agency {
+      id
+      agency_id
+      agency_name
+      onestop_id
+    }
+    headways {
+      dow_category
+      service_date
+      direction_id
+      headway_secs
+      headway_seconds_morning_min
+      headway_seconds_midday_min
+      headway_seconds_afternoon_min
+      headway_seconds_night_min
+      headway_seconds_morning_mid
+      headway_seconds_midday_mid
+      headway_seconds_afternoon_mid
+      headway_seconds_night_mid
+      headway_seconds_morning_max
+      headway_seconds_midday_max
+      headway_seconds_afternoon_max
+      headway_seconds_night_max
+    }
+    feed_version {
+      id
+      fetched_at
+    }
+  }
+}
+`
+
+// # operator {
+// #   agency_id
+// #   operator_name
+// #   agency_name
+// #   operator_onestop_id
+// # }
 
 export default {
   mixins: [EntityPageMixin],
@@ -211,15 +279,15 @@ export default {
     }
   },
   apollo: {
-    query: {
-      query: require('~/graphql/feed-version-route.gql'),
+    entities: {
+      query: q,
+      skip () { return this.checkSearchSkip(this.$route.query.route_id) },
       variables () {
         return {
           onestop_id: this.search ? null : this.$route.params.onestop_id,
           feed_onestop_id: this.$route.query.feed_onestop_id,
           feed_version_sha1: this.$route.query.feed_version_sha1,
-          route_id: this.$route.query.route_id,
-          active_null: this.linkVersion ? null : false
+          route_id: this.$route.query.route_id
         }
       }
     }

@@ -10,7 +10,7 @@
     <span v-if="routeShortName" class="route-icon-short-name">
       {{ routeShortName }}
     </span>
-    <span v-if="routeLongName" class="route-icon-long-name">
+    <span v-if="routeLongName && routeShortName != routeLongName" class="route-icon-long-name">
       {{ routeLongName }}
     </span>
   </div>

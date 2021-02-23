@@ -61,7 +61,7 @@
               Earliest Date
             </p>
             <p class="title">
-              {{ entity.earliest_calendar_date }}
+              {{ entity.earliest_calendar_date.substr(0,10) }}
             </p>
           </div>
         </div>
@@ -71,7 +71,7 @@
               Latest Date
             </p>
             <p class="title">
-              {{ entity.latest_calendar_date }}
+              {{ entity.latest_calendar_date.substr(0,10) }}
             </p>
           </div>
         </div>
@@ -129,20 +129,6 @@
       </div>
 
       <b-tabs v-model="activeTab" type="is-boxed" :animated="false" @input="setTab">
-        <b-tab-item label="Service levels">
-          <!-- <service-levels :fvid="entity.id" /> -->
-          <multi-service-levels :fvids="[entity.id]" :week-agg="false" />
-        </b-tab-item>
-
-        <b-tab-item label="Map">
-          <template v-if="activeTab === 1">
-            <feed-version-map-viewer v-if="activeTab === 1 && fvi && fvi.success" :fvids="[entity.id]" :overlay="true" :link-version="true" />
-            <template v-else>
-              Map is only available for successfully imported feed versions.
-            </template>
-          </template>
-        </b-tab-item>
-
         <b-tab-item label="Files">
           <div class="content">
             <table class="table is-striped">
@@ -181,7 +167,40 @@
           </div>
         </b-tab-item>
 
-        <b-tab-item label="Import log">
+        <b-tab-item label="Service levels">
+          <template v-if="activeTab === 1">
+            <client-only placeholder="Service levels">
+              <multi-service-levels :fvids="[entity.id]" :week-agg="false" />
+            </client-only>
+          </template>
+        </b-tab-item>
+
+        <b-tab-item label="Map">
+          <template v-if="activeTab === 2">
+            <div v-if="imported">
+              <client-only placeholder="Map">
+                <feed-version-map-viewer :feed-version-sha1="entity.sha1" :overlay="true" :link-version="true" />
+              </client-only>
+            </div>
+            <b-message v-else has-icon type="is-warning">
+              Map is only available for successfully imported feed versions.
+            </b-message>
+          </template>
+        </b-tab-item>
+
+        <b-tab-item v-if="imported" label="Agencies">
+          <agency-viewer v-if="activeTab === 3" :fvid="entity.sha1" />
+        </b-tab-item>
+
+        <b-tab-item v-if="imported" label="Routes">
+          <route-viewer v-if="activeTab === 4" :link-version="true" :feed-version-sha1="entity.sha1" />
+        </b-tab-item>
+
+        <b-tab-item v-if="imported" label="Stops">
+          <stop-viewer v-if="activeTab === 5" :link-version="true" :feed-version-sha1="entity.sha1" />
+        </b-tab-item>
+
+        <b-tab-item v-if="imported" label="Import log">
           <div class="content">
             <table class="table is-striped">
               <thead>
@@ -212,33 +231,57 @@
             </table>
           </div>
         </b-tab-item>
-
-        <b-tab-item label="Agencies">
-          <agency-viewer v-if="activeTab === 4" :fvid="entity.sha1" />
-        </b-tab-item>
-
-        <b-tab-item label="Routes">
-          <route-viewer v-if="activeTab === 5" :link-version="true" :fvids="[entity.id]" />
-        </b-tab-item>
-
-        <b-tab-item label="Stops">
-          <stop-viewer v-if="activeTab === 6" :fvids="[entity.id]" />
-        </b-tab-item>
       </b-tabs>
     </div>
   </div>
 </template>
 
 <script>
+import gql from 'graphql-tag'
 import EntityPageMixin from '~/components/entity-page-mixin'
 import multiServiceLevels from '~/components/multi-service-levels.vue'
+
+const q = gql`
+query ($feed_version_sha1: String!) {
+  entities: feed_versions(limit: 1, where: {sha1: $feed_version_sha1}) {
+    id
+    sha1
+    earliest_calendar_date
+    latest_calendar_date
+    url
+    fetched_at
+    files {
+      name
+      rows
+      size
+      sha1
+      csv_like
+      header
+    }
+    feed_version_gtfs_import {
+      id
+      exception_log
+      in_progress
+      success
+      # generated_count
+      # interpolated_stop_time_count
+      skip_entity_error_count
+      skip_entity_reference_count
+      skip_entity_filter_count
+      skip_entity_marked_count
+      warning_count
+      entity_count
+    }
+  }
+}
+`
 
 export default {
   components: { multiServiceLevels },
   mixins: [EntityPageMixin],
   apollo: {
-    query: {
-      query: require('~/graphql/feed-version.gql'),
+    entities: {
+      query: q,
       variables () {
         return {
           feed_version_sha1: this.$route.params.version
@@ -250,23 +293,26 @@ export default {
     return {
       features: [],
       tabIndex: {
-        0: 'service',
-        1: 'map',
-        2: 'files',
-        3: 'import',
-        4: 'agencies',
-        5: 'routes',
-        6: 'stops'
+        0: 'files',
+        1: 'service',
+        2: 'map',
+        3: 'agencies',
+        4: 'routes',
+        5: 'stops',
+        6: 'import'
       }
     }
   },
   computed: {
+    imported () {
+      return this.fvi && this.fvi.success
+    },
     fvi () {
       return (this.entity && this.entity.feed_version_gtfs_import) ? this.entity.feed_version_gtfs_import : null
     },
     rowCount () {
       const ret = {}
-      for (const f of this.entity.files) {
+      for (const f of this.entity.files || []) {
         ret[f.name] = f.rows
       }
       return ret
@@ -276,23 +322,23 @@ export default {
     mergedCount (fvi) {
       const m = {}
       if (!fvi) { return m }
-      for (const [a, b] of Object.entries(fvi.entity_count)) {
+      for (const [a, b] of Object.entries(fvi.entity_count || {})) {
         m[a] = m[a] ? m[a] : {}
         m[a].count = b
       }
-      for (const [a, b] of Object.entries(fvi.skip_entity_error_count)) {
+      for (const [a, b] of Object.entries(fvi.skip_entity_error_count || {})) {
         m[a] = m[a] ? m[a] : {}
         m[a].skip_error = b
       }
-      for (const [a, b] of Object.entries(fvi.skip_entity_reference_count)) {
+      for (const [a, b] of Object.entries(fvi.skip_entity_reference_count || {})) {
         m[a] = m[a] ? m[a] : {}
         m[a].skip_reference = b
       }
-      for (const [a, b] of Object.entries(fvi.skip_entity_marked_count)) {
+      for (const [a, b] of Object.entries(fvi.skip_entity_marked_count || {})) {
         m[a] = m[a] ? m[a] : {}
         m[a].skip_marked = b
       }
-      for (const [a, b] of Object.entries(fvi.skip_entity_filter_count)) {
+      for (const [a, b] of Object.entries(fvi.skip_entity_filter_count || {})) {
         m[a] = m[a] ? m[a] : {}
         m[a].skip_filter = b
       }

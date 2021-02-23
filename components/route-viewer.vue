@@ -3,102 +3,136 @@
     <b-message v-if="error" class="is-danger">
       {{ error }}
     </b-message>
-    <b-table
-      v-else
-      :loading="$apollo.loading"
-      :data="entityPage"
-      :striped="true"
-      :per-page="perPage"
-      :paginated="true"
-      :total="total"
-      sort-icon="menu-up"
-      backend-pagination
-      backend-sorting
-      backend-filtering
-      @page-change="onPageChange"
-      @sort="onSort"
-    >
-      <b-table-column
-        v-slot="props"
-        field="route_id"
-        label="Route ID"
-        :sortable="true"
-        :width="140"
+    <div v-else>
+      <search-bar v-model="search" placeholder="Filter Routes" />
+      <b-table
+        :loading="$apollo.loading"
+        :data="entityPage"
+        :striped="true"
       >
-        <nuxt-link
-          :to="{name:'routes-onestop_id', params:{onestop_id:props.row.onestop_id || 'search'}, query: (linkVersion ? {feed_onestop_id:props.row.feed_onestop_id, feed_version_sha1:props.row.feed_version_sha1, route_id:props.row.route_id} : {})}"
+        <b-table-column
+          v-slot="props"
+          field="route_id"
+          label="Route ID"
+          :width="140"
         >
-          {{ props.row.route_id }}
-        </nuxt-link>
-      </b-table-column>
+          <nuxt-link
+            :to="{name:'routes-onestop_id', params:{onestop_id:props.row.onestop_id || 'search'}, query: (linkVersion ? {feed_onestop_id:props.row.feed_onestop_id, feed_version_sha1:props.row.feed_version_sha1, route_id:props.row.route_id} : {})}"
+          >
+            {{ props.row.route_id }}
+          </nuxt-link>
+        </b-table-column>
 
-      <b-table-column
-        v-slot="props"
-        field="route_short_name"
-        label="Name"
-        :sortable="true"
-        :width="140"
-      >
-        {{ props.row.route_short_name }}
-      </b-table-column>
-      <b-table-column
-        v-slot="props"
-        :sortable="true"
-        field="route_long_name"
-        label=""
-        :width="500"
-      >
-        {{ props.row.route_long_name }}
-      </b-table-column>
+        <b-table-column
+          v-slot="props"
+          field="route_short_name"
+          label="Name"
+          :width="140"
+        >
+          {{ props.row.route_short_name }}
+        </b-table-column>
+        <b-table-column
+          v-slot="props"
+          field="route_long_name"
+          label=""
+          :width="500"
+        >
+          {{ props.row.route_long_name }}
+        </b-table-column>
 
-      <b-table-column v-if="showAgency" v-slot="props" field="agency" label="Agency">
-        {{ props.row.agency.agency_name }}
-      </b-table-column>
+        <b-table-column v-if="showAgency" v-slot="props" field="agency" label="Agency">
+          {{ props.row.agency.agency_name }}
+        </b-table-column>
 
-      <b-table-column v-if="showGeometry" v-slot="props" field="geometry" label="Shape" :width="60">
-        <template v-if="props.row.geometries.filter((s)=>{return s.generated === true}).length > 0">
-          <b-tooltip label="This route contains generated shapes">
-            <b-icon icon="alert" type="is-grey-light" />
-          </b-tooltip>
-        </template>
-        <template v-else-if="props.row.geometries.filter((s)=>{return s.generated === false}).length > 0">
-          <b-icon icon="check" type="is-grey-dark" />
-        </template>
-        <template v-else>
-          <b-tooltip label="No shape information was present or generated">
-            <b-icon type="is-warning" icon="alert" />
-          </b-tooltip>
-        </template>
-      </b-table-column>
+        <b-table-column v-if="showGeometry" v-slot="props" field="geometry" label="Shape" :width="60">
+          <template v-if="(props.row.geometries || []).filter((s)=>{return s.generated === true}).length > 0">
+            <b-tooltip label="This route contains generated shapes">
+              <b-icon icon="alert" type="is-grey-light" />
+            </b-tooltip>
+          </template>
+          <template v-else-if="(props.row.geometries || []).filter((s)=>{return s.generated === false}).length > 0">
+            <b-icon icon="check" type="is-grey-dark" />
+          </template>
+          <template v-else>
+            <b-tooltip label="No shape information was present or generated">
+              <b-icon type="is-warning" icon="alert" />
+            </b-tooltip>
+          </template>
+        </b-table-column>
 
-      <b-table-column
-        v-slot="props"
-        field="headways"
-        label="Headway"
-        :numeric="true"
-        :sortable="true"
-        :width="100"
-      >
-        <span v-if="props.row.headways_weekday && props.row.headways_weekday.headway_secs">
+        <b-table-column
+          v-slot="props"
+          field="headways"
+          label="Headway"
+          :numeric="true"
+          :width="100"
+        >
           <b-tooltip
+            v-if="props.row.headway_seconds_weekday_morning"
             :label="headwayTooltip(props.row.headways)"
             :dashed="true"
             multilined
           >
-            {{ Math.ceil(props.row.headways_weekday.headway_secs / 60) }} mins
+            {{ Math.ceil(props.row.headway_seconds_weekday_morning / 60) }} mins
           </b-tooltip>
-        </span>
-      </b-table-column>
-    </b-table>
+        </b-table-column>
+      </b-table>
+      <show-more v-if="entities.length === limit || hasMore" :limit="entities.length" @click="showAll" />
+    </div>
   </div>
 </template>
 
 <script>
+import gql from 'graphql-tag'
 import TableViewerMixin from '~/components/table-viewer-mixin'
+
+const q = gql`
+query($after: Int, $limit: Int, $feed_version_sha1: String, $agency_ids: [Int!], $search: String) {
+  entities: routes(after: $after, limit: $limit, where: { search: $search, feed_version_sha1: $feed_version_sha1, agency_ids: $agency_ids }) {
+    id
+    onestop_id
+    feed_version_sha1
+    feed_onestop_id
+    route_id
+    route_short_name
+    route_long_name
+    route_type
+    route_url
+    agency {
+      id
+      agency_id
+      agency_name
+    }
+    geometries {
+      direction_id
+      generated
+    }
+    headway_seconds_weekday_morning
+    headways {
+      # selected_stop_id
+      # service_date
+      dow_category
+      headway_seconds_morning_min
+      headway_seconds_midday_min
+      headway_seconds_afternoon_min
+      headway_seconds_night_min
+      headway_seconds_morning_mid
+      headway_seconds_midday_mid
+      headway_seconds_afternoon_mid
+      headway_seconds_night_mid
+      headway_seconds_morning_max
+      headway_seconds_midday_max
+      headway_seconds_afternoon_max
+      headway_seconds_night_max
+    }
+  }
+}
+`
 
 export default {
   mixins: [TableViewerMixin],
   props: {
+    feedVersionSha1: { type: String, default: null },
     fvids: { type: Array, default: null },
     agencyIds: { type: Array, default: null },
     routeIds: { type: Array, default: null },
@@ -106,10 +140,18 @@ export default {
     showGeometry: { type: Boolean, default: true },
     linkVersion: { type: Boolean, default: false }
   },
-  data () {
-    return {
-      sortField: 'route_id',
-      sortOrder: 'asc'
+  apollo: {
+    entities: {
+      query: q,
+      variables () {
+        return {
+          limit: this.limit,
+          search: this.search,
+          feed_version_sha1: this.feedVersionSha1,
+          agency_ids: this.agencyIds
+        }
+      },
+      error (e) { this.error = e }
     }
   },
   methods: {
@@ -130,32 +172,6 @@ Weekday Morning: ${fmt(ret.weekday, 'morning')} mins
 Weekday Midday: ${fmt(ret.weekday, 'midday')} mins
 Weekday Afternoon: ${fmt(ret.weekday, 'afternoon')} mins
 Weekday Night: ${fmt(ret.weekday, 'night')} mins`
-    }
-  },
-  apollo: {
-    q: {
-      query: require('~/graphql/feed-version-routes.gql'),
-      variables () {
-        let orderby = {}
-        if (this.sortField === 'headways') {
-          orderby = { headways_weekday: { headway_secs: this.sortOrder }, route_id: 'asc' }
-        } else {
-          orderby = this.orderBy
-        }
-        return {
-          offset: this.entityOffset,
-          limit: this.limit,
-          agency_ids: this.agencyIds,
-          route_ids: this.routeIds,
-          feed_version_ids: this.fvids,
-          order_by: orderby
-        }
-      },
-      error (e) { this.error = e },
-      update (data) {
-        this.total = data.total.aggregate.count
-        this.entities = data.routes
-      }
     }
   }
 }

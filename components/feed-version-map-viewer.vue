@@ -16,24 +16,59 @@
 </template>
 
 <script>
+import gql from 'graphql-tag'
+
+const q = gql`
+query ($limit: Int!, $agency_ids: [Int!], $route_ids: [Int!], $feed_version_sha1: String, $include_stops: Boolean! = false) {
+  routes(limit: $limit, ids: $route_ids, where: {agency_ids: $agency_ids, feed_version_sha1: $feed_version_sha1}) {
+    id
+    onestop_id
+    feed_onestop_id
+    feed_version_sha1
+    route_id
+    route_color
+    route_desc
+    route_long_name
+    route_short_name
+    route_type
+    route_url
+    geometry
+    headway_seconds_weekday_morning
+    route_stops @include(if: $include_stops) {
+      stop {
+        id
+        stop_id
+        stop_name
+        geometry
+      }
+    }
+    agency {
+      id
+      agency_id
+      agency_name
+    }
+  }
+}
+`
+
 export default {
   apollo: {
     routes: {
-      query: require('~/graphql/map-routes.gql'),
+      query: q,
       error (e) { this.error = e },
       variables () {
         return {
           include_stops: this.includeStops,
-          feed_version_ids: this.fvids,
+          feed_version_sha1: this.feedVersionSha1,
           route_ids: this.routeIds,
           agency_ids: this.agencyIds,
-          offset: 0,
           limit: 10000
         }
       }
     }
   },
   props: {
+    feedVersionSha1: { type: String, default: null },
     includeStops: { type: Boolean, default: false },
     overlay: { type: Boolean, default: false },
     fvids: { type: Array, default: null },
@@ -60,7 +95,7 @@ export default {
           const fcopy = Object.assign({}, feature, {
             geometry_length: -1,
             route_color: routeColor,
-            headway_secs: (feature.headways_weekday && feature.headways_weekday.headway_secs) ? feature.headways_weekday.headway_secs : -1,
+            headway_secs: feature.headway_seconds_weekday_morning ? feature.headway_seconds_weekday_morning : -1,
             agency_name: feature.agency ? feature.agency.agency_name : null
           })
           delete fcopy.geometry

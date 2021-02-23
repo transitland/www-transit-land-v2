@@ -1,37 +1,41 @@
 export default {
   data () {
     return {
-      page: 1,
-      perPage: 20,
-      limit: 100,
-      total: 0,
+      hasMore: false,
+      prevAfter: null,
+      search: null,
+      limit: 20,
       entities: [],
-      sortField: null,
-      sortOrder: 'asc',
       error: null
     }
   },
   computed: {
-    orderBy () {
-      const ret = {}
-      ret[this.sortField] = this.sortOrder
-      return ret
-    },
-    entityOffset () {
-      return Math.floor(((this.page - 1) * this.perPage) / this.limit) * this.limit
+    maxId () {
+      return Math.max(...this.entities.map((s) => { return s.id }))
     },
     entityPage () {
-      const offset = ((this.page - 1) * this.perPage) - this.entityOffset
-      return this.entities.slice(offset, offset + this.perPage)
+      return this.entities
     }
   },
   methods: {
-    onPageChange (page) {
-      this.page = page
-    },
-    onSort (field, order) {
-      this.sortField = field
-      this.sortOrder = order
+    showAll () {
+      const newLimit = 1000
+      this.$apollo.queries.entities.fetchMore({
+        variables: {
+          after: this.maxId,
+          limit: newLimit
+        },
+        updateQuery: (previousResult, { fetchMoreResult }) => {
+          if (fetchMoreResult.entities.length >= newLimit) {
+            this.hasMore = true
+          } else {
+            this.hasMore = false
+          }
+          return {
+            entities: [...previousResult.entities, ...fetchMoreResult.entities]
+          }
+        }
+      })
     }
   }
 }

@@ -1,17 +1,19 @@
 <template>
   <div style="position:relative">
-    <map-viewer
-      :show-generated="true"
-      :show-long-generated="false"
-      :route-tiles="routeTiles"
-      :stop-tiles="stopTiles"
-      :overlay="true"
-      :zoom="1.5"
-      :center="[-119.49,12.66]"
-      :hash="true"
-      :show-options="true"
-      map-class="tall"
-    />
+    <client-only>
+      <map-viewer
+        :show-generated="true"
+        :show-long-generated="false"
+        :route-tiles="routeTiles"
+        :stop-tiles="stopTiles"
+        :overlay="true"
+        :zoom="1.5"
+        :center="[-119.49,12.66]"
+        :hash="true"
+        :show-options="true"
+        map-class="tall"
+      />
+    </client-only>
   </div>
 </template>
 
