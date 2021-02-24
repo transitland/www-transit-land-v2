@@ -1,20 +1,20 @@
 <template>
-  <div class="container">
-    <div id="swagger-ui" />
+  <div>
+    <client-only>
+      <iframe src="/rest-console.html" />
+    </client-only>
   </div>
 </template>
 
 <script>
-import 'swagger-ui/dist/swagger-ui.css'
-const SwaggerUI = require('swagger-ui')
-
 export default {
-  mounted () {
-    SwaggerUI({
-      url: '/rest.swagger.json',
-      dom_id: '#swagger-ui',
-      defaultModelRendering: 'model'
-    })
-  }
+  layout: 'map'
 }
 </script>
+
+<style lang="scss" scoped>
+  iframe {
+    width: 100%;
+    height: calc(100vh - 60px);
+  }
+</style>

@@ -6,10 +6,6 @@
     "title": "Transitland REST API",
     "contact": {
       "email": "hello@transit.land"
-    },
-    "license": {
-      "name": "Apache 2.0",
-      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     }
   },
   "paths": {
@@ -1671,7 +1667,10 @@
   },
   "servers": [
     {
-      "url": "https://api.transit.land/api/v2.1/rest"
+      "url": "https://demo.transit.land/api/v2/rest"
+    },
+    {
+      "url": "https://api.transit.land/api/v2/rest"
     }
   ]
 }
