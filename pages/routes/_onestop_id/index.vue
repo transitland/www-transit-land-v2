@@ -5,30 +5,39 @@
       <nav class="breadcrumb">
         <ul>
           <li>
-            <nuxt-link :to="{name:'operators'}">
+            <nuxt-link :to="{ name: 'operators' }">
               Operators
             </nuxt-link>
           </li>
           <li>
             <!-- TODO: this is not ideal... it links only to the auto-generated onestop_id, and not the resolved, cached tl_mv_active_agencies lookup. -->
-            <nuxt-link :to="{name: 'operators-onestop_id', params:{onestop_id:entity.agency.onestop_id}}">
+            <nuxt-link
+              :to="{
+                name: 'operators-onestop_id',
+                params: { onestop_id: entity.agency.onestop_id },
+              }"
+            >
               {{ entity.agency.agency_name }}
             </nuxt-link>
           </li>
           <li>
-            <nuxt-link :to="{name: 'routes-onestop_id', params:{onestop_id:$route.params.onestop_id}}">
-              {{ entity.route_short_name }} <template v-if="entity.route_short_name != entity.route_long_name">
+            <nuxt-link
+              :to="{
+                name: 'routes-onestop_id',
+                params: { onestop_id: $route.params.onestop_id },
+              }"
+            >
+              {{ entity.route_short_name }}
+              <template
+                v-if="entity.route_short_name != entity.route_long_name"
+              >
                 {{ entity.route_long_name }}
               </template>
             </nuxt-link>
           </li>
         </ul>
       </nav>
-      <h1
-        v-for="ent of routeNames"
-        :key="ent.id"
-        class="title"
-      >
+      <h1 v-for="ent of routeNames" :key="ent.id" class="title">
         {{ ent.agency.agency_name }} <br>
         <route-icon
           :route-link="ent.route_url"
@@ -38,22 +47,50 @@
         />
       </h1>
 
+      <div>
+        preview:
+        <img :src="`http://localhost:8080/rest/routes/${this.onestopId}.png`">
+      </div>
+
       <!-- Warnings for freshness and viewing a specific version -->
       <b-message v-if="dataFreshness > 365" type="is-warning" has-icon>
-        The GTFS feeds associated with this page were fetched {{ dataFreshness }} days ago; use caution or check if newer data is available.
+        The GTFS feeds associated with this page were fetched
+        {{ dataFreshness }} days ago; use caution or check if newer data is
+        available.
       </b-message>
       <b-message v-if="linkVersion" type="is-warning" has-icon>
         You are viewing a single GTFS Route entity defined in source feed
-        <nuxt-link :to="{name:'feeds-feed', params:{feed:$route.query.feed_onestop_id}}">
+        <nuxt-link
+          :to="{
+            name: 'feeds-feed',
+            params: { feed: $route.query.feed_onestop_id },
+          }"
+        >
           {{ $route.query.feed_onestop_id | shortenName }}
-        </nuxt-link> version
-        <nuxt-link :to="{name:'feeds-feed-versions-version', params:{feed:$route.query.feed_onestop_id, version:$route.query.feed_version_sha1}}">
+        </nuxt-link>
+        version
+        <nuxt-link
+          :to="{
+            name: 'feeds-feed-versions-version',
+            params: {
+              feed: $route.query.feed_onestop_id,
+              version: $route.query.feed_version_sha1,
+            },
+          }"
+        >
           {{ $route.query.feed_version_sha1 | shortenName(8) }}
         </nuxt-link>.<br>
         <template v-if="!search">
-          Click <nuxt-link :to="{name: 'routes-onestop_id', params:{onestop_id:$route.params.onestop_id}}">
+          Click
+          <nuxt-link
+            :to="{
+              name: 'routes-onestop_id',
+              params: { onestop_id: $route.params.onestop_id },
+            }"
+          >
             here
-          </nuxt-link> to return to the main view.
+          </nuxt-link>
+          to return to the main view.
         </template>
       </b-message>
 
@@ -63,7 +100,10 @@
           <table class="property-list mb-4">
             <tr>
               <td>
-                <b-tooltip dashed label="A globally unique identifier for this route">
+                <b-tooltip
+                  dashed
+                  label="A globally unique identifier for this route"
+                >
                   Onestop ID
                 </b-tooltip>
               </td>
@@ -72,7 +112,12 @@
             <tr>
               <td>Operated by</td>
               <td>
-                <nuxt-link :to="{name: 'operators-onestop_id', params:{onestop_id:entity.agency.onestop_id}}">
+                <nuxt-link
+                  :to="{
+                    name: 'operators-onestop_id',
+                    params: { onestop_id: entity.agency.onestop_id },
+                  }"
+                >
                   {{ entity.agency.agency_name }}
                 </nuxt-link>
               </td>
@@ -104,7 +149,10 @@
             <tr>
               <td>Vehicle Type</td>
               <td>
-                <b-tooltip dashed :label="`Route with route_type = ${entity.route_type}`">
+                <b-tooltip
+                  dashed
+                  :label="`Route with route_type = ${entity.route_type}`"
+                >
                   {{ entity.route_type | routeTypeToWords }}
                 </b-tooltip>
               </td>
@@ -112,14 +160,31 @@
             <tr>
               <td>URL</td>
               <td>
-                {{ entity.route_url }} <a :href="entity.route_url" target="_blank"><b-icon icon="link" /></a>
+                {{ entity.route_url }}
+                <a
+                  :href="entity.route_url"
+                  target="_blank"
+                ><b-icon
+                  icon="link"
+                /></a>
               </td>
             </tr>
           </table>
           <b-message class="is-info">
-            <p>Learn more about the contents of <code>routes.txt</code> on <a href="https://gtfs.org/reference/static#routestxt" target="_blank">gtfs.org</a>.</p>
+            <p>
+              Learn more about the contents of <code>routes.txt</code> on
+              <a
+                href="https://gtfs.org/reference/static#routestxt"
+                target="_blank"
+              >gtfs.org</a>.
+            </p>
           </b-message>
-          <b-tabs v-model="activeTab" type="is-boxed" :animated="false" @input="setTab">
+          <b-tabs
+            v-model="activeTab"
+            type="is-boxed"
+            :animated="false"
+            @input="setTab"
+          >
             <b-tab-item label="Summary">
               <headway-viewer :headways="entity.headways" />
               <div class="clearfix">
@@ -129,22 +194,54 @@
 
             <!-- Data sources -->
             <b-tab-item label="Sources">
-              <b-table
-                :data="entities"
-                :striped="true"
-              >
-                <b-table-column v-slot="props" field="feed_onestop_id" label="Feed">
-                  <nuxt-link :to="{name:'feeds-feed', params:{feed:props.row.feed_onestop_id}}">
+              <b-table :data="entities" :striped="true">
+                <b-table-column
+                  v-slot="props"
+                  field="feed_onestop_id"
+                  label="Feed"
+                >
+                  <nuxt-link
+                    :to="{
+                      name: 'feeds-feed',
+                      params: { feed: props.row.feed_onestop_id },
+                    }"
+                  >
                     {{ props.row.feed_onestop_id | shortenName }}
                   </nuxt-link>
                 </b-table-column>
-                <b-table-column v-slot="props" field="feed_version_sha1" label="Version">
-                  <nuxt-link :to="{name:'feeds-feed-versions-version', params:{feed:props.row.feed_onestop_id, version:props.row.feed_version_sha1}}">
+                <b-table-column
+                  v-slot="props"
+                  field="feed_version_sha1"
+                  label="Version"
+                >
+                  <nuxt-link
+                    :to="{
+                      name: 'feeds-feed-versions-version',
+                      params: {
+                        feed: props.row.feed_onestop_id,
+                        version: props.row.feed_version_sha1,
+                      },
+                    }"
+                  >
                     {{ props.row.feed_version_sha1 | shortenName(8) }}
                   </nuxt-link>
                 </b-table-column>
-                <b-table-column v-slot="props" field="route_id" label="Route ID">
-                  <nuxt-link :to="{name:'routes-onestop_id', params:{onestop_id:props.row.onestop_id}, query:{feed_onestop_id:props.row.feed_onestop_id, feed_version_sha1:props.row.feed_version_sha1, route_id:props.row.route_id}}">
+                <b-table-column
+                  v-slot="props"
+                  field="route_id"
+                  label="Route ID"
+                >
+                  <nuxt-link
+                    :to="{
+                      name: 'routes-onestop_id',
+                      params: { onestop_id: props.row.onestop_id },
+                      query: {
+                        feed_onestop_id: props.row.feed_onestop_id,
+                        feed_version_sha1: props.row.feed_version_sha1,
+                        route_id: props.row.route_id,
+                      },
+                    }"
+                  >
                     {{ props.row.route_id | shortenName }}
                   </nuxt-link>
                 </b-table-column>
@@ -173,11 +270,15 @@
             </b-tab-item>
 
             <b-tab-item :label="childLabel">
-              <nuxt-child :service-date="serviceDate" :entity="entity" :label.sync="childLabel" />
+              <nuxt-child
+                :service-date="serviceDate"
+                :entity="entity"
+                :label.sync="childLabel"
+              />
             </b-tab-item>
           </b-tabs>
         </div>
-        <div class="column is-one-third" style="width:400px">
+        <div class="column is-one-third" style="width: 400px">
           <client-only>
             <feed-version-map-viewer
               :route-ids="entityIds"
@@ -199,58 +300,72 @@ import EntityPageMixin from '~/components/entity-page-mixin'
 import { routeTypeToWords } from '~/plugins/global'
 
 const q = gql`
-query ($onestop_id: String, $route_id: String, $feed_onestop_id: String, $feed_version_sha1: String, $include_stops: Boolean! = true) {
-  entities: routes(limit: 100, where: {onestop_id: $onestop_id, feed_onestop_id: $feed_onestop_id, feed_version_sha1: $feed_version_sha1, route_id: $route_id}) {
-    id
-    onestop_id
-    feed_onestop_id
-    feed_version_sha1
-    route_id
-    route_color
-    route_desc
-    route_long_name
-    route_short_name
-    route_type
-    route_url
-    geometry
-    route_stops @include(if: $include_stops) {
-      stop {
+  query(
+    $onestop_id: String
+    $route_id: String
+    $feed_onestop_id: String
+    $feed_version_sha1: String
+    $include_stops: Boolean! = true
+  ) {
+    entities: routes(
+      limit: 100
+      where: {
+        onestop_id: $onestop_id
+        feed_onestop_id: $feed_onestop_id
+        feed_version_sha1: $feed_version_sha1
+        route_id: $route_id
+      }
+    ) {
+      id
+      onestop_id
+      feed_onestop_id
+      feed_version_sha1
+      route_id
+      route_color
+      route_desc
+      route_long_name
+      route_short_name
+      route_type
+      route_url
+      geometry
+      route_stops @include(if: $include_stops) {
+        stop {
+          id
+          stop_id
+          stop_name
+          geometry
+        }
+      }
+      agency {
         id
-        stop_id
-        stop_name
-        geometry
+        agency_id
+        agency_name
+        onestop_id
+      }
+      headways {
+        dow_category
+        service_date
+        direction_id
+        headway_secs
+        headway_seconds_morning_min
+        headway_seconds_midday_min
+        headway_seconds_afternoon_min
+        headway_seconds_night_min
+        headway_seconds_morning_mid
+        headway_seconds_midday_mid
+        headway_seconds_afternoon_mid
+        headway_seconds_night_mid
+        headway_seconds_morning_max
+        headway_seconds_midday_max
+        headway_seconds_afternoon_max
+        headway_seconds_night_max
+      }
+      feed_version {
+        id
+        fetched_at
       }
     }
-    agency {
-      id
-      agency_id
-      agency_name
-      onestop_id
-    }
-    headways {
-      dow_category
-      service_date
-      direction_id
-      headway_secs
-      headway_seconds_morning_min
-      headway_seconds_midday_min
-      headway_seconds_afternoon_min
-      headway_seconds_night_min
-      headway_seconds_morning_mid
-      headway_seconds_midday_mid
-      headway_seconds_afternoon_mid
-      headway_seconds_night_mid
-      headway_seconds_morning_max
-      headway_seconds_midday_max
-      headway_seconds_afternoon_max
-      headway_seconds_night_max
-    }
-    feed_version {
-      id
-      fetched_at
-    }
   }
-}
 `
 
 // # operator {
@@ -281,7 +396,9 @@ export default {
   apollo: {
     entities: {
       query: q,
-      skip () { return this.checkSearchSkip(this.$route.query.route_id) },
+      skip () {
+        return this.checkSearchSkip(this.$route.query.route_id)
+      },
       variables () {
         return {
           onestop_id: this.search ? null : this.$route.params.onestop_id,
@@ -359,7 +476,9 @@ export default {
     },
     serviceDate: {
       get () {
-        return this.$route.query.service_date ? this.$route.query.service_date : 'TODO'
+        return this.$route.query.service_date
+          ? this.$route.query.service_date
+          : 'TODO'
       },
       set (value) {
         this.$router.push({
@@ -376,7 +495,12 @@ export default {
       return {
         title: `${this.routeName} • ${this.routeType} route`,
         meta: [
-          { hid: 'description', name: 'description', content: `${this.routeName} is a ${this.routeType} route available for browsing and analyzing on the Transitland platform.` }
+          {
+            hid: 'description',
+            name: 'description',
+            content: `${this.routeName} is a ${this.routeType} route available for browsing and analyzing on the Transitland platform.`,
+            'og:image': `https://transit.land/api/v2/rest/routes/${this.onestopId}.png`
+          }
         ]
       }
     }
