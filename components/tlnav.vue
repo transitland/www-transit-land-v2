@@ -17,8 +17,13 @@
       </client-only>
     </template>
     <template slot="end">
-      <b-navbar-item tag="div">
-        <nav-search-bar @selected="searchBarSelected" />
+      <b-navbar-item tag="div" :style="searchBarWidth">
+        <nav-search-bar
+          style="width:100%"
+          @selected="searchBarSelected"
+          @focus="searchFocus = true"
+          @blur="searchFocus = false"
+        />
       </b-navbar-item>
     </template>
   </b-navbar>
@@ -28,6 +33,7 @@
 export default {
   data () {
     return {
+      searchFocus: false,
       apikey: null,
       openLogin: false,
       items: [
@@ -67,6 +73,11 @@ export default {
           to: { name: 'news' }
         }
       ]
+    }
+  },
+  computed: {
+    searchBarWidth () {
+      return { width: this.searchFocus ? '600px' : '200px' }
     }
   },
   methods: {

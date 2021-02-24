@@ -62,6 +62,7 @@ export default {
   },
   methods: {
     clearSearch () {
+      this.$emit('blur')
       this.search = ''
     },
     getAsyncData: debounce(function (name) {

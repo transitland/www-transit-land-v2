@@ -1,13 +1,15 @@
 <template>
-  <b-field>
+  <b-field expanded>
     <b-autocomplete
       v-model="search"
+      expanded
       :data="data"
       max-height="600px"
       placeholder="Search"
       :loading="isFetching"
       :clearable="true"
       icon="magnify"
+      @focus="$emit('focus')"
       @typing="getAsyncData"
       @select="option => selected = option"
       @keydown.esc.native="clearSearch"
@@ -32,6 +34,7 @@ export default {
   },
   watch: {
     selected () {
+      this.$emit('blur')
       const key = this.selected ? this.selected.type : null
       const ent = this.selected.entity
       if (!key) {
@@ -58,6 +61,7 @@ export default {
   },
   methods: {
     goToSearch () {
+      this.$emit('blur')
       this.$router.push({ name: 'search', query: { q: this.search } })
       this.clearSearch()
     }
