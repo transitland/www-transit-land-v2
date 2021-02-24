@@ -47,11 +47,6 @@
         />
       </h1>
 
-      <div>
-        preview:
-        <img :src="`http://localhost:8080/rest/routes/${this.onestopId}.png`">
-      </div>
-
       <!-- Warnings for freshness and viewing a specific version -->
       <b-message v-if="dataFreshness > 365" type="is-warning" has-icon>
         The GTFS feeds associated with this page were fetched
@@ -488,18 +483,91 @@ export default {
           }
         })
       }
+    },
+    staticImage () {
+      return `https://transit.land/api/v2/rest/routes/${this.onestopId}.png`
+    },
+    staticTitle () {
+      return `${this.routeName} • ${this.routeType} route`
+    },
+    staticDescription () {
+      return `${this.routeName} is a ${this.routeType} route available for browsing and analyzing on the Transitland platform.`
     }
   },
   head () {
     if (this.entity) {
       return {
-        title: `${this.routeName} • ${this.routeType} route`,
+        title: this.staticTitle,
         meta: [
           {
             hid: 'description',
             name: 'description',
-            content: `${this.routeName} is a ${this.routeType} route available for browsing and analyzing on the Transitland platform.`,
-            'og:image': `https://transit.land/api/v2/rest/routes/${this.onestopId}.png`
+            content: this.staticDescription
+          },
+          {
+            hid: 'twitter:card',
+            name: 'twitter:card',
+            content: 'summary'
+          },
+          {
+            hid: 'twitter:site',
+            name: 'twitter:site',
+            content: '@transitland'
+          },
+          {
+            hid: 'twitter:title',
+            name: 'twitter:title',
+            content: this.staticTitle
+          },
+          {
+            hid: 'twitter:description',
+            name: 'twitter:description',
+            content: this.staticDescription
+          },
+          {
+            hid: 'twitter:image',
+            name: 'twitter:image',
+            content: this.staticImage
+          },
+          {
+            hid: 'twitter:image:alt',
+            name: 'twitter:image:alt',
+            content: this.staticTitle
+          },
+          {
+            hid: 'og:title',
+            property: 'og:title',
+            content: this.staticTitle
+          },
+          {
+            hid: 'og:description',
+            property: 'og:description',
+            content: this.staticDescription
+          },
+          {
+            hid: 'og:image',
+            property: 'og:image',
+            content: this.staticImage
+          },
+          {
+            hid: 'og:image:alt',
+            property: 'og:image:alt',
+            content: this.staticTitle
+          },
+          {
+            hid: 'og:image:type',
+            property: 'og:image:type',
+            content: 'image/png'
+          },
+          {
+            hid: 'og:image:width',
+            property: 'og:image:width',
+            content: '800'
+          },
+          {
+            hid: 'og:image:height',
+            property: 'og:image:height',
+            content: '600'
           }
         ]
       }
