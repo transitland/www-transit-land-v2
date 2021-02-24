@@ -6,11 +6,8 @@
       max-height="600px"
       placeholder="Search"
       :loading="isFetching"
+      :clearable="true"
       icon="magnify"
-      expanded
-      :icon-right="(search && search.length) > 0 ? 'close-circle' : null"
-      icon-right-clickable
-      @icon-right-click="clearSearch"
       @typing="getAsyncData"
       @select="option => selected = option"
       @keydown.esc.native="clearSearch"

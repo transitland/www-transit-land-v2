@@ -15,9 +15,11 @@
           <a v-for="item in items" :key="item.title" class="navbar-item" :href="item.to.name === 'index' ? '/' : `/${item.to.name}`">{{ item.title }}</a>
         </template>
       </client-only>
-      <div class="navbar-item" style="width:400px">
+    </template>
+    <template slot="end">
+      <b-navbar-item tag="div">
         <nav-search-bar @selected="searchBarSelected" />
-      </div>
+      </b-navbar-item>
     </template>
   </b-navbar>
 </template>
