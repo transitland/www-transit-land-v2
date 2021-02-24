@@ -90,8 +90,9 @@ export default {
     height: '5px'
   },
   publicRuntimeConfig: {
-    graphqlEndpoint: process.env.GRAPHQL_ENDPOINT || 'https://api.transit.land/api/v2/query',
+    graphqlEndpoint: process.env.GRAPHQL_ENDPOINT || 'https://transit.land/api/v2/query',
     graphqlApikey: process.env.GRAPHQL_APIKEY || '',
+    graphqlServerReferer: process.env.GRAPHQL_SERVER_REFERER || '',
     tileEndpoint: process.env.TILE_ENDPOINT || 'https://transit.land/api/v2/tiles',
     tileApikey: process.env.TILE_APIKEY || ''
   },

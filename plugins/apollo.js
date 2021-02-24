@@ -4,6 +4,7 @@ export default ({ $config }) => {
     httpLinkOptions: {
       credentials: 'same-origin',
       headers: {
+        referer: $config.graphqlServerReferer,
         apikey: $config.graphqlApikey
       }
     }
