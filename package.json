@@ -42,8 +42,6 @@
     "eslint-plugin-nuxt": ">=0.4.2",
     "graphql": "^14.5.8",
     "graphql-tag": "^2.10.1",
-    "leaflet": "^1.5.1",
-    "leaflet-hash": "^0.2.1",
     "lodash.debounce": "^4.0.8",
     "mapbox-gl": "^1.6.1",
     "node-loader": "^0.6.0",
