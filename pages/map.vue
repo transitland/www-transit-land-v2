@@ -27,13 +27,13 @@ export default {
     return {
       routeTiles: {
         id: 'routes',
-        url: `${process.env.tileEndpoint}/routes/tiles/{z}/{x}/{y}.pbf`,
+        url: `${this.$config.tileEndpoint}/routes/tiles/{z}/{x}/{y}.pbf`,
         minzoom: 0,
         maxzoom: 14
       },
       stopTiles: {
         id: 'stops',
-        url: `${process.env.tileEndpoint}/stops/tiles/{z}/{x}/{y}.pbf`,
+        url: `${this.$config.tileEndpoint}/stops/tiles/{z}/{x}/{y}.pbf`,
         minzoom: 14,
         maxzoom: 14
       }

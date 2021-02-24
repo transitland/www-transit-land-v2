@@ -147,7 +147,7 @@ export default {
           if (resourceType === 'Tile' && url.startsWith('https://transit.land')) {
             return {
               url,
-              headers: { apikey: process.env.tileApikey }
+              headers: { apikey: this.$config.tileApikey }
             }
           }
         },

@@ -52,7 +52,6 @@ const create = async (feed, args) => {
 
 export default {
   ssr: true,
-  target: 'static',
   // https://github.com/nuxt/components
   components: true,
   server: {
@@ -90,11 +89,11 @@ export default {
     color: 'blue',
     height: '5px'
   },
-  env: {
-    tileEndpoint: process.env.TILE_ENDPOINT,
-    tileApikey: process.env.TILE_APIKEY,
-    graphqlEndpoint: process.env.GRAPHQL_ENDPOINT,
-    graphqlApikey: process.env.GRAPHQL_APIKEY
+  publicRuntimeConfig: {
+    graphqlEndpoint: process.env.GRAPHQL_ENDPOINT || 'https://api.transit.land/api/v2/query',
+    graphqlApikey: process.env.GRAPHQL_APIKEY || '',
+    tileEndpoint: process.env.TILE_ENDPOINT || 'https://transit.land/api/v2/tiles',
+    tileApikey: process.env.TILE_APIKEY || ''
   },
   /*
   ** Global CSS
@@ -167,15 +166,7 @@ export default {
   /* APOLLO */
   apollo: {
     clientConfigs: {
-      default: {
-        httpEndpoint: process.env.GRAPHQL_ENDPOINT,
-        httpLinkOptions: {
-          credentials: 'same-origin',
-          headers: {
-            apikey: process.env.GRAPHQL_APIKEY
-          }
-        }
-      }
+      default: '~/plugins/apollo.js'
     }
   },
   sitemap: {
