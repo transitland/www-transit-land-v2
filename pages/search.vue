@@ -1,5 +1,8 @@
 <template>
-  <div style="width:100%">
+  <div>
+    <h2 class="title is-2">
+      Search Transitland
+    </h2>
     <b-input
       v-model="search"
       placeholder="Search"
@@ -47,6 +50,11 @@ export default {
   mounted () {
     this.search = this.$route.query.q || ''
     this.getAsyncData(this.search)
+  },
+  head () {
+    return {
+      title: 'Search'
+    }
   }
 }
 </script>

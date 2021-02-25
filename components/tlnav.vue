@@ -77,7 +77,7 @@ export default {
   },
   computed: {
     searchBarWidth () {
-      return { width: this.searchFocus ? '600px' : '200px' }
+      return { 'flex-grow': this.searchFocus ? 1 : 0.25 }
     }
   },
   methods: {
@@ -120,5 +120,11 @@ a {
 }
 .client-only-placeholder {
   display: flex;
+}
+</style>
+
+<style>
+.navbar-end {
+  flex-grow: 2;
 }
 </style>
