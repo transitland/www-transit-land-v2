@@ -37,6 +37,11 @@ export default {
     filteredArticles () {
       return filterPosts(this.articles)
     }
+  },
+  head () {
+    return {
+      title: 'News & Updates'
+    }
   }
 }
 </script>
