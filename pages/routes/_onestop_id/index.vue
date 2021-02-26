@@ -244,14 +244,16 @@
             </b-tab-item>
 
             <b-tab-item label="Export">
-              <data-export
-                v-if="activeTab === 2"
-                :route-name="routeName"
-                :route-features="routeFeatures"
-                :stop-features="stopFeatures"
-                :route-ids="[entity.id]"
-                @setFeatures="features = $event"
-              />
+              <client-only>
+                <data-export
+                  v-if="activeTab === 2"
+                  :route-name="routeName"
+                  :route-features="routeFeatures"
+                  :stop-features="stopFeatures"
+                  :route-ids="[entity.id]"
+                  @setFeatures="features = $event"
+                />
+              </client-only>
             </b-tab-item>
 
             <b-tab-item label="Inbound Trips">

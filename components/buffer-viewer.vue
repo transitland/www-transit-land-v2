@@ -5,15 +5,19 @@
 <script>
 import gql from 'graphql-tag'
 
-const q2 = gql`
-query ($arg_agency_ids: _int8, $arg_route_ids: _int8, $arg_stop_ids: _int8, $radius: numeric) {
-  buffers: tl_calculate_buffers(args: {agency_ids: $arg_agency_ids, route_ids: $arg_route_ids, stop_ids: $arg_stop_ids, radius: $radius}) {
-    stop_buffer
-    stop_points
-    stop_convexhull
+const q = gql`
+query ($route_ids: [Int!], $radius: Float!) {
+  routes: routes(ids: $route_ids) {
+    id
+    route_stop_buffer(radius: $radius) {
+      stop_points
+      stop_buffer
+      stop_convexhull
+    }
   }
 }
 `
+
 export default {
   props: {
     radius: { type: Number, default: 400 },
@@ -23,24 +27,17 @@ export default {
   },
   data () {
     return {
-      buffers: []
+      routes: []
     }
   },
   apollo: {
-    buffers: {
-      query: q2,
+    routes: {
+      query: q,
       variables () {
-        const q = {
-          radius: this.radius
+        return {
+          radius: this.radius,
+          route_ids: this.routeIds
         }
-        if (this.agencyIds) {
-          q.arg_agency_ids = `{${this.agencyIds.join(',')}}`
-        } else if (this.routeIds) {
-          q.arg_route_ids = `{${this.routeIds.join(',')}}`
-        } else if (this.stopIds) {
-          q.arg_stop_ids = `{${this.stopIds.join(',')}}`
-        }
-        return q
       }
     }
   },
@@ -48,10 +45,13 @@ export default {
     bufferFeatures () {
       if (this.$apollo.loading) { return [] }
       const ret = []
-      for (const f of this.buffers || []) {
+      for (const route of this.routes || []) {
+        if (!route.route_stop_buffer) {
+          continue
+        }
         ret.push({
           type: 'Feature',
-          geometry: f.stop_buffer,
+          geometry: route.route_stop_buffer.stop_buffer,
           properties: { radius: this.radius }
         })
       }
@@ -60,10 +60,13 @@ export default {
     hullFeatures () {
       if (this.$apollo.loading) { return [] }
       const ret = []
-      for (const f of this.buffers || []) {
+      for (const route of this.routes || []) {
+        if (!route.route_stop_buffer) {
+          continue
+        }
         ret.push({
           type: 'Feature',
-          geometry: f.stop_convexhull,
+          geometry: route.route_stop_buffer.stop_convexhull,
           properties: {}
         })
       }
