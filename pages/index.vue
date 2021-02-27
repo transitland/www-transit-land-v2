@@ -1,37 +1,37 @@
 <template>
   <div>
     <div class="columns is-centered">
-      <div class="tl-animation-hero column is-three-quarters rows-wrapper">
+      <div class="tl-animation-hero column rows-wrapper">
         <div data-item="bus" class="row">
-          <h2>
+          <span>
             A COMMUNITY-EDITED DATA SERVICE
-          </h2>
+          </span>
           <div id="bus" class="animation bus moveToRight">
             <div class="figure bus" />
           </div>
         </div>
         <div data-item="ferry" class="row">
-          <h2>
+          <span>
             AGGREGATING
-          </h2>
+          </span>
           <div id="ferry" class="animation ferry moveToRight">
             <div class="figure ferry" />
           </div>
-          <h2> TRANSIT NETWORKS </h2>
+          <span> TRANSIT NETWORKS </span>
         </div>
         <div data-item="bike" class="row">
-          <h2>
+          <span>
             ACROSS METROPOLITAN
-          </h2>
+          </span>
           <div id="bike" class="animation bike moveToLeft">
             <div class="figure bike" />
           </div>
-          <h2>AND RURAL </h2>
+          <span>AND RURAL </span>
         </div>
         <div data-item="train" class="row">
-          <h2>
+          <span>
             AREAS AROUND THE WORLD.
-          </h2>
+          </span>
           <div id="train" class="animation train moveToLeft">
             <div class="figure train" />
           </div>
@@ -117,15 +117,27 @@ export default {
 }
 
 .tl-animation-hero {
-  h2 {
+   @media only screen and (max-width: $tablet - 1) {
+     display: none !important;
+   }
+   @media only screen and (min-width: $tablet) and (max-width: $desktop - 1) {
+    transform: scale(.8);
+  }
+   @media only screen and (min-width: $desktop) and (max-width: $widescreen - 1) {
+    transform: scale(.95);
+  }
+  @media only screen and (min-width: $widescreen) {
+    transform: scale(1);
+  }
+  span {
+    @extend .title;
     padding-top: 0px;
     white-space: nowrap;
     float: left;
-    font-size:32px;
+    font-size: 32px;
   }
 
   .rows-wrapper {
-    width:80%;
     text-align:center;
   }
 
