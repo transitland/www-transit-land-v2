@@ -17,11 +17,11 @@
     "@nuxtjs/feed": "^2.0.0",
     "@nuxtjs/robots": "^2.4.2",
     "@nuxtjs/sitemap": "^2.4.0",
-    "buefy": "~> 0.9.3",
+    "buefy": "~> 0.9.4",
     "core-js": "^2.6.5",
     "date-fns": "^2.16.1",
     "nuxt": "~> 2.14",
-    "nuxt-buefy": "^0.3.2",
+    "nuxt-buefy": "^0.4.4",
     "rehype-add-classes": "^1.0.0",
     "rehype-wrap": "^1.0.10",
     "sanitize-filename": "^1.6.3"
