@@ -141,7 +141,8 @@ export default {
     '@nuxt/content',
     '@nuxtjs/feed',
     '@nuxtjs/sitemap',
-    '@nuxtjs/robots'
+    '@nuxtjs/robots',
+    '@nuxtjs/redirect-module'
   ],
   content: {
     liveEdit: false,
@@ -196,6 +197,20 @@ export default {
     // NOTE: we handle these redirects in the Nginx containers that serve https://www.transit.land
     exclude: ['/documentation/glossary', '/playground', '/feed-registry', '/an-open-project', '/feed-registry/feeds/new']
   },
+  redirect: [
+    { from: '^/feed-registry/operators/(.*)$', to: '/operators/$1', status: 301 },
+    { from: '^/feed-registry/feeds/new', to: '/documentation/atlas', status: 301 },
+    { from: '^/feed-registry', to: '/operators', status: 301 },
+    { from: '^/how-it-works', to: '/documentation', status: 301 },
+    { from: '^/an-open-project/contributor-agreement.html', to: '/documentation/an-open-project/contributor-agreement', status: 301 },
+    { from: '^/an-open-project/transitland-model-license.docx', to: '/transitland-model-license.docx', status: 302 },
+    { from: '^/an-open-project', to: '/documentation/an-open-project', status: 301 },
+    { from: '^/playground', to: '/map', status: 301 },
+    { from: '^/documentation/tutorials/(.*)$', to: 'https://v1.transit.land/documentation/tutorials/$1', status: 302 },
+    { from: '^/documentation/dispatcher', to: 'https://v1.transit.land/documentation/dispatcher', status: 302 },
+    { from: '^/documentation/glossary', to: 'https://v1.transit.land/documentation/glossary', status: 302 },
+    { from: '^/documentation/feed-registry/(.*)$', to: 'https://v1.transit.land/documentation/feed-registry/$1', status: 302 }
+  ],
   /*
   ** Build configuration
   */
