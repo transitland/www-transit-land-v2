@@ -4,6 +4,9 @@ category: news
 published: true
 isThereTitle: true
 title: "Transitland v2 Enables Search Across 700,000+ Operators, Feeds, and Routes"
+description: >
+  A favorite new feature of Transitland version 2: search across all of the operators, feed records, and routes in Transitland
+previewImagePath: https://www.transit.land/images/tlv2-feature-announcements/tlv2-search-animation.gif
 ---
 
 Over the last year (or two?) [we've been creating Transitland v2](/news/2019/10/17/tlv2), a major rewrite of the platform's internals. Transitland v2 brings performance improvements, the option to deploy any number of customized Transitland installations (in addition to the "canonical" Transitland that lives here at [transit.land](/)), and useful new feature additions. Here's one of our favorite new additions: search across all of the operators, feed records, and routes in Transitland
