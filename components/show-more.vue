@@ -1,7 +1,7 @@
 <template>
-  <b-message type="is-info" :closable="false" class="show-more-results">
-    <span style="float:right" class="button" @click="$emit('click')">First {{ limit }} results shown. Click to load more.</span>
-  </b-message>
+  <div class="pt-6 pb-6">
+    <a class="button is-primary is-outlined is-fullwidth" @click="$emit('click')">First {{ limit.toLocaleString() }} results shown. Click to load more.</a>
+  </div>
 </template>
 
 <script>
