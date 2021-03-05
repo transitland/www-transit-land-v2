@@ -20,154 +20,155 @@
         Feed details: {{ onestopId }}
       </h1>
 
-      <b-message type="is-info" has-icon icon="information" :closable="false">
-        <div class="columns">
-          <div class="column is-8">
-            <p>
-              You can update the URLs associated with this Feed record and other metadata in the <a href="https://github.com/transitland/transitland-atlas">Transitland Atlas</a> repository. We welcome edits and additions. Press the button at right to start a pull request.
-            </p>
-          </div>
-          <div class="column is-4 has-text-right">
-            <b-tooltip label="Create or edit an associated feed metadata file in the Transitland Atlas repository">
-              <a class="button is-primary" :href="editLink" target="_blank"><b-icon icon="pencil" size="is-small" /> &nbsp; Edit Feed Record</a>
-            </b-tooltip>
-          </div>
+      <p class="content">
+        {{ textDescription }}
+      </p>
+
+      <div class="columns">
+        <div class="column is-three-quarters">
+          <table class="property-list">
+            <tr>
+              <td>
+                <b-tooltip dashed label="A globally unique identifier for this feed">
+                  Onestop ID
+                </b-tooltip>
+              </td>
+              <td>
+                {{ onestopId }}
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <b-tooltip dashed label="Data specification or format for this feed">
+                  Format
+                </b-tooltip>
+              </td>
+              <td>{{ entity.spec.toUpperCase() }}</td>
+            </tr>
+
+            <tr v-if="displayUrls">
+              <td>URLs</td>
+              <td>
+                <ul>
+                  <li v-if="entity.urls.static_current">
+                    Current Static GTFS: {{ entity.urls.static_current }}
+                  </li>
+                  <li v-if="entity.urls.static_planned && entity.urls.static_planned.length > 0">
+                    Future Static GTFS: {{ entity.urls.static_planned }}
+                  </li>
+                  <li v-if="entity.urls.static_historic">
+                    <div v-for="(k,i) of entity.urls.static_historic" :key="i">
+                      Historic GTFS: {{ k }}
+                    </div>
+                  </li>
+                  <li v-if="entity.urls.realtime_vehicle_positions">
+                    GTFS-RealTime Vehicle Positions: {{ entity.urls.static_planned }}
+                  </li>
+                  <li v-if="entity.urls.realtime_trip_updates">
+                    GTFS-RealTime Trip Updates: {{ entity.urls.static_planned }}
+                  </li>
+                  <li v-if="entity.urls.realtime_alerts">
+                    GTFS RealTime Alerts: {{ entity.urls.static_planned }}
+                  </li>
+                </ul>
+              </td>
+            </tr>
+
+            <tr v-if="entity.spec == 'gtfs'">
+              <td>
+                <b-tooltip dashed label="Last time a fetch successfully returned valid GTFS data">
+                  Last Fetch
+                </b-tooltip>
+              </td>
+              <td>
+                <template v-if="entity.feed_state && entity.feed_state.last_successful_fetch_at">
+                  {{ entity.feed_state.last_successful_fetch_at | formatDate }} ({{ entity.feed_state.last_successful_fetch_at | fromNow }})
+                </template>
+                <template v-else>
+                  Unknown
+                </template>
+              </td>
+            </tr>
+
+            <tr v-if="entity.spec == 'gtfs' && entity.feed_state.last_fetch_error">
+              <td>
+                <b-tooltip dashed label="Error message from last fetch attempt">
+                  Fetch Error
+                </b-tooltip>
+              </td>
+              <td>
+                Failed
+                <b-message class="is-danger" has-icon>
+                  {{ entity.feed_state.last_fetch_error }}
+                </b-message>
+              </td>
+            </tr>
+
+            <tr v-if="entity.authorization && entity.authorization.type">
+              <td>Authorization</td>
+              <td>
+                <ul>
+                  <li v-if="entity.authorization.type">
+                    Type: {{ entity.authorization.type }}
+                  </li>
+                  <li v-if="entity.authorization.param_name">
+                    Parameter Name: {{ entity.authorization.param_name }}
+                  </li>
+                  <li v-if="entity.authorization.info_url">
+                    Info URL: {{ entity.authorization.info_url }}
+                  </li>
+                </ul>
+              </td>
+            </tr>
+            <tr v-if="displayLicense">
+              <td>License</td>
+              <td>
+                <ul>
+                  <li v-if="entity.license.url">
+                    License URL: {{ entity.license.url }}
+                  </li>
+                  <li v-if="entity.license.spdx_identifier">
+                    License Identifier: {{ entity.license.spdx_identifier }}
+                  </li>
+                  <li v-if="entity.license.use_without_attribution">
+                    Use allowed without attribution: {{ entity.license.use_without_attribution | capitalize }}
+                  </li>
+                  <li v-if="entity.license.share_alike_optional">
+                    Share-alike optional: {{ entity.license.share_alike_optional | capitalize }}
+                  </li>
+                  <li v-if="entity.license.commercial_use_allowed">
+                    Commercial use allowed: {{ entity.license.commercial_use_allowed | capitalize }}
+                  </li>
+                  <li v-if="entity.license.create_derived_product">
+                    Creating derived products allowed: {{ entity.license.create_derived_product | capitalize }}
+                  </li>
+                  <li v-if="entity.license.redistribute">
+                    Redistribution allowed: {{ entity.license.redistribute | capitalize }}
+                  </li>
+                  <li v-if="entity.license.attribution_text">
+                    Required attribution text: {{ entity.license.attribution_text }}
+                  </li>
+                  <li v-if="entity.license.attribution_instructions">
+                    Attribution instructions: {{ entity.license.attribution_instructions }}
+                  </li>
+                </ul>
+              </td>
+            </tr>
+            <tr v-if="entity.languages">
+              <td>Languages</td>
+              <td>{{ entity.languages }}</td>
+            </tr>
+          </table>
         </div>
-      </b-message>
-
-      <table class="property-list">
-        <tr>
-          <td>
-            <b-tooltip dashed label="A globally unique identifier for this feed">
-              Onestop ID
-            </b-tooltip>
-          </td>
-          <td>
-            {{ onestopId }}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <b-tooltip dashed label="Data specification or format for this feed">
-              Format
-            </b-tooltip>
-          </td>
-          <td>{{ entity.spec.toUpperCase() }}</td>
-        </tr>
-
-        <tr v-if="displayUrls">
-          <td>URLs</td>
-          <td>
-            <ul>
-              <li v-if="entity.urls.static_current">
-                Current Static GTFS: {{ entity.urls.static_current }}
-              </li>
-              <li v-if="entity.urls.static_planned && entity.urls.static_planned.length > 0">
-                Future Static GTFS: {{ entity.urls.static_planned }}
-              </li>
-              <li v-if="entity.urls.static_historic">
-                <div v-for="(k,i) of entity.urls.static_historic" :key="i">
-                  Historic GTFS: {{ k }}
-                </div>
-              </li>
-              <li v-if="entity.urls.realtime_vehicle_positions">
-                GTFS-RealTime Vehicle Positions: {{ entity.urls.static_planned }}
-              </li>
-              <li v-if="entity.urls.realtime_trip_updates">
-                GTFS-RealTime Trip Updates: {{ entity.urls.static_planned }}
-              </li>
-              <li v-if="entity.urls.realtime_alerts">
-                GTFS RealTime Alerts: {{ entity.urls.static_planned }}
-              </li>
-            </ul>
-          </td>
-        </tr>
-
-        <tr v-if="entity.spec == 'gtfs'">
-          <td>
-            <b-tooltip dashed label="Last time a fetch successfully returned valid GTFS data">
-              Last Fetch
-            </b-tooltip>
-          </td>
-          <td>
-            <template v-if="entity.feed_state && entity.feed_state.last_successful_fetch_at">
-              {{ entity.feed_state.last_successful_fetch_at | formatDate }} ({{ entity.feed_state.last_successful_fetch_at | fromNow }})
-            </template>
-            <template v-else>
-              Unknown
-            </template>
-          </td>
-        </tr>
-
-        <tr v-if="entity.spec == 'gtfs' && entity.feed_state.last_fetch_error">
-          <td>
-            <b-tooltip dashed label="Error message from last fetch attempt">
-              Fetch Error
-            </b-tooltip>
-          </td>
-          <td>
-            Failed
-            <b-message class="is-danger" has-icon>
-              {{ entity.feed_state.last_fetch_error }}
-            </b-message>
-          </td>
-        </tr>
-
-        <tr v-if="entity.authorization && entity.authorization.type">
-          <td>Authorization</td>
-          <td>
-            <ul>
-              <li v-if="entity.authorization.type">
-                Type: {{ entity.authorization.type }}
-              </li>
-              <li v-if="entity.authorization.param_name">
-                Parameter Name: {{ entity.authorization.param_name }}
-              </li>
-              <li v-if="entity.authorization.info_url">
-                Info URL: {{ entity.authorization.info_url }}
-              </li>
-            </ul>
-          </td>
-        </tr>
-        <tr v-if="displayLicense">
-          <td>License</td>
-          <td>
-            <ul>
-              <li v-if="entity.license.url">
-                License URL: {{ entity.license.url }}
-              </li>
-              <li v-if="entity.license.spdx_identifier">
-                License Identifier: {{ entity.license.spdx_identifier }}
-              </li>
-              <li v-if="entity.license.use_without_attribution">
-                Use allowed without attribution: {{ entity.license.use_without_attribution | capitalize }}
-              </li>
-              <li v-if="entity.license.share_alike_optional">
-                Share-alike optional: {{ entity.license.share_alike_optional | capitalize }}
-              </li>
-              <li v-if="entity.license.commercial_use_allowed">
-                Commercial use allowed: {{ entity.license.commercial_use_allowed | capitalize }}
-              </li>
-              <li v-if="entity.license.create_derived_product">
-                Creating derived products allowed: {{ entity.license.create_derived_product | capitalize }}
-              </li>
-              <li v-if="entity.license.redistribute">
-                Redistribution allowed: {{ entity.license.redistribute | capitalize }}
-              </li>
-              <li v-if="entity.license.attribution_text">
-                Required attribution text: {{ entity.license.attribution_text }}
-              </li>
-              <li v-if="entity.license.attribution_instructions">
-                Attribution instructions: {{ entity.license.attribution_instructions }}
-              </li>
-            </ul>
-          </td>
-        </tr>
-        <tr v-if="entity.languages">
-          <td>Languages</td>
-          <td>{{ entity.languages }}</td>
-        </tr>
-      </table>
+        <div class="column is-one-quarter">
+          <b-message type="is-info" title="Edit" :closable="false">
+            <p>
+              You can update the URLs associated with this Feed record and other metadata in the <a href="/documentation/atlas">Transitland Atlas</a> repository. We welcome edits and additions.
+            </p>
+            <a class="button is-primary" :href="editLink" target="_blank"><b-icon icon="pencil" size="is-small" /> &nbsp; Edit Feed Record</a>
+          </b-message>
+        </div>
+      </div>
       <hr>
       <h4 class="title is-4">
         Operator(s) Associated with this Feed
@@ -332,6 +333,7 @@
       </div>
     </div>
   </div>
+  </div>
 </template>
       </b-table>
     </div>
@@ -463,6 +465,9 @@ export default {
     displayUrls () {
       if (this.entity) { return isEmpty(this.entity.urls) }
       return false
+    },
+    textDescription () {
+      return `${this.onestopId} is a ${this.entity.spec.toUpperCase()} feed describing ${this.entity.associated_operators[0].operator_name} and aggregated by the Transitland open data platform`
     }
   },
   head () {
@@ -471,7 +476,7 @@ export default {
       meta.push({
         hid: 'description',
         name: 'description',
-        content: `${this.onestopId} is a ${this.entity.spec.toUpperCase()} feed registered on the Transitland open data platform.`
+        content: this.textDescription
       })
     }
     return {
