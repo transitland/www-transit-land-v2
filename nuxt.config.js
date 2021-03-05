@@ -206,7 +206,7 @@ export default {
     { from: '^/dispatcher/operators/(.*)$', to: '/operators/$1', status: 301 },
     { from: '^/dispatcher/operators', to: '/operators', status: 301 },
     { from: '^/dispatcher/feed-versions/(.*)$', to: '/feed-versions/$1', status: 301 },
-    { from: '^/dispatcher', to: '/documentation', status: 301 },
+    { from: '^/dispatcher', to: '/documentation/dispatcher', status: 302 },
     { from: '^/how-it-works', to: '/documentation', status: 301 },
     { from: '^/an-open-project/contributor-agreement.html', to: '/documentation/an-open-project/contributor-agreement', status: 301 },
     { from: '^/an-open-project/transitland-model-license.docx', to: '/transitland-model-license.docx', status: 302 },
