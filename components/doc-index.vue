@@ -54,6 +54,10 @@ export default {
             {
               title: 'Signing up for an API Token',
               link: '/documentation/index#signing-up-for-an-api-token'
+            },
+            {
+              title: 'How to Participate',
+              link: '/documentation/index#how-to-participate'
             }
           ]
         },

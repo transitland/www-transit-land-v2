@@ -41,3 +41,11 @@ Transitland v2 APIs all require an API token to access: To get an API token, fol
 
 4. Place "order" and watch your email inbox (or your spam folder) for an API key
 5. You may retrieve your API token at any time by [signing into your Interline account](https://app.interline.io/users/me)
+
+### How to Participate
+
+Transitland welcome many types of participation:
+
+- Please help us to expand the coverage of existing public feeds in the [Transitland Atlas](/documentation/atlas).
+- Use Transitland APIs to power your own maps, apps, trip planning tools, analyses, and other projects. Share your creations with us at [hello@transit.land] or [@transitland](https://twitter.com/transitland)
+- Share Transitland with your favorite transit agency &mdash; whether it's one you ride, you work for, or one you just really like.
