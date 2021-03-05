@@ -24,6 +24,9 @@
       <h1 class="title">
         Feed {{ $route.params.feed }}: version fetched {{ entity.fetched_at | formatDate }} ({{ entity.fetched_at | fromNow }})
       </h1>
+      <p class="content">
+        {{ textDescription }}
+      </p>
       <nav class="level">
         <div class="level-item has-text-centered">
           <div>
@@ -272,6 +275,15 @@ query ($feed_version_sha1: String!) {
       warning_count
       entity_count
     }
+    agencies {
+      agency_name
+    }
+    feed {
+      associated_operators {
+        operator_name
+        operator_onestop_id
+      }
+    }
   }
 }
 `
@@ -316,6 +328,18 @@ export default {
         ret[f.name] = f.rows
       }
       return ret
+    },
+    operatororAgencyNames () {
+      if (this.entity && this.entity.feed && this.entity.feed.associated_operators[0].operator_name) {
+        return this.entity.feed.associated_operators[0].operator_name
+      } else if (this.entity && this.entity.agencies) {
+        return this.entity.agencies.map(a => a.agency_name).join(', ')
+      } else {
+        return null
+      }
+    },
+    textDescription () {
+      return `An archived GTFS feed version for ${this.operatororAgencyNames} from the feed with a Onestop ID of ${this.$route.params.feed} first fetched at ${this.entity.fetched_at} by Transitland. This feed version contains ${this.rowCount['agency.txt'] ? this.rowCount['agency.txt'].toLocaleString() : '-'} agencies, ${this.rowCount['routes.txt'] ? this.rowCount['routes.txt'].toLocaleString() : '-'} routes, and ${this.rowCount['stops.txt'] ? this.rowCount['stops.txt'].toLocaleString() : '-'} stops. The SHA1 hash of the contents is ${this.$route.params.version}`
     }
   },
   methods: {
@@ -351,7 +375,7 @@ export default {
       meta.push({
         hid: 'description',
         name: 'description',
-        content: `Feed version from the feed with a Onestop ID of ${this.$route.params.feed} fetched at ${this.entity.fetched_at} by Transitland. This feed version contains ${this.rowCount['agency.txt'] ? this.rowCount['agency.txt'].toLocaleString() : '-'} agencies, ${this.rowCount['routes.txt'] ? this.rowCount['routes.txt'].toLocaleString() : '-'} routes, and ${this.rowCount['stops.txt'] ? this.rowCount['stops.txt'].toLocaleString() : '-'} stops. The SHA1 hash for this feed version is ${this.$route.params.version}`
+        content: this.textDescription
       })
     }
     return {
