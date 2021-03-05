@@ -4,16 +4,11 @@
       Transitland Source Feeds
     </h1>
 
-    <div class="notification content is-info is-light">
-      <p>
-        Source feeds are open data sources defined in the <nuxt-link to="/documentation/atlas">
-          Transitland Atlas
-        </nuxt-link> repository.
-      </p>
-      <p>
-        <!-- eslint-disable-next-line vue/singleline-html-element-content-newline -->
-        See also <nuxt-link :to="{name:'operators'}">Transitland operators</nuxt-link>, which group together related feeds for a richer browsing experience.
-      </p>
+    <div class="content">
+      <!-- eslint-disable-next-line vue/singleline-html-element-content-newline -->
+      <p>Transitland aggregates data from thousands of public GTFS, GTFS Realtime, GBFS, and MSD feeds. Use the following table to search through Transitland's feed records. Or switch to browsing <nuxt-link :to="{name:'operators'}">Transitland operators</nuxt-link>, which group together related feeds for a richer experience.</p>
+      <!-- eslint-disable-next-line vue/singleline-html-element-content-newline -->
+      <p>Transitland's registry of feeds for viewing and editing in the <nuxt-link to="/documentation/atlas">Transitland Atlas</nuxt-link> repository on GitHub. <a href="/documentation/atlas#how-to-contribute-or-edit-a-feed">We welcome contributions!</a></p>
     </div>
 
     <div>
@@ -131,7 +126,7 @@
     <div style="margin-top:40px">
       <b-message type="is-info">
         <div>
-          Know a feed that's missing? <a href="https://github.com/transitland/transitland-atlas/blob/master/README.md#how-to-add-a-new-feed" class="button" style="float:right">Add a feed to Transitland Atlas</a>
+          Know a public feed that's missing from Transitland? <a href="/documentation/atlas#how-to-contribute-or-edit-a-feed" class="button" style="float:right">Add a feed to Transitland Atlas</a>
         </div>
       </b-message>
     </div>

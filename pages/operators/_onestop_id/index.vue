@@ -19,6 +19,10 @@
         {{ operatorName }}
       </h1>
 
+      <p class="content">
+        {{ textDescription }}
+      </p>
+
       <!-- Warnings for freshness and viewing a specific version -->
       <b-message v-if="dataFreshness > 365" type="is-warning" has-icon>
         The GTFS feeds associated with this page were fetched {{ dataFreshness }} days ago; use caution or check if newer data is available.
@@ -38,107 +42,107 @@
         </template>
       </b-message>
 
-      <b-message v-else type="is-info" has-icon icon="information" :closable="false">
-        <div class="columns">
-          <div class="column is-8">
+      <!-- Main content -->
+      <div class="columns">
+        <div class="column is-three-quarters">
+          <table class="property-list">
+            <tr>
+              <td>
+                <b-tooltip dashed label="A globally unique identifier for this operator">
+                  Onestop ID
+                </b-tooltip>
+              </td>
+              <td>{{ onestopId }}</td>
+            </tr>
+            <tr>
+              <td>
+                <b-tooltip dashed multiline label="Matched agencies; see 'Sources' below for full details">
+                  Agencies
+                </b-tooltip>
+              </td>
+              <td>
+                <ul>
+                  <li v-for="k of agencyNames" :key="k">
+                    {{ k }}
+                  </li>
+                </ul>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <b-tooltip dashed multiline label="Operators and their service areas are matched against place names from the Natural Earth project">
+                  Locations
+                </b-tooltip>
+              </td>
+              <td>
+                <ul>
+                  <li v-for="location of locations" :key="location.name">
+                    <nuxt-link :to="{name:'operators', query:{adm0name:location.adm0name}}">
+                      {{ location.adm0name }}
+                    </nuxt-link>
+                    <template v-if="location.adm1name">
+                      /
+                      <nuxt-link :to="{name:'operators', query:{adm1name:location.adm1name}}">
+                        {{ location.adm1name }}
+                      </nuxt-link>
+                    </template>
+                    <template v-if="location.name">
+                      /
+                      <nuxt-link :to="{name:'operators', query:{city_name:location.name}}">
+                        {{ location.name }}
+                      </nuxt-link>
+                    </template>
+                  </li>
+                </ul>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Contact
+              </td>
+              <td>
+                <ul>
+                  <li v-for="k of agencyURLs" :key="k">
+                    {{ k }}
+                  </li>
+                </ul>
+              </td>
+            </tr>
+            <tr v-if="entity && entity.operator_tags && Object.keys(entity.operator_tags).length > 0">
+              <td>
+                <b-tooltip dashed multiline label="Links between Transitland and other catalogs and data sources on the Internet">
+                  ID Crosswalk
+                </b-tooltip>
+              </td>
+              <td>
+                <ul>
+                  <li v-if="entity.operator_tags.us_ntd_id">
+                    US National Transit Database (NTD) ID: <code>{{ entity.operator_tags.us_ntd_id }}</code> <a target="_blank" href="https://www.transit.dot.gov/ntd/"><b-icon icon="link" title="US National Transit Database website" /></a>
+                  </li>
+                  <li v-if="entity.operator_tags.omd_provider_id">
+                    OpenMobilityData Provider ID: <code>{{ entity.operator_tags.omd_provider_id }}</code> <a target="_blank" :href="`https://openmobilitydata.org/p/${entity.operator_tags.omd_provider_id}`"><b-icon icon="link" title="OpenMobilityData provider page" /></a>
+                  </li>
+                  <li v-if="entity.operator_tags.wikidata_id">
+                    Wikidata Entity ID: <code>{{ entity.operator_tags.wikidata_id }}</code> <a target="_blank" :href="`https://www.wikidata.org/wiki/${entity.operator_tags.wikidata_id}`"><b-icon icon="link" title="Wikidata entity query page" /></a>
+                  </li>
+                </ul>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div class="column is-one-quarter is-full-height">
+          <b-message type="is-info" :closable="false" title="Edit">
             <p>
-              The metadata associated with this operator record can be edited in the <a href="https://github.com/transitland/transitland-atlas">Transitland Atlas</a> repository. We welcome edits and additions. Press the button at right to start a pull request.
+              The metadata associated with this operator record can be edited in the <a href="https://github.com/transitland/transitland-atlas">Transitland Atlas</a> repository. We welcome edits and additions.
             </p>
-          </div>
-          <div class="column is-4 has-text-right">
-            <b-tooltip label="Create or edit an associated operator metadata file in the Transitland Atlas repository">
+            <div class="control">
               <a v-if="!generatedOperator" class="button is-primary" :href="editLink" target="_blank"><b-icon icon="pencil" size="is-small" /> &nbsp; Edit Operator Record</a>
               <a v-else class="button is-primary" :href="newLink" target="_blank"><b-icon icon="pencil" size="is-small" /> &nbsp; Create Operator Record</a>
-            </b-tooltip>
-          </div>
+            </div>
+          </b-message>
         </div>
-      </b-message>
+      </div>
 
-      <!-- Main content -->
-      <table class="property-list">
-        <tr>
-          <td>
-            <b-tooltip dashed label="A globally unique identifier for this operator">
-              Onestop ID
-            </b-tooltip>
-          </td>
-          <td>{{ onestopId }}</td>
-        </tr>
-        <tr>
-          <td>
-            <b-tooltip dashed multiline label="Matched agencies; see 'Sources' below for full details">
-              Agencies
-            </b-tooltip>
-          </td>
-          <td>
-            <ul>
-              <li v-for="k of agencyNames" :key="k">
-                {{ k }}
-              </li>
-            </ul>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <b-tooltip dashed multiline label="Operators and their service areas are matched against place names from the Natural Earth project">
-              Locations
-            </b-tooltip>
-          </td>
-          <td>
-            <ul>
-              <li v-for="location of locations" :key="location.name">
-                <nuxt-link :to="{name:'operators', query:{adm0name:location.adm0name}}">
-                  {{ location.adm0name }}
-                </nuxt-link>
-                <template v-if="location.adm1name">
-                  /
-                  <nuxt-link :to="{name:'operators', query:{adm1name:location.adm1name}}">
-                    {{ location.adm1name }}
-                  </nuxt-link>
-                </template>
-                <template v-if="location.name">
-                  /
-                  <nuxt-link :to="{name:'operators', query:{city_name:location.name}}">
-                    {{ location.name }}
-                  </nuxt-link>
-                </template>
-              </li>
-            </ul>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            Contact
-          </td>
-          <td>
-            <ul>
-              <li v-for="k of agencyURLs" :key="k">
-                {{ k }}
-              </li>
-            </ul>
-          </td>
-        </tr>
-        <tr v-if="entity && entity.operator_tags && Object.keys(entity.operator_tags).length > 0">
-          <td>
-            <b-tooltip dashed multiline label="Links between Transitland and other catalogs and data sources on the Internet">
-              ID Crosswalk
-            </b-tooltip>
-          </td>
-          <td>
-            <ul>
-              <li v-if="entity.operator_tags.us_ntd_id">
-                US National Transit Database (NTD) ID: <code>{{ entity.operator_tags.us_ntd_id }}</code> <a target="_blank" href="https://www.transit.dot.gov/ntd/"><b-icon icon="link" title="US National Transit Database website" /></a>
-              </li>
-              <li v-if="entity.operator_tags.omd_provider_id">
-                OpenMobilityData Provider ID: <code>{{ entity.operator_tags.omd_provider_id }}</code> <a target="_blank" :href="`https://openmobilitydata.org/p/${entity.operator_tags.omd_provider_id}`"><b-icon icon="link" title="OpenMobilityData provider page" /></a>
-              </li>
-              <li v-if="entity.operator_tags.wikidata_id">
-                Wikidata Entity ID: <code>{{ entity.operator_tags.wikidata_id }}</code> <a target="_blank" :href="`https://www.wikidata.org/wiki/${entity.operator_tags.wikidata_id}`"><b-icon icon="link" title="Wikidata entity query page" /></a>
-              </li>
-            </ul>
-          </td>
-        </tr>
-      </table>
       <hr>
       <h4 class="title is-4">
         Source Feed(s)
@@ -147,7 +151,7 @@
       <b-tabs type="is-boxed" :animated="false">
         <b-tab-item label="Source Feeds">
           <b-message
-            v-for="feedOnestopId in new Set(sources.map(s => s.target_feed))"
+            v-for="feedOnestopId in uniqueFeedSourcesOnestopIds"
             :key="feedOnestopId"
             type="is-success"
             has-icon
@@ -425,17 +429,25 @@ export default {
         })
       }
       return ret
+    },
+    uniqueFeedSourcesOnestopIds () {
+      return new Set(this.sources.map(s => s.target_feed))
+    },
+    uniqueFeedSourcesNumber () {
+      return this.uniqueFeedSourcesOnestopIds.size
+    },
+    textDescription () {
+      const locations = this.locations
+        .map(l => [l.adm0name, l.adm1name, l.name].filter(Boolean).join(', '))
+        .join('; ')
+      return `${this.operatorName} is an operator listed on the Transitland open data platform. Transitland sources data for this operator from ${this.uniqueFeedSourcesNumber} GTFS ${this.uniqueFeedSourcesNumber > 1 ? 'feeds' : 'feed'}. ${this.operatorName} provides transit services in the following locations: ${locations}.`
     }
   },
   head () {
-    const feedsNumber = new Set(this.sources.map(s => s.target_feed)).size
-    const locations = this.locations
-      .map(l => [l.adm0name, l.adm1name, l.name].filter(Boolean).join(', '))
-      .join('; ')
     return {
       title: `${this.operatorName} • Operator details`,
       meta: [
-        { hid: 'description', name: 'description', content: `${this.operatorName} is an operator listed on the Transitland open data platform. ${this.operatorName} provides transit services in the following locations: ${locations}. Transitland sources data for this operator from ${feedsNumber} GTFS ${feedsNumber > 1 ? 'feeds' : 'feed'}.` }
+        { hid: 'description', name: 'description', content: this.textDescription }
       ]
     }
   }
