@@ -51,24 +51,24 @@
               <td>
                 <ul>
                   <li v-if="entity.urls.static_current">
-                    Current Static GTFS: {{ entity.urls.static_current }}
+                    Current Static GTFS: <code>{{ entity.urls.static_current }}</code>
                   </li>
                   <li v-if="entity.urls.static_planned && entity.urls.static_planned.length > 0">
-                    Future Static GTFS: {{ entity.urls.static_planned }}
+                    Future Static GTFS: <code>{{ entity.urls.static_planned }}</code>
                   </li>
                   <li v-if="entity.urls.static_historic">
                     <div v-for="(k,i) of entity.urls.static_historic" :key="i">
-                      Historic GTFS: {{ k }}
+                      Historic GTFS: <code>{{ k }}</code>
                     </div>
                   </li>
                   <li v-if="entity.urls.realtime_vehicle_positions">
-                    GTFS-RealTime Vehicle Positions: {{ entity.urls.static_planned }}
+                    GTFS Realtime Vehicle Positions: <code>{{ entity.urls.realtime_vehicle_positions }}</code>
                   </li>
                   <li v-if="entity.urls.realtime_trip_updates">
-                    GTFS-RealTime Trip Updates: {{ entity.urls.static_planned }}
+                    GTFS Realtime Trip Updates: <code>{{ entity.urls.realtime_trip_updates }}</code>
                   </li>
                   <li v-if="entity.urls.realtime_alerts">
-                    GTFS RealTime Alerts: {{ entity.urls.static_planned }}
+                    GTFS Realtime Alerts: <code>{{ entity.urls.realtime_alerts }}</code>
                   </li>
                 </ul>
               </td>
@@ -125,7 +125,7 @@
               <td>
                 <ul>
                   <li v-if="entity.license.url">
-                    License URL: {{ entity.license.url }}
+                    License URL: <code>{{ entity.license.url }}</code>
                   </li>
                   <li v-if="entity.license.spdx_identifier">
                     License Identifier: {{ entity.license.spdx_identifier }}
@@ -150,6 +150,22 @@
                   </li>
                   <li v-if="entity.license.attribution_instructions">
                     Attribution instructions: {{ entity.license.attribution_instructions }}
+                  </li>
+                </ul>
+              </td>
+            </tr>
+            <tr v-if="displayAuthorization">
+              <td>Authorization</td>
+              <td>
+                <ul>
+                  <li v-if="entity.authorization.info_url">
+                    Info URL: {{ entity.authorization.info_url }}
+                  </li>
+                  <li v-if="entity.authorization.type">
+                    Type: {{ entity.authorization.type }}
+                  </li>
+                  <li v-if="entity.authorization.param_name">
+                    Parameter name: {{ entity.authorization.param_name }}
                   </li>
                 </ul>
               </td>
@@ -333,11 +349,6 @@
       </div>
     </div>
   </div>
-  </div>
-</template>
-      </b-table>
-    </div>
-  </div>
 </template>
 
 <script>
@@ -373,6 +384,9 @@ query($feed_onestop_id: String) {
       static_current
       static_historic
       static_planned
+      realtime_alerts
+      realtime_trip_updates
+      realtime_vehicle_positions
     }
     # other_ids
     # associated_feeds
@@ -459,6 +473,12 @@ export default {
     displayLicense () {
       if (this.entity) {
         return isEmpty(this.entity.license)
+      }
+      return false
+    },
+    displayAuthorization () {
+      if (this.entity) {
+        return isEmpty(this.entity.authentication)
       }
       return false
     },
