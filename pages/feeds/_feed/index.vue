@@ -467,7 +467,8 @@ export default {
       return false
     },
     textDescription () {
-      return `${this.onestopId} is a ${this.entity.spec.toUpperCase()} feed describing ${this.entity.associated_operators[0].operator_name} and aggregated by the Transitland open data platform`
+      const operatorDescription = this.entity.associated_operators ? ` describing ${this.entity.associated_operators[0].operator_name} and` : ''
+      return `${this.onestopId} is a ${this.entity.spec.toUpperCase()} feed${operatorDescription} aggregated by the Transitland open data platform`
     }
   },
   head () {
