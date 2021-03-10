@@ -97,7 +97,10 @@ export default {
     graphqlApikey: process.env.GRAPHQL_APIKEY || '',
     graphqlServerReferer: process.env.GRAPHQL_SERVER_REFERER || '',
     tileEndpoint: process.env.TILE_ENDPOINT || 'https://transit.land/api/v2/tiles',
-    tileApikey: process.env.TILE_APIKEY || ''
+    tileApikey: process.env.TILE_APIKEY || '',
+    auth0domain: process.env.AUTH0_DOMAIN,
+    auth0clientId: process.env.AUTH0_CLIENTID,
+    auth0audience: process.env.AUTH0_AUDIENCE
   },
   /*
   ** Global CSS
@@ -114,7 +117,9 @@ export default {
   /*
   ** Plugins to load before mounting the App
   */
-  plugins: ['~/plugins/global.js'],
+  plugins: [
+    '~/plugins/global.js'
+  ],
   /*
   ** Nuxt.js dev-modules
   */
@@ -145,8 +150,27 @@ export default {
     '@nuxtjs/feed',
     '@nuxtjs/sitemap',
     '@nuxtjs/robots',
-    '@nuxtjs/redirect-module'
+    '@nuxtjs/redirect-module',
+    // auth
+    '@nuxtjs/axios',
+    '@nuxtjs/auth-next'
   ],
+  auth: {
+    plugins: ['~/plugins/auth.js'],
+    redirect: {
+      callback: '/user/profile',
+      logout: '/',
+      home: '/'
+    },
+    strategies: {
+      auth0: {
+        domain: process.env.AUTH0_DOMAIN,
+        clientId: process.env.AUTH0_CLIENTID,
+        audience: process.env.AUTH0_AUDIENCE,
+        scope: ['openid', 'profile', 'email', 'offline_access']
+      }
+    }
+  },
   content: {
     liveEdit: false,
     markdown: {
@@ -171,8 +195,17 @@ export default {
   /* APOLLO */
   apollo: {
     clientConfigs: {
-      default: '~/plugins/apollo.js'
-    }
+      default: '~/plugins/apollo.js',
+      // you can setup multiple clients with arbitrary names
+      authenticated: {
+        httpEndpoint: 'https://api.transit.land/api/v2/query',
+        httpLinkOptions: {
+          credentials: 'same-origin'
+        }
+      }
+    },
+    authenticationType: 'Bearer',
+    tokenName: 'auth._token.auth0'
   },
   sitemap: {
     hostname: 'https://www.transit.land',

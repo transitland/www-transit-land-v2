@@ -20,7 +20,6 @@
       <b-navbar-item tag="div" :style="searchBarWidth">
         <nav-search-bar
           style="width:100%"
-          @selected="searchBarSelected"
           @focus="searchFocus = true"
           @blur="searchFocus = false"
         />
@@ -35,7 +34,6 @@ export default {
     return {
       searchFocus: false,
       apikey: null,
-      openLogin: false,
       items: [
         {
           title: 'Home',
@@ -57,11 +55,6 @@ export default {
           icon: 'lightbulb',
           to: { name: 'feeds' }
         },
-        // {
-        //   title: 'API',
-        //   icon: 'lightbulb',
-        //   to: { name: 'api-console' }
-        // },
         {
           title: 'Documentation',
           icon: 'lightbulb',
@@ -78,19 +71,6 @@ export default {
   computed: {
     searchBarWidth () {
       return { 'flex-grow': this.searchFocus ? 1 : 0.25 }
-    }
-  },
-  methods: {
-    login (apikey) {
-      localStorage.setItem('apikey', apikey)
-      location.reload()
-    },
-    logout () {
-      localStorage.removeItem('apikey')
-      location.reload()
-    },
-    searchBarSelected (route, entity) {
-
     }
   }
 }
