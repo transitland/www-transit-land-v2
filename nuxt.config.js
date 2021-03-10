@@ -97,10 +97,7 @@ export default {
     graphqlApikey: process.env.GRAPHQL_APIKEY || '',
     graphqlServerReferer: process.env.GRAPHQL_SERVER_REFERER || '',
     tileEndpoint: process.env.TILE_ENDPOINT || 'https://transit.land/api/v2/tiles',
-    tileApikey: process.env.TILE_APIKEY || '',
-    auth0domain: process.env.AUTH0_DOMAIN,
-    auth0clientId: process.env.AUTH0_CLIENTID,
-    auth0audience: process.env.AUTH0_AUDIENCE
+    tileApikey: process.env.TILE_APIKEY || ''
   },
   /*
   ** Global CSS
@@ -156,7 +153,6 @@ export default {
     '@nuxtjs/auth-next'
   ],
   auth: {
-    plugins: ['~/plugins/auth.js'],
     redirect: {
       callback: '/user/profile',
       logout: '/',
@@ -164,9 +160,9 @@ export default {
     },
     strategies: {
       auth0: {
-        domain: process.env.AUTH0_DOMAIN,
-        clientId: process.env.AUTH0_CLIENTID,
-        audience: process.env.AUTH0_AUDIENCE,
+        domain: 'dev-3xr6xv4r.us.auth0.com',
+        clientId: 'L5PhzeHsyJpLhwJvsOjvQuTZggmm6eXr',
+        audience: 'https://api.transit.land',
         scope: ['openid', 'profile', 'email', 'offline_access']
       }
     }
