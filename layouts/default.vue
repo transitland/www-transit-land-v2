@@ -3,7 +3,7 @@
     <tlnav />
 
     <div class="main" style="flex:1">
-      <div class="container section">
+      <div class="container">
         <nuxt />
       </div>
     </div>
