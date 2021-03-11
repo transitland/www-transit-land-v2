@@ -1,86 +1,87 @@
 <template>
   <div>
-    <b-field grouped>
-      <b-field v-if="showRouteSelect" label="Select routes">
-        <b-taginput
-          v-model="selectedRoutes"
-          :data="route_fvsls"
-          ellipsis
-          autocomplete
-          :open-on-focus="true"
-          field="route_id"
-          icon="label"
-          placeholder="Select routes"
-          @typing="routeFilter = $event"
-        >
-          <template slot-scope="props">
-            <strong>{{ props.option.route_short_name }}</strong>: {{ props.option.route_long_name }}
-          </template>
-          <template slot="selected" slot-scope="props">
-            <b-tag
-              v-for="(tag, index) in props.tags"
-              :key="index"
-              :tabstop="false"
-              ellipsis
-              closable
-              @close="removeSelectedRoute(index, $event)"
-            >
-              {{ tag.route_short_name || tag.route_long_name || tag.route_id }}
-            </b-tag>
-          </template>
-        </b-taginput>
-      </b-field>
+    <div v-if="showFilters">
+      <b-field grouped>
+        <b-field v-if="showRouteSelect" label="Select routes">
+          <b-taginput
+            v-model="selectedRoutes"
+            :data="route_fvsls"
+            ellipsis
+            autocomplete
+            :open-on-focus="true"
+            field="route_id"
+            icon="label"
+            placeholder="Select routes"
+            @typing="routeFilter = $event"
+          >
+            <template slot-scope="props">
+              <strong>{{ props.option.route_short_name }}</strong>: {{ props.option.route_long_name }}
+            </template>
+            <template slot="selected" slot-scope="props">
+              <b-tag
+                v-for="(tag, index) in props.tags"
+                :key="index"
+                :tabstop="false"
+                ellipsis
+                closable
+                @close="removeSelectedRoute(index, $event)"
+              >
+                {{ tag.route_short_name || tag.route_long_name || tag.route_id }}
+              </b-tag>
+            </template>
+          </b-taginput>
+        </b-field>
 
-      <b-field label="Aggregate">
-        <b-select v-model="weekAgg">
-          <option :value="true">
-            Week
-          </option>
-          <option :value="false">
-            Day
-          </option>
-        </b-select>
-      </b-field>
+        <b-field label="Aggregate">
+          <b-select v-model="weekAgg">
+            <option :value="true">
+              Week
+            </option>
+            <option :value="false">
+              Day
+            </option>
+          </b-select>
+        </b-field>
 
-      <b-field label="Service relative to">
-        <b-select v-model="maxAggMode">
-          <option value="all">
-            All cells
-          </option>
-          <option value="group">
-            Within group
-          </option>
-        </b-select>
-      </b-field>
+        <b-field label="Service relative to">
+          <b-select v-model="maxAggMode">
+            <option value="all">
+              All cells
+            </option>
+            <option value="group">
+              Within group
+            </option>
+          </b-select>
+        </b-field>
 
-      <b-field label="Start date">
-        <b-datepicker
-          v-model="displayStartDate"
-          :unselectable-days-of-week="[0,2,3,4,5,6]"
-          placeholder="Click to select..."
-          icon="calendar-today"
-          trap-focus
-        />
-      </b-field>
+        <b-field v-if="showDateSelector" label="Start date">
+          <b-datepicker
+            v-model="displayStartDate"
+            :unselectable-days-of-week="[0,2,3,4,5,6]"
+            placeholder="Click to select..."
+            icon="calendar-today"
+            trap-focus
+          />
+        </b-field>
 
-      <b-field label="End date">
-        <b-datepicker
-          v-model="displayEndDate"
-          :unselectable-days-of-week="[1,2,3,4,5,6]"
-          placeholder="Click to select..."
-          icon="calendar-today"
-          trap-focus
-        />
-      </b-field>
+        <b-field v-if="showDateSelector" label="End date">
+          <b-datepicker
+            v-model="displayEndDate"
+            :unselectable-days-of-week="[1,2,3,4,5,6]"
+            placeholder="Click to select..."
+            icon="calendar-today"
+            trap-focus
+          />
+        </b-field>
 
-      <!-- label is zero width joiner -->
-      <b-field label="‍">
-        <!-- TODO: replace route picker with real search -->
-        <span v-if="route_fvsls.length >= 1000" class="tag">Note: only the first 1,000 routes are shown</span>
-        <span v-if="maxWeeks && displayWeeks.length >= maxWeeks" class="tag">Note: only {{ maxWeeks }} weeks are displayed</span>
+        <!-- label is zero width joiner -->
+        <b-field label="‍">
+          <!-- TODO: replace route picker with real search -->
+          <span v-if="route_fvsls.length >= 1000" class="tag">Note: only the first 1,000 routes are shown</span>
+          <span v-if="maxWeeks && displayWeeks.length >= maxWeeks" class="tag">Note: only {{ maxWeeks }} weeks are displayed</span>
+        </b-field>
       </b-field>
-    </b-field>
-
+    </div>
     <br>
 
     <div class="clearfix">
@@ -130,6 +131,7 @@
         <div v-for="(cell,i) of colGroups.rowinfo" :key="i">
           <span v-for="(dow,j) of daysOfWeek" :key="j" class="cell rowlabel">
             <template v-if="i>0" />
+            <template v-else-if="!showGroupInfo">.</template>
             <template v-else-if="cell.route_id">
               {{ cell.route_short_name }}: {{ cell.route_long_name }}
             </template>
@@ -194,15 +196,19 @@ query($feed_version_ids:[Int!], $start_date: Time, $end_date: Time) {
 
 export default {
   props: {
+    showFilters: { type: Boolean, default: true },
+    showGroupInfo: { type: Boolean, default: true },
+    showDateSelector: { type: Boolean, default: true },
     showRouteSelect: { type: Boolean, default: true },
     fvids: { type: Array, default () { return [] } },
     maxWeeks: { type: Number, default () { return null } },
-    weekAgg: { type: Boolean, default () { return true } }
+    weekAgg: { type: Boolean, default () { return true } },
+    useFeedVersions: { type: Array, default () { return [] } }
   },
   data () {
     return {
       dowNames,
-      feed_versions: [],
+      feed_versions: this.useFeedVersions,
       feed_version_routes: [],
       selectedRoutes: [],
       routeFilter: '',
@@ -215,6 +221,7 @@ export default {
   apollo: {
     feed_versions: {
       query: q,
+      skip () { return this.useFeedVersions.length > 0 },
       variables () {
         const rids = this.selectedRoutes.map((s) => { return s.route_id })
         return {

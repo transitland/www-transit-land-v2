@@ -41,13 +41,13 @@
           <div v-show="Object.keys(agencyFeatures).length == 0">
             <strong>Use your mouse cursor</strong> to highlight routes and see their names here. <strong>Click</strong> to select for more details.
           </div>
-          <route-select :agency-features="agencyFeatures" :collapse="true" />
+          <route-select :link="link" :agency-features="agencyFeatures" :collapse="true" />
         </div>
       </div>
     </div>
 
     <b-modal
-      v-if="overlay"
+      v-if="overlay && link"
       :active.sync="isComponentModalActive"
       has-modal-card
       full-screen
@@ -61,7 +61,7 @@
             <button type="button" class="delete" @click="props.close" />
           </header>
           <section class="modal-card-body">
-            <route-select :agency-features="agencyFeatures" :link-version="linkVersion" />
+            <route-select :agency-features="agencyFeatures" :link="link" :link-version="linkVersion" />
           </section>
         </div>
       </template>
@@ -89,6 +89,7 @@ export default {
     center: { type: Array, default () { return null } },
     circleRadius: { type: Number, default: 1 },
     circleColor: { type: String, default: '#f03b20' },
+    link: { type: Boolean, default: true },
     linkVersion: { type: Boolean, default: false },
     zoom: { type: Number, default: 4 },
     hash: { type: Boolean, default: false },
@@ -350,7 +351,7 @@ export default {
     },
     fitFeatures () {
       const coords = []
-      for (const f of this.features) {
+      for (const f of [...this.features, ...this.routeFeatures, ...this.stopFeatures]) {
         const g = f.geometry
         if (g.type === 'Point') {
           coords.push(g.coordinates)
@@ -364,14 +365,12 @@ export default {
               coords.push(b)
             }
           }
-        }
-      }
-      for (const f of this.stopFeatures) {
-        coords.push(f.geometry.coordinates)
-      }
-      for (const f of this.routeFeatures) {
-        for (const c of f.geometry.coordinates) {
-          coords.push(c)
+        } else if (g.type === 'MultiLineString') {
+          for (const a of g.coordinates) {
+            for (const b of a) {
+              coords.push(b)
+            }
+          }
         }
       }
       if (this.autoFit && coords.length > 0) {
