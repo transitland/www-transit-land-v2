@@ -160,8 +160,8 @@ export default {
     },
     strategies: {
       auth0: {
-        domain: 'dev-3xr6xv4r.us.auth0.com',
-        clientId: 'L5PhzeHsyJpLhwJvsOjvQuTZggmm6eXr',
+        domain: 'interline.us.auth0.com',
+        clientId: 'GwwocjhHGFR9dfOv2kFgebRhx79GRh0B',
         audience: 'https://api.transit.land',
         scope: ['openid', 'profile', 'email', 'offline_access']
       }
@@ -200,7 +200,7 @@ export default {
         }
       }
     },
-    authenticationType: 'Bearer',
+    authenticationType: '',
     tokenName: 'auth._token.auth0'
   },
   sitemap: {
